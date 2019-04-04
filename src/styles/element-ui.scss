@@ -1,1 +1,14 @@
 // 重写覆盖element-ui的样式
+.el-aside{
+    width:220px!important;
+}
+.el-menu{
+    background: none;
+}
+.is-opened .el-submenu__title{
+    color:#3874d4;
+    background: #cedef5;
+}
+.el-submenu__title:hover {
+    background-color:#cedef5 !important;
+ }

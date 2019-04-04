@@ -3,11 +3,12 @@
     <div class="logo"></div>
     <div class="top-nav">
       <ul class="top-nav__list">
-        <li>首页</li>
-        <li>项目管理</li>
-        <li>我的首页</li>
-        <li>工作台</li>
-        <li>模型开发</li>
+        <li class="items-ul" v-for="(item,i) of list"
+            :key="i"
+            @click="clickIndex=i"
+            :class="{'active':i==clickIndex}">
+            {{item.text}}
+        </li>
       </ul>
     </div>
     <div class="user-name">{{userName}}</div>
@@ -18,15 +19,20 @@ export default {
   name: 'Header',
   data () {
     return {
-      activeName: 'second',
-      userName: '吴超亭'
+      userName: '吴超亭',
+      clickIndex: -1,
+      list: [
+        {text: '首页'},
+        {text: '项目管理'},
+        {text: '我的首页'},
+        {text: '工作台'},
+        {text: '模型研发'}
+      ]
     }
   },
   activated () {},
   methods: {
-    handleClick (tab, event) {
-      console.log(tab, event)
-    }
+
   }
 }
 </script>
@@ -54,9 +60,11 @@ $baseHeight:60px;
     font-size:14px;
     li {
       float:left;
-      margin-right:30px;
+      padding:0 20px;
+        line-height: 40px;
       &.active {
         color:#fff;
+        border-bottom:solid 2px #ccc;
       }
     }
   }

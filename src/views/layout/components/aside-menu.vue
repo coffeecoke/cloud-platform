@@ -49,6 +49,9 @@ export default {
     border:none;
   }
    .aside {
-      width:200px;
+      width:220px;
+      height:100%;
+      background: #edf2f8;
+
    }
 </style>
