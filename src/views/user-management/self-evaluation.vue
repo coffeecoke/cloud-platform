@@ -1,14 +1,12 @@
 <template>
-  
+  <div>
+    自我评价
+  </div>
 </template>
 <script>
 export default {
-  data () {
-
-  }
 }
 </script>
 <style lang="scss" scoped>
 
 </style>
-

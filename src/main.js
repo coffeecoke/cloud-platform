@@ -9,6 +9,7 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 
 import './styles/common.scss'
+import './styles/element-ui.scss'
 
 // import locale from 'element-ui/lib/locale/lang/en' // lang i18n
 Vue.use(ElementUI)

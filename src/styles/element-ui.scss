@@ -1,1 +1,21 @@
 // 重写覆盖element-ui的样式
+.el-aside {
+  background-color:#edf2f8;
+}
+.el-menu {
+  border: none;
+}
+
+.el-menu {
+  background-color: #edf2f8;
+}
+.el-submenu.is-opened .el-submenu__title {
+  background-color:#cedef5;
+  color:#1a74ee;
+  i:before {
+    color:#1a74ee;
+  }
+}
+.el-menu-item:focus, .el-menu-item:hover {
+
+}
