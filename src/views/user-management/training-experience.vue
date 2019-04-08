@@ -1,13 +1,8 @@
 <template>
-  <main>
-     <router-view/>
-  </main>
+  <div>培训经历</div>
 </template>
 <script>
 export default {
-  data () {
-    return {}
-  }
 }
 </script>
 <style lang="scss" scoped>

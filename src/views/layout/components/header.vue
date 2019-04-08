@@ -32,9 +32,9 @@ export default {
   },
   activated () {},
   methods: {
-
   }
 }
+
 </script>
 <style scoped lang="scss">
 $baseHeight:60px;
@@ -67,11 +67,12 @@ $baseHeight:60px;
         border-bottom:solid 2px #ccc;
       }
     }
-  }
-  .user-name {
-    float:right;
-    color:#fff;
-    line-height:$baseHeight;
+
+    .user-name {
+      float: right;
+      color: #fff;
+      line-height: $baseHeight;
+    }
   }
 }
 </style>
