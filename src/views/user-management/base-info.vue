@@ -1,54 +1,53 @@
 <template>
   <section class="baseInfo">
+    <el-form :label-position="labelPosition" :model="ruleForm" :rules="rules" ref="ruleForm"  label-width="80px">
     <h4 class="base-text">基本信息</h4>
       <el-row :gutter="100">
           <el-col :span="10" :offset="1">
-            <el-form :label-position="labelPosition" label-width="80px" :model="formLabelAlign">
-              <el-form-item label="名称">
-                <el-input class="ipt" placeholder="请输入名称" v-model="formLabelAlign.name"></el-input>
+              <el-form-item label="名称" prop="name">
+                <el-input class="ipt" placeholder="请输入名称" v-model=" ruleForm.name"></el-input>
               </el-form-item>
-              <el-form-item label="电话">
-                <el-input class="ipt" placeholder="请输入电话" v-model="formLabelAlign.phone"></el-input>
+              <el-form-item label="电话" prop="phone">
+                <el-input class="ipt" placeholder="请输入电话" v-model="ruleForm.phone"></el-input>
               </el-form-item>
-              <el-form-item label="紧急联系人">
-                <el-input class="ipt" placeholder="请输入紧急联系人" v-model="formLabelAlign.people"></el-input>
+              <el-form-item label="紧急联系人" prop="people">
+                <el-input class="ipt" placeholder="请输入紧急联系人" v-model="ruleForm.people"></el-input>
               </el-form-item>
-              <el-form-item label="学历">
-                <el-select class="ipt" v-model="ruleForm.region" placeholder="请选择学历">
+              <el-form-item label="学历" prop="education">
+                <el-select class="ipt" v-model="ruleForm.education" placeholder="请选择学历">
                   <el-option label="本科" value="shanghai"></el-option>
                   <el-option label="专科" value="beijing"></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="全日制">
-                <el-select class="ipt" v-model="ruleForm.region" placeholder="请选择学历">
+              <el-form-item label="全日制" prop="fulltime">
+                <el-select class="ipt" v-model="ruleForm.fulltime" placeholder="请选择学历">
                   <el-option label="是" value="shanghai"></el-option>
                   <el-option label="否" value="beijing"></el-option>
                 </el-select>
               </el-form-item>
-            </el-form>
           </el-col>
           <el-col :span="10" :offset="1">
-              <el-form :label-position="labelPosition" label-width="80px" :model="formLabelAlign">
-                  <el-form-item label="性别">
-                    <el-radio-group v-model="form.resource">
+              <el-form :label-position="labelPosition" label-width="80px">
+                  <el-form-item label="性别" prop="resource">
+                    <el-radio-group v-model="ruleForm.resource">
                       <el-radio label="男"></el-radio>
                       <el-radio label="女"></el-radio>
                     </el-radio-group>
                   </el-form-item>
-                  <el-form-item label="邮件">
-                    <el-input  class="ipt" placeholder="请输入邮件" v-model="formLabelAlign.email"></el-input>
+                  <el-form-item label="邮件" prop="email">
+                    <el-input  class="ipt" placeholder="请输入邮件" v-model="ruleForm.email"></el-input>
                   </el-form-item>
-                  <el-form-item label="紧急联系方式">
-                    <el-input class="ipt" placeholder="请输入紧急联系方式" v-model="formLabelAlign.mode"></el-input>
+                  <el-form-item label="紧急联系方式" prop="mode">
+                    <el-input class="ipt" placeholder="请输入紧急联系方式" v-model="ruleForm.mode"></el-input>
                   </el-form-item>
-                  <el-form-item label="学位">
-                    <el-select class="ipt" v-model="ruleForm.region" placeholder="请选择学历">
+                  <el-form-item label="学位" prop="region1">
+                    <el-select class="ipt" v-model="ruleForm.region1" placeholder="请选择学历">
                       <el-option label="本科" value="shanghai"></el-option>
                       <el-option label="专科" value="beijing"></el-option>
                     </el-select>
                   </el-form-item>
-                  <el-form-item label="专业">
-                    <el-select class="ipt" v-model="ruleForm.major" placeholder="请选择专业">
+                  <el-form-item label="专业" prop="major">
+                    <el-select class="ipt" v-model="ruleForm.major" placeholder="请选择日制">
                       <el-option label="是" value="shi"></el-option>
                       <el-option label="否" value="fou"></el-option>
                     </el-select>
@@ -59,42 +58,39 @@
     <h4 class="base-text"><el-checkbox v-model="checked">我(曾经)是融鑫人</el-checkbox></h4>
     <el-row :gutter="100">
         <el-col :span="10" :offset="1">
-          <el-form :label-position="labelPosition" label-width="80px" :model="formLabelAlign">
+          <el-form :label-position="labelPosition" label-width="80px">
             <el-form-item label="融鑫邮箱">
-              <el-input class="ipt" placeholder="请输入名称" v-model="formLabelAlign.rxEmail"></el-input>
+              <el-input class="ipt" placeholder="请输入名称" v-model="ruleForm.rxEmail"></el-input>
             </el-form-item>
           </el-form>
         </el-col>
         <el-col :span="10" :offset="1">
-          <el-form :label-position="labelPosition" label-width="80px" :model="formLabelAlign">
             <el-form-item label="身份证号码">
-              <el-input class="ipt" placeholder="请输入身份证号码" v-model="formLabelAlign.id"></el-input>
+              <el-input class="ipt" placeholder="请输入身份证号码" v-model="ruleForm.id"></el-input>
             </el-form-item>
-          </el-form>
         </el-col>
     </el-row>
     <h4 class="base-text">付款信息</h4>
     <el-row :gutter="100">
         <el-col :span="20" :offset="1">
-          <el-form :label-position="labelPosition" label-width="80px" :model="formLabelAlign">
             <el-form-item label="账户名称">
-              <el-input class="ipt" placeholder="请输入名称" v-model="formLabelAlign.account"></el-input>
+              <el-input class="ipt" placeholder="请输入名称" v-model="ruleForm.account"></el-input>
             </el-form-item>
             <el-form-item label="账号">
-              <el-input class="ipt" placeholder="请输入账号" v-model="formLabelAlign.zh1"></el-input>
+              <el-input class="ipt" placeholder="请输入账号" v-model="ruleForm.zh1"></el-input>
             </el-form-item>
             <el-form-item label="账号">
-              <el-input class="ipt" placeholder="请输入名称" v-model="formLabelAlign.zh2"></el-input>
+              <el-input class="ipt" placeholder="请输入名称" v-model="ruleForm.zh2"></el-input>
             </el-form-item>
-          </el-form>
         </el-col>
     </el-row>
     <el-row>
       <el-col :span="20" :offset="8">
-        <el-button type="primary" round>确定</el-button>
-        <el-button type="info" round>取消</el-button>
+        <el-button @click="submitForm('ruleForm')" type="primary" round>确定</el-button>
+        <el-button @click="resetForm('ruleForm')" type="info" round>取消</el-button>
       </el-col>
     </el-row>
+    </el-form>
   </section>
 </template>
 <script>
@@ -102,7 +98,8 @@ export default {
   data () {
     return {
       labelPosition: 'top',
-      formLabelAlign: {
+      checked: true,
+      ruleForm: {
         name: '',
         region: '',
         type: ''
@@ -110,10 +107,49 @@ export default {
       form: {
         resource: ''
       },
-      ruleForm: {
-        region: '',
-        major: ''
+      rules: {
+        name: [
+          { required: true, message: '请输入名称', trigger: 'blur' },
+          { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+        ],
+        education: [
+          { required: true, message: '请选择学历', trigger: 'change' }
+        ],
+        phone: [
+          { type: 'date', required: true, message: '请选择电话', trigger: 'change' }
+        ],
+        region: [
+          { type: 'date', required: true, message: '请选择时间', trigger: 'change' }
+        ],
+        people: [
+          { type: 'array', required: true, message: '请输入紧急联系人', trigger: 'change' }
+        ],
+        resource: [
+          { required: true, message: '请选择活动资源', trigger: 'change' }
+        ],
+        fulltime: [
+          { required: true, message: '请选择是否全日制', trigger: 'blur' }
+        ]
       }
+      // ruleForm: {
+      //   region: '',
+      //   major: ''
+      // }
+    }
+  },
+  methods: {
+    submitForm (formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          alert('submit!')
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+    resetForm (formName) {
+      this.$refs[formName].resetFields()
     }
   }
 }
