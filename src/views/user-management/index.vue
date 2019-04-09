@@ -21,9 +21,6 @@ export default {
 
 </script>
 <style lang="scss" scoped>
-  .el-main {
-    padding-top:0;
-  }
   .content {
     height: calc(100% - 60px);
   }
