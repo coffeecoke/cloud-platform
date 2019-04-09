@@ -1,6 +1,6 @@
 <template>
   <el-menu :router="true"
-  :default-active="$route.path">
+  :default-active="defaultActive">
     <el-submenu index="1">
       <template slot="title"><i class="el-icon-message"></i>我的情况</template>
       <el-menu-item-group>
@@ -27,7 +27,13 @@
 export default {
   data () {
     return {}
+  },
+  computed: {
+    defaultActive () {
+      return this.$route.path.split('/')[1]
+    }
   }
+
 }
 
 </script>

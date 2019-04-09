@@ -7,20 +7,23 @@
           {{item.name}}
         </li> -->
 
-        <router-link tag="li" class="tab-item" to="/userManagement">
-          <a>用户管理</a>
+        <router-link tag="li" class="tab-item" to="/home">
+          <a>我的首页</a>
         </router-link>
-        <router-link tag="li" class="tab-item" to="layout/pm">
-          <a>首页</a>
+        <router-link tag="li" class="tab-item" to="/pm">
+          <a>项目信息</a>
+        </router-link>
+        <router-link tag="li" class="tab-item" to="/">
+          <a>个人中心</a>
         </router-link>
         <li class="tab-item">
-          <a href="http://www.baidu.com">我的首页</a>
+          <a href="http://www.baidu.com">知识库</a>
         </li>
         <li class="tab-item">
           <a>工作台</a>
         </li>
         <li class="tab-item">
-          <a>模型开发</a>
+          <a>产品资料</a>
         </li>
 
       </ul>

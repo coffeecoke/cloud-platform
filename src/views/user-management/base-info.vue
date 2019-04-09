@@ -116,7 +116,7 @@
       </box-wrap>
       <!-- /.付款信息 -->
       <div class="btns-group">
-        <el-button type="primary" round>确定</el-button>
+        <el-button type="primary" round @click="submit('form')">确定</el-button>
         <el-button class="gray-btn" round>取消</el-button>
       </div>
     </el-form>
