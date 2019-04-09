@@ -5,7 +5,6 @@
 .el-menu {
   border: none;
 }
-
 .el-menu {
   background-color: #edf2f8;
 }
@@ -16,6 +15,15 @@
     color:#1a74ee;
   }
 }
-.el-menu-item:focus, .el-menu-item:hover {
-
+.el-input__inner {
+  border-radius: 0;
+  border-top:none;
+  border-left:none;
+  border-right:none;
+}
+.el-form-item__label {
+  line-height: 20px;
+}
+.el-select {
+  width:100%;
 }

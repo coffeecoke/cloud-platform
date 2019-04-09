@@ -3,9 +3,11 @@
     <div class="breadcrumb">
       <Breadcrumb></Breadcrumb>
     </div>
-    <keep-alive>
-      <router-view></router-view>
-    </keep-alive>
+    <div class="content">
+      <keep-alive>
+        <router-view></router-view>
+      </keep-alive>
+    </div>
   </main>
 </template>
 <script>
@@ -21,7 +23,8 @@ export default {
 
 </script>
 <style lang="scss" scoped>
-  .breadcrumb {
-    margin-bottom:20px;
+  .content {
+    background-color:#fff;
+    padding:30px;
   }
 </style>
