@@ -67,12 +67,11 @@ $baseHeight:60px;
         border-bottom:solid 2px #ccc;
       }
     }
-
-    .user-name {
+  }
+  .user-name {
       float: right;
       color: #fff;
       line-height: $baseHeight;
     }
-  }
 }
 </style>
