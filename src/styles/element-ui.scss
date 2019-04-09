@@ -1,29 +1,36 @@
 // 重写覆盖element-ui的样式
 .el-aside {
-  background-color:#edf2f8;
+  width: 220px !important;
 }
+
 .el-menu {
-  border: none;
+  background: none;
 }
+
 .el-menu {
   background-color: #edf2f8;
 }
-.el-submenu.is-opened .el-submenu__title {
-  background-color:#cedef5;
-  color:#1a74ee;
-  i:before {
-    color:#1a74ee;
-  }
+
+.el-submenu__title:hover {
+  background-color: #cedef5 !important;
 }
+
+.el-input .el-input__inner {
+  border: none !important;
+  border-bottom: solid 1px #ccc !important;
+}
+
 .el-input__inner {
   border-radius: 0;
-  border-top:none;
-  border-left:none;
-  border-right:none;
+  border-top: none;
+  border-left: none;
+  border-right: none;
 }
+
 .el-form-item__label {
   line-height: 20px;
 }
+
 .el-select {
-  width:100%;
+  width: 100%;
 }
