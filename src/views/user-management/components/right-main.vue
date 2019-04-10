@@ -18,6 +18,9 @@ export default {
   },
   components: {
     Breadcrumb
+  },
+  beforeCreate () {
+    console.log()
   }
 }
 
