@@ -111,10 +111,4 @@ export default {
       color: #fff;
       line-height: $baseHeight;
     }
-<<<<<<< HEAD
-}
-=======
-  }
-
->>>>>>> 09093385b9d10725f98cba558c486d18e9f0a5df
 </style>
