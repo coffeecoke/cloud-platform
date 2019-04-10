@@ -4,9 +4,9 @@
       <Breadcrumb></Breadcrumb>
     </div>
     <div class="content">
-      <keep-alive>
+      <transition name="fade-transform" mode="out-in">
         <router-view></router-view>
-      </keep-alive>
+      </transition>
     </div>
   </main>
 </template>
