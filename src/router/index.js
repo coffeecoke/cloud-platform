@@ -25,7 +25,7 @@ const router = new Router({
     path: '/',
     component: Layout,
     redirect: '/userManagement',
-    name: '个人信息',
+    name: '我的情况',
     children: [
       {
         path: 'userManagement',
@@ -34,7 +34,7 @@ const router = new Router({
         children: [
           {
             path: '/',
-            name: '我的情况',
+            name: '',
             component: mySituation
           },
           {
