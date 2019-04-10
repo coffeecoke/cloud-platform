@@ -117,7 +117,6 @@ export default {
         })
       }
       )
-      list
       row.edit = false
     },
     handleClick (row) {
