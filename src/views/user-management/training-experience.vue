@@ -60,17 +60,24 @@
       <el-table-column prop="enclosure" label="附件">
         <template slot-scope="scope">
           <template v-if="scope.row.edit">
-            <el-input class="ipt" size="small" v-model="scope.row.enclosure"></el-input>
+            <el-upload class="upload-demo" :ref="'upload'+scope.$index" action="aa"
+             :auto-upload="false"
+             :on-remove="removeImg"
+             :on-change="change">
+              <el-button icon="el-icon-plus" circle></el-button>
+            </el-upload>
           </template>
-          <span v-else>{{scope.row.enclosure}}</span>
+          <ul class="file-list--readonly" v-else>
+            <li v-for ="(item, index) in scope.row.fileList" :key = "index">{{item.name}}</li>
+          </ul>
         </template>
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button class="edit" @click="scope.row.edit=true" type="text" size="small"></el-button>
+          <el-button class="edit"  type="text" size="small"></el-button>
           <el-button class="delect" type="text" size="small" @click.native.prevent="deleteRow(scope.$index, tableData)">
           </el-button>
-          <el-button class="save" @click="saveClick(scope.row)" type="text" size="small"></el-button>
+          <el-button class="save" @click="saveClick(scope.$index,scope.row)" type="text" size="small"></el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -94,12 +101,24 @@ export default {
         technology: '',
         diploma: '',
         enclosure: '',
+        files: [],
         edit: true
       }
       this.tableData.push(list)
     },
-    saveClick (rows) {
-      console.log(rows)
+    // 保存
+    saveClick (index, row) {
+      let formData = new FormData()
+      var currUpload = 'upload' + index
+      Object.entries(this.$refs[currUpload].uploadFiles).forEach(file => {
+        file[1].forEach(item => {
+          formData.append('files', item.raw)
+          // formData.append(item.name, file[0])
+        })
+      }
+      )
+      list
+      row.edit = false
     },
     handleClick (row) {
       console.log(row)
@@ -107,8 +126,11 @@ export default {
     deleteRow (index, rows) {
       rows.splice(index, 1)
     },
-    handleEdit (index, row) {
-      console.log(index, row)
+    change (file, fileList) {
+
+    },
+    removeImg (file, fileList) {
+
     }
   },
   data () {
@@ -122,9 +144,9 @@ export default {
         technology: 'java开发',
         diploma: 'java',
         enclosure: 'jdc',
-        edit: false
-      }
-      ]
+        edit: true
+
+      }]
     }
   }
 }
