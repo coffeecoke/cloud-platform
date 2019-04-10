@@ -110,9 +110,5 @@ export default {
       float: right;
       color: #fff;
       line-height: $baseHeight;
-<<<<<<< HEAD
   }
-=======
-    }
->>>>>>> 181a9df336931ea4dd2b50e970789693bdd8328b
 </style>
