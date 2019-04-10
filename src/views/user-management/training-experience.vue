@@ -99,7 +99,7 @@ export default {
       this.tableData.push(list)
     },
     saveClick (rows) {
-      console.log(rows)
+      rows.edit = false
     },
     handleClick (row) {
       console.log(row)
