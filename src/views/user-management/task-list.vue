@@ -11,21 +11,22 @@
 </el-row>
     <el-table
       :data="tableData"
-      style="width: 100%">
-      <el-table-column  prop="task_id"  label="任务编码"  ></el-table-column>
-      <el-table-column  prop="task_name"  label="任务名称"  ></el-table-column>
-      <el-table-column  prop="task_target"  label="任务标的"></el-table-column>
-      <el-table-column  prop="predecessor_task"  label="前置任务"></el-table-column>
-      <el-table-column  prop="post_task"  label="后置任务"></el-table-column>
-      <el-table-column  prop="task_group_id"  label="所属组"></el-table-column>
-      <el-table-column  prop="task_status"  label="任务状态"></el-table-column>
-      <el-table-column  prop="subordinate_person"  label="所属人"></el-table-column>
+      style="width: 100%" >
+      <el-table-column  type="selection"  width="55" align="center"></el-table-column>
+      <el-table-column  prop="task_id"  label="任务编码" align="center"></el-table-column>
+      <el-table-column  prop="task_name"  label="任务名称"  align="center"></el-table-column>
+      <el-table-column  prop="task_target"  label="任务标的" align="center"></el-table-column>
+      <el-table-column  prop="predecessor_task"  label="前置任务" align="center"></el-table-column>
+      <el-table-column  prop="post_task"  label="后置任务" align="center"></el-table-column>
+      <el-table-column  prop="task_group_id"  label="所属组" align="center"></el-table-column>
+      <el-table-column  prop="task_status"  label="任务状态" align="center"></el-table-column>
+      <el-table-column  prop="subordinate_person"  label="所属人" align="center"></el-table-column>
     </el-table>
 </div>
 </template>
+
 <script>
 export default {
-
   data () {
     return {
       tableData: [{
@@ -37,7 +38,18 @@ export default {
         task_group_id: '333dsad',
         task_status: '3444dsad',
         subordinate_person: '231321gfd'
-      }]
+      },
+      {
+        task_id: '2016-05-02',
+        task_name: '王小虎',
+        task_target: '上海市普陀区金沙dsa',
+        predecessor_task: '111dsadas',
+        post_task: '222dsad',
+        task_group_id: '333dsad',
+        task_status: '3444dsad',
+        subordinate_person: '231321gfd'
+      }
+      ]
     }
   }
 }
