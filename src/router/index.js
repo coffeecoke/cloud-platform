@@ -8,7 +8,9 @@ import mySituation from '@/views/user-management/my-situation'
 import BaseInfo from '@/views/user-management/base-info'
 import TrainingExperience from '@/views/user-management/training-experience'
 import SelfEvaluation from '@/views/user-management/self-evaluation'
+import TaskList from '@/views/user-management/task-list'
 import Pm from '@/views/pm/pm'
+
 Vue.use(Router)
 
 const router = new Router({
@@ -51,6 +53,11 @@ const router = new Router({
             path: '/1-3',
             name: '自我评价',
             component: SelfEvaluation
+          },
+          {
+            path: '/2-1',
+            name: '任务列表',
+            component: TaskList
           }
         ]
       },
@@ -60,7 +67,6 @@ const router = new Router({
       }
     ]
   }
-
   ]
 })
 
