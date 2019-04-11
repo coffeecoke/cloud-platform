@@ -58,7 +58,7 @@
             </el-col>
             <el-col :span="10">
               <el-form-item label="专业">
-                <el-select v-model="form.profession.value" placeholder="请选择专业">
+                <el-select v-model="form.profession.value" multiple placeholder="请选择专业">
                   <el-option v-for="item in form.profession.options" :key="item.label" :label="item.label"
                     :value="item.label" :disabled="item.diasbled">
                   </el-option>
@@ -126,6 +126,7 @@
 <script>
 // 自定义box组件，用到了*具名插槽*
 import BoxWrap from '@/components/box.vue'
+import { getuserbylognname } from '@/api/base-info'
 export default {
   components: {
     BoxWrap
@@ -174,6 +175,16 @@ export default {
         accountNum: '7438947837483728947324'
 
       }
+    }
+  },
+  created () {
+    getuserbylognname().then(function (res) {
+      this.form = res
+    })
+  },
+  methods: {
+    submit (formName) {
+      // var formData = new formData()
     }
   }
 }
