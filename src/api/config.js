@@ -1,6 +1,6 @@
 
 import axios from 'axios'
-import Qs from 'qs'
+// import Qs from 'qs'
 export let commonConfig = {
   headers: { 'Content-Type': 'multipart/form-data' },
   // 添加上传进度监听事件
@@ -24,7 +24,7 @@ export function get (url, params, config) {
 
 export function post (url, params, config) {
   return new Promise((resolve, reject) => {
-    axios.post(url, Qs.stringify(params), Object.assign({}, commonConfig, config))
+    axios.post(url, params, Object.assign({}, commonConfig, config))
       .then(res => {
         resolve(res)
       })

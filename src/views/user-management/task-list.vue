@@ -55,7 +55,7 @@ export default {
 }
 
 </script>
-<style lang="scss">
+<style lang="scss" scope>
  .el-row {
     margin-bottom: 70px;
      margin-top: 20px;

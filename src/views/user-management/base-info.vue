@@ -126,7 +126,7 @@
 <script>
 // 自定义box组件，用到了*具名插槽*
 import BoxWrap from '@/components/box.vue'
-import { getuserbylognname } from '@/api/base-info'
+import {getuserbylognname, registerUser} from '@/api/base-info'
 export default {
   components: {
     BoxWrap
@@ -180,11 +180,25 @@ export default {
   created () {
     getuserbylognname().then(function (res) {
       this.form = res
+    }).catch(res => {
+      this.$message('基本信息获取失败')
     })
   },
   methods: {
     submit (formName) {
-      // var formData = new formData()
+      var formData = new FormData()
+      Object.keys(this.form).forEach(key => {
+        if (key === 'education' || key === 'profession') {
+          formData.append(key, this.form[key].value)
+        } else {
+          formData.append(key, this.form[key])
+        }
+      })
+      registerUser(formData).then(res => {
+        this.$message('提交成功')
+      }).catch(res => {
+        this.$message('提交失败')
+      })
     }
   }
 }

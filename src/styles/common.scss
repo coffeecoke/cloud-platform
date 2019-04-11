@@ -11,3 +11,65 @@ html,body {
 #app {
   height:100%;
 }
+// .edit {
+//   width: 18px;
+//   height: 18px;
+//   background: url("~@assets/imgs/edit.png") no-repeat center;
+// }
+
+.delect {
+  color:#3d8cf5;
+  font-size:18px;
+  padding:0 10px;
+  cursor: pointer;
+}
+
+.save {
+  color:#3d8cf5;
+  font-size:18px;
+  padding:0 10px;
+  cursor: pointer;
+}
+.edit {
+  color:#3d8cf5;
+  font-size:18px;
+  padding:0 10px;
+  cursor: pointer;
+}
+.el-table .btn-icons-group {
+  display: flex;
+  align-items: center;
+}
+.box-table {
+  .ipt {
+    .el-input__inner {
+      border: none !important;
+      background: #f0f3f8;
+    }
+  }
+
+  .active {
+    .el-input__inner {
+      background: none;
+    }
+  }
+}
+
+.has-gutter {
+  tr {
+    th {
+      background: #3c81de;
+      color: #fff;
+      text-align: center;
+    }
+  }
+}
+
+.add-row {
+  display: inline-block;
+  padding: 10px 20px;
+  background: #1a74ee;
+  border-radius: 25px;
+  margin-top: 20px;
+  color: #fff;
+}
