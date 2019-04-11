@@ -1,6 +1,6 @@
 <template>
   <div class="box-table">
-    <el-table :data="tableData" border style="width: 100%" @row-click="handleCurrentChange">
+    <el-table :data="tableData" border style="width: 100%" >
       <el-table-column prop="date" label="开始日期">
         <template slot-scope="scope">
           <template v-if="scope.row.edit">
@@ -61,9 +61,9 @@
         <template slot-scope="scope">
           <template v-if="scope.row.edit">
             <el-upload class="upload-demo" :ref="'upload'+scope.$index" action="aa"
+              :limit = "3"
              :auto-upload="false"
-             :on-remove="removeImg"
-             :on-change="change">
+             :file-list="scope.row.fileList">
               <el-button icon="el-icon-plus" circle></el-button>
             </el-upload>
           </template>
@@ -74,10 +74,10 @@
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button class="edit"  type="text" size="small"></el-button>
+          <el-button class="edit"  type="text" size="small" @click="scope.row.edit=true"></el-button>
           <el-button class="delect" type="text" size="small" @click.native.prevent="deleteRow(scope.$index, tableData)">
           </el-button>
-          <el-button class="save" @click="saveClick(scope.$index,scope.row)" type="text" size="small"></el-button>
+          <el-button class="save" @click.native.prevent="saveClick(scope.$index,scope.row)" type="text" size="small"></el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -85,16 +85,13 @@
   </div>
 </template>
 <script>
+import {getuserbylognname} from '@/api/base-info'
 export default {
-  methods: {
-    handleCurrentChange (row, event, column) {
-      console.log(row, event, column, event.currentTarget)
-    },
-    addRow (rows) {
-      console.log(this.endtime)
-      var list = {
+  data () {
+    return {
+      list: {
         date: '',
-        endtime: '2019-08-04',
+        endtime: '',
         trainingmode: '',
         trainname: '',
         traincon: '',
@@ -102,38 +99,9 @@ export default {
         diploma: '',
         enclosure: '',
         files: [],
+        fileList: [],
         edit: true
-      }
-      this.tableData.push(list)
-    },
-    // 保存
-    saveClick (index, row) {
-      let formData = new FormData()
-      var currUpload = 'upload' + index
-      Object.entries(this.$refs[currUpload].uploadFiles).forEach(file => {
-        file[1].forEach(item => {
-          formData.append('files', item.raw)
-          // formData.append(item.name, file[0])
-        })
-      }
-      )
-      row.edit = false
-    },
-    handleClick (row) {
-      console.log(row)
-    },
-    deleteRow (index, rows) {
-      rows.splice(index, 1)
-    },
-    change (file, fileList) {
-
-    },
-    removeImg (file, fileList) {
-
-    }
-  },
-  data () {
-    return {
+      },
       tableData: [{
         date: '2018-01-01',
         endtime: '2019-02-02',
@@ -143,9 +111,58 @@ export default {
         technology: 'java开发',
         diploma: 'java',
         enclosure: 'jdc',
-        edit: true
-
+        fileList: [
+          {
+            name: 'img1.png',
+            url: ''
+          },
+          {
+            name: 'img2.png',
+            url: ''
+          }
+        ],
+        edit: false
       }]
+    }
+  },
+  methods: {
+    addRow (rows) {
+      this.tableData.push(Object.assign({}, this.list))
+    },
+    // 保存
+    saveClick (index, row) {
+      if (row.edit === false) {
+        this.$message('请先编辑')
+        return false
+      }
+      row.edit = false
+      let formData = new FormData()
+      var currUpload = 'upload' + index
+      row.fileList = []
+      Object.entries(this.$refs[currUpload].uploadFiles).forEach(file => {
+        formData.append('files', file[1].raw)
+        formData.append('fileUid', file[1].uid)
+        row.fileList.push(
+          {
+            name: file[1].name
+          }
+        )
+      }
+      )
+      Object.keys(this.list).forEach(function (key) {
+        formData.append(key, row[key])
+      })
+      this.saveSubmit(formData)
+    },
+    saveSubmit (formData) {
+      getuserbylognname(formData).then(function (res) {
+        console.log(res)
+      }).catch(function (err) {
+        console.log(err)
+      })
+    },
+    deleteRow (index, rows) {
+      rows.splice(index, 1)
     }
   }
 }
