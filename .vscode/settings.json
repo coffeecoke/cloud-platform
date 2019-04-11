@@ -1,0 +1,33 @@
+{
+    "sync.gist": "285059b6083cd3bdb3d201e8e9388860",
+    "sync.lastUpload": "2018-07-26T14:59:21.418Z",
+    "sync.autoDownload": false,
+    "sync.autoUpload": false,
+    "sync.lastDownload": "2018-07-26T14:52:35.006Z",
+    "sync.forceDownload": false,
+    "sync.host": "",
+    "sync.pathPrefix": "",
+    "sync.quietSync": false,
+    "sync.askGistName": false,
+    "sync.removeExtensions": true,
+    "sync.syncExtensions": true,
+    "editor.fontSize": 14,
+    // "window.zoomLevel": 2,
+    "files.autoSave": "onFocusChange",
+    "window.zoomLevel": 1,
+    "gitlens.advanced.messages": {
+        "suppressShowKeyBindingsNotice": true
+    },
+    "workbench.colorTheme": "Dark-Dracula",
+    "search.followSymlinks": false,
+    "editor.tabSize": 2,
+    "vetur.format.defaultFormatter.html": "js-beautify-html",
+    "eslint.autoFixOnSave": true,
+    "eslint.validate": [
+        "javascript",{
+            "language": "vue",
+            "autoFix": true
+        },"html",
+        "vue"
+    ]
+}
