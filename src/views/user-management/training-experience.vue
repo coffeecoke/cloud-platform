@@ -74,7 +74,7 @@
       <el-table-column label="操作">
         <template slot-scope="scope">
          <div class="btn-icons-group">
-            <i class="edit el-icon-edit"  @click="scope.row.edit=true"></i>
+            <i class="edit el-icon-edit"  @click="scope.row.edit=true;isAddRow=false"></i>
             <i class="delect el-icon-delete" @click="deleteRow(scope.$index, tableData)">
             </i>
             <i class="save el-icon-upload2" @click="saveClick(scope.$index,scope.row)">
@@ -91,6 +91,7 @@ import {queryResumeby, saveresume, delresume} from '@/api/training-experience'
 export default {
   data () {
     return {
+      isAddRow: true,
       loading: true,
       list: {
         date: '',
@@ -138,7 +139,18 @@ export default {
   },
   methods: {
     addRow (rows) {
-      this.tableData.push(Object.assign({}, this.list))
+      if (this.isAddRow) {
+        this.tableData.push(Object.assign({}, this.list))
+        this.isAddRow = false
+      } else {
+        this.$notify({
+          title: '提示',
+          message: '请先保存上一条再添加！',
+          type: 'warning',
+          offset: 100
+        })
+        return false
+      }
     },
     // 保存
     saveClick (index, row) {
@@ -148,6 +160,7 @@ export default {
       }
       this.loading = true
       row.edit = false
+      this.isAddRow = true
       let formData = new FormData()
       var currUpload = 'upload' + index
       row.fileList = []
