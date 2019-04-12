@@ -1,6 +1,6 @@
 <template>
   <div class="box-table">
-    <el-table :data="tableData" border style="width: 100%">
+    <el-table :data="tableData" border style="width: 100%" v-loading="loading">
       <el-table-column prop="date" label="开始日期">
         <template slot-scope="scope">
           <template v-if="scope.row.edit">
@@ -91,6 +91,7 @@ import {queryResumeby, saveresume, delresume} from '@/api/training-experience'
 export default {
   data () {
     return {
+      loading: true,
       list: {
         date: '',
         endtime: '',
@@ -131,6 +132,7 @@ export default {
     queryResumeby().then(res => {
       console.log(res)
     }).catch(res => {
+      this.loading = false
       this.$message('获取失败')
     })
   },
@@ -144,6 +146,7 @@ export default {
         this.$message('请先编辑')
         return false
       }
+      this.loading = true
       row.edit = false
       let formData = new FormData()
       var currUpload = 'upload' + index
@@ -161,11 +164,13 @@ export default {
       this.saveSubmit(formData)
     },
     saveSubmit (formData) {
-      saveresume(formData).then(function (res) {
+      saveresume(formData).then(res => {
         console.log(res)
-      }).catch(function (err) {
+        this.loading = false
+      }).catch(err => {
         console.log(err)
         this.$message('保存失败')
+        this.loading = false
       })
     },
     deleteRow (index, rows) {
@@ -174,6 +179,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
+        this.loading = true
         var currData = rows[index]
         delresume(currData).then(res => {
           rows.splice(index, 1)
@@ -181,11 +187,13 @@ export default {
             type: 'success',
             message: '删除成功!'
           })
+          this.loading = false
         }).catch(res => {
           this.$message({
             type: 'error',
             message: '删除失败!'
           })
+          this.loading = false
         })
       }).catch(() => {
         this.$message({
