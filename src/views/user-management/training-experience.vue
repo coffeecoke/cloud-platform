@@ -94,6 +94,7 @@ export default {
       isAddRow: true,
       loading: true,
       list: {
+        id: '',
         date: '',
         endtime: '',
         trainingmode: '',
@@ -106,26 +107,50 @@ export default {
         fileList: [],
         edit: true
       },
-      tableData: [{
-        date: '2018-01-01',
-        endtime: '2019-02-02',
-        trainingmode: '培训机构',
-        trainname: '培训机构',
-        traincon: '培训机构方式',
-        technology: 'java开发',
-        diploma: 'java',
-        enclosure: 'jdc',
-        fileList: [{
-          name: 'img1.png',
-          url: ''
+      tableData: [
+        {
+          id: '1',
+          date: '2018-01-01',
+          endtime: '2019-02-02',
+          trainingmode: '培训机构',
+          trainname: '培训机构',
+          traincon: '培训机构方式',
+          technology: 'java开发',
+          diploma: 'java',
+          enclosure: 'jdc',
+          fileList: [{
+            name: 'img1.png',
+            url: ''
+          },
+          {
+            name: 'img2.png',
+            url: ''
+          }
+          ],
+          edit: false
         },
         {
-          name: 'img2.png',
-          url: ''
+          id: '2',
+          date: '2018-01-01',
+          endtime: '2019-02-02',
+          trainingmode: '培训机构',
+          trainname: '培训机构',
+          traincon: '培训机构方式',
+          technology: 'java开发',
+          diploma: 'java',
+          enclosure: 'jdc',
+          fileList: [{
+            name: 'img1.png',
+            url: ''
+          },
+          {
+            name: 'img2.png',
+            url: ''
+          }
+          ],
+          edit: false
         }
-        ],
-        edit: false
-      }]
+      ]
     }
   },
   created () {
@@ -187,6 +212,13 @@ export default {
       })
     },
     deleteRow (index, rows) {
+      if (rows[index].edit === true) { // 删除前，如果此行为不可编辑，把isAddRow置为true,防止在编辑状态删除后，出现不可新增的情况
+        this.isAddRow = true
+      }
+      if (!rows[index].id) {
+        rows.splice(index, 1) // 如果id为空，说明没有进行过保存操作，前台直接删除，不同调用后台
+        return false
+      }
       this.$confirm('是否要删除此条培训经历', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
