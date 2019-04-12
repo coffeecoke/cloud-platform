@@ -75,7 +75,7 @@
         <template slot-scope="scope">
          <div class="btn-icons-group">
             <i class="edit el-icon-edit"  @click="scope.row.edit=true"></i>
-            <i class="delect el-icon-delete" @click.native.prevent="deleteRow(scope.$index, tableData)">
+            <i class="delect el-icon-delete" @click="deleteRow(scope.$index, tableData)">
             </i>
             <i class="save el-icon-upload2" @click="saveClick(scope.$index,scope.row)">
             </i>
@@ -87,9 +87,7 @@
   </div>
 </template>
 <script>
-import {
-  getuserbylognname
-} from '@/api/base-info'
+import {queryResumeby, saveresume, delresume} from '@/api/training-experience'
 export default {
   data () {
     return {
@@ -128,6 +126,14 @@ export default {
       }]
     }
   },
+  created () {
+    // 参数需要用户认证，获取token
+    queryResumeby().then(res => {
+      console.log(res)
+    }).catch(res => {
+      this.$message('获取失败')
+    })
+  },
   methods: {
     addRow (rows) {
       this.tableData.push(Object.assign({}, this.list))
@@ -155,14 +161,38 @@ export default {
       this.saveSubmit(formData)
     },
     saveSubmit (formData) {
-      getuserbylognname(formData).then(function (res) {
+      saveresume(formData).then(function (res) {
         console.log(res)
       }).catch(function (err) {
         console.log(err)
+        this.$message('保存失败')
       })
     },
     deleteRow (index, rows) {
-      rows.splice(index, 1)
+      this.$confirm('是否要删除此条培训经历', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        var currData = rows[index]
+        delresume(currData).then(res => {
+          rows.splice(index, 1)
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          })
+        }).catch(res => {
+          this.$message({
+            type: 'error',
+            message: '删除失败!'
+          })
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
     }
   }
 }
