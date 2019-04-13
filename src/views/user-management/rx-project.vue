@@ -2,16 +2,18 @@
   <div class="base-info">
     <!-- 基本信息 -->
     <el-row>
-      <el-col :span="16">
+      <el-col :span="4">
         <box-wrap>
           <template slot="boxHeaderTitle">
             融鑫项目
           </template>
         </box-wrap>
       </el-col>
-      <el-col :span="8">
-        <el-button class="add-row" @click.prevent="addRow()"><span>项目遗漏手工添加</span></el-button>
-        <el-button class="add-row"><span>申请同步融鑫项目</span></el-button>
+      <el-col :span="20">
+        <div class="top-btns">
+          <el-button class="add-row" @click.prevent="addRow()"><span>项目遗漏手工添加</span></el-button>
+          <el-button class="add-row"><span>申请同步融鑫项目</span></el-button>
+        </div>
       </el-col>
     </el-row>
 
@@ -103,7 +105,6 @@
 </template>
 <script>
 import BoxWrap from '@/components/box.vue'
-import {queryResoftProject, saveResoftProject, delresume} from '@/api/rx-project' // 导入api方法
 export default {
   components: {
     BoxWrap
@@ -156,7 +157,7 @@ export default {
   },
   created () {
     // 参数为用户认证之后的token，token放在http header中,方便以后做api响应拦截
-    queryResoftProject().then(res => {
+    this.$api.resoftProject.queryResoftProject().then(res => {
       this.tableData = res
     }).catch(res => {
       this.loading = false
@@ -197,7 +198,7 @@ export default {
     },
     // 保存提交
     saveSubmit (row, formData) {
-      saveResoftProject(formData).then(res => {
+      this.$api.resoftProject.saveResoftProject(formData).then(res => {
         this.loading = false
         row = res// 保存此行数据后，后台返回这行数据，更新页面，目的是添加id，保证保存过得数据，数据都有ID
       }).catch(err => {
@@ -212,17 +213,17 @@ export default {
         this.isAddRow = true
       }
       if (!rows[index].id) {
-        rows.splice(index, 1) // 如果id为空，说明没有进行过保存操作，前台直接删除，不同调用后台
+        rows.splice(index, 1) // 如果id为空，说明没有进行过保存操作，前台直接删除，不用调用后台
         return false
       }
-      this.$confirm('是否要删除此条培训经历', '提示', {
+      this.$confirm('是否要删除此条数据', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
         this.loading = true
         var currData = rows[index]
-        delresume(currData).then(res => {
+        this.$api.resoftProject.delresume(currData).then(res => {
           this.$message({
             type: 'success',
             message: '删除成功!'
@@ -247,6 +248,9 @@ export default {
 
 </script>
 <style lang="scss" scoped>
+.top-btns {
+  float:right;
+}
 .project-notice-icon {
   width:5px;
   height:16px;

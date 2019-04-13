@@ -1,8 +1,29 @@
 
-import {post} from './config'
-// 培训经历保存
-export const saveresume = p => post('/resume/saveresume', p, {})
-// 培训经历查看
-export const queryResumeby = p => post('/resume/queryResumeby', p, {})
-// 培训经历删除
-export const delresume = p => post('/resume/delresume', p, {})
+import axios from '@/utils/http' // 导入http中创建的axios实例
+const trainingExperience = {
+  // 培训经历保存
+  saveresume (params) {
+    return axios({
+      method: 'post',
+      url: '/resume/saveresume',
+      data: params
+    })
+  },
+  // 培训经历查看
+  queryResumeby (params) {
+    return axios({
+      method: 'post',
+      url: '/resume/queryResumeby',
+      data: params
+    })
+  },
+  // 培训经历删除
+  delresume (params) {
+    return axios({
+      method: 'post',
+      url: '/resume/delresume',
+      data: params
+    })
+  }
+}
+export default trainingExperience

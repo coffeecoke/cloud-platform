@@ -116,7 +116,7 @@
       </box-wrap>
       <!-- /.付款信息 -->
       <div class="btns-group">
-        <el-button type="primary" round @click="submit('form')">确定</el-button>
+        <el-button type="primary" round @click.native.prevent="submit('form')">确定</el-button>
         <el-button class="gray-btn" round>取消</el-button>
       </div>
     </el-form>
@@ -126,7 +126,6 @@
 <script>
 // 自定义box组件，用到了*具名插槽*
 import BoxWrap from '@/components/box.vue'
-import {getuserbylognname, registerUser} from '@/api/base-info'
 export default {
   components: {
     BoxWrap
@@ -178,8 +177,8 @@ export default {
     }
   },
   created () {
-    getuserbylognname().then(function (res) {
-      this.form = res
+    this.$api.baseInfo.getuserbylognname().then(function (res) {
+      this.form = res.data
     }).catch(res => {
       this.$message('基本信息获取失败')
     })
@@ -187,6 +186,7 @@ export default {
   methods: {
     submit (formName) {
       var formData = new FormData()
+      console.log(Object.keys(this.form))
       Object.keys(this.form).forEach(key => {
         if (key === 'education' || key === 'profession') {
           formData.append(key, this.form[key].value)
@@ -194,10 +194,22 @@ export default {
           formData.append(key, this.form[key])
         }
       })
-      registerUser(formData).then(res => {
+      formData.append('haha', 'huan')
+      // const aa = new XMLHttpRequest()
+      // aa.open('post', '/api/user/registerUser')
+      // aa.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+      // aa.send(formData)
+      // this.$http.post('/api/user/registerUser', {
+      //   params: formData
+      // }, {
+      //   headers: {
+      //     'Content-Type': 'application/x-www-form-urlencoded'
+      //   }
+      // })
+      this.$api.baseInfo.registerUser(formData).then(res => {
         this.$message('提交成功')
       }).catch(res => {
-        this.$message('提交失败')
+        this.$message('提交失败!!')
       })
     }
   }

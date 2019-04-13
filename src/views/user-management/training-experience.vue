@@ -87,7 +87,6 @@
   </div>
 </template>
 <script>
-import {queryResumeby, saveresume, delresume} from '@/api/training-experience'
 export default {
   data () {
     return {
@@ -155,7 +154,7 @@ export default {
   },
   created () {
     // 参数需要用户认证，获取token
-    queryResumeby().then(res => {
+    this.$api.trainingExperience.queryResumeby().then(res => {
       console.log(res)
     }).catch(res => {
       this.loading = false
@@ -202,7 +201,7 @@ export default {
       this.saveSubmit(formData)
     },
     saveSubmit (formData) {
-      saveresume(formData).then(res => {
+      this.$api.trainingExperience.saveresume(formData).then(res => {
         console.log(res)
         this.loading = false
       }).catch(err => {
@@ -226,7 +225,7 @@ export default {
       }).then(() => {
         this.loading = true
         var currData = rows[index]
-        delresume(currData).then(res => {
+        this.$api.trainingExperience.delresume(currData).then(res => {
           rows.splice(index, 1)
           this.$message({
             type: 'success',

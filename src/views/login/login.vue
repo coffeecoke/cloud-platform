@@ -1,6 +1,6 @@
 <template>
   <div class="" id="">
-    外部项目新增
+    登录跳转中~~
   </div>
 </template>
 <script>
@@ -10,6 +10,9 @@ export default {
     }
   },
   activated () {
+  },
+  beforeCreate () {
+    window.location.href = 'http://www.baidu.com'
   }
 }
 </script>

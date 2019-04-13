@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Page404 from '@/views/404'
+import Login from '@/views/login/login'
 import Layout from '@/views/layout/layout'
 import Home from '@/views/home/index'
 // 个人中心主页
@@ -29,6 +30,10 @@ const router = new Router({
     path: '/404',
     component: Page404
 
+  },
+  {
+    path: '/login',
+    component: Login
   },
   {
     path: '/home',

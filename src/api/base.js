@@ -1,5 +1,5 @@
 // 接口域名管理
-const base = {
+const basePort = {
 
 }
-export default base
+export default basePort
