@@ -1,6 +1,27 @@
-
-import {post} from './config'
-// 获取基本信息
-export const getuserbylognname = p => post('/user/getuserbylognname', p, {})
-// 提交基本信息
-export const registerUser = p => post('/user/registerUser', p, {})
+import axios from '@/utils/http' // 导入http中创建的axios实例
+// import Qs from 'qs'
+const headers = {
+  // 'Content-Type': 'multipart/form-data'
+  'Content-Type': 'application/x-www-form-urlencoded'
+  // 'Accept': `*/*`
+}
+const baseInfo = {
+  // 获取基本信息
+  getuserbylognname (params) {
+    return axios({
+      method: 'post',
+      url: '/user/getuserbylognname',
+      data: params,
+      headers: headers
+    })
+  },
+  // 提交基本信息
+  registerUser (params) {
+    return axios({
+      method: 'post',
+      url: '/user/registerUser',
+      data: params
+    })
+  }
+}
+export default baseInfo

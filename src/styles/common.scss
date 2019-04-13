@@ -11,6 +11,7 @@ html,body {
 #app {
   height:100%;
 }
+<<<<<<< HEAD
 .edit {
   width: 18px;
   height: 18px;
@@ -29,6 +30,37 @@ html,body {
   background: url("~@assets/imgs/save.png") no-repeat center;
 }
 
+=======
+// .edit {
+//   width: 18px;
+//   height: 18px;
+//   background: url("~@assets/imgs/edit.png") no-repeat center;
+// }
+
+.delect {
+  color:#3d8cf5;
+  font-size:18px;
+  padding:0 10px;
+  cursor: pointer;
+}
+
+.save {
+  color:#3d8cf5;
+  font-size:18px;
+  padding:0 10px;
+  cursor: pointer;
+}
+.edit {
+  color:#3d8cf5;
+  font-size:18px;
+  padding:0 10px;
+  cursor: pointer;
+}
+.el-table .btn-icons-group {
+  display: flex;
+  align-items: center;
+}
+>>>>>>> 739c9ae835396f2bba9c85c3a9f4e086f6a50e59
 .box-table {
   .ipt {
     .el-input__inner {
@@ -61,4 +93,8 @@ html,body {
   border-radius: 25px;
   margin-top: 20px;
   color: #fff;
+<<<<<<< HEAD
+=======
+  cursor: pointer;
+>>>>>>> 739c9ae835396f2bba9c85c3a9f4e086f6a50e59
 }

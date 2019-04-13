@@ -1,3 +1,4 @@
+
 <template>
   <div class="progress-wrap">
     <situation-bar v-for = "(item, index) in situation" :key="index" :bar-title="item.name" :bar-value="item.value" :bar-height="26">
@@ -69,7 +70,13 @@ export default {
       ]
     }
   },
-  computed: {
+  created () {
+    this.$api.mySituation.situationAll().then(
+      this.$http.spread(function (acct, perms) {
+        // 两个请求现在都执行完成
+        console.log(acct, perms)
+      })
+    )
   },
   components: {
     SituationBar
