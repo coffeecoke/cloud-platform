@@ -49,7 +49,7 @@
           <template v-else>
             <span>{{ scope.row.projectName }}</span>
             <el-popover trigger="hover" placement="top">
-              <p>{{ scope.row.xmname }}</p>
+              <p>{{ scope.row.projectName }}</p>
               <p>{{ scope.row.content }}</p>
               <i slot="reference" class="project-notice-icon"></i>
             </el-popover>
@@ -123,7 +123,17 @@ export default {
       list: {
         id: null, // id为空表示新增
         date: null,
-        industry: '',
+        industry: {
+          value: '',
+          options: [
+            {
+              label: 'IT'
+            },
+            {
+              label: '金融'
+            }
+          ]
+        },
         projectName: '',
         projectSize: '',
         role: '',
