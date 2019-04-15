@@ -1,6 +1,7 @@
 <template>
   <div class="base-info">
     <!-- 基本信息 -->
+
     <el-row>
       <el-col :span="4">
         <box-wrap>
@@ -17,13 +18,19 @@
       </el-col>
     </el-row>
 
-    <el-table :data="tableData" border style="width: 100%">
+    <el-table :data="tableData" :border="true" style="width: 100%">
       <el-table-column prop="date" label="开始结束日期">
         <template slot-scope="scope">
           <template v-if="scope.row.edit">
-            <el-input class="ipt" size="small" v-model="scope.row.date"></el-input>
+            <el-date-picker
+              v-model="scope.row.date"
+              type="daterange"
+              range-separator="至"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期">
+            </el-date-picker>
           </template>
-          <span v-else>{{ scope.row.date }}</span>
+          <span v-else>{{getDateStr1(scope.row)}}</span>
         </template>
       </el-table-column>
       <el-table-column prop="industry" label="所属行业">
@@ -112,10 +119,10 @@ export default {
   data () {
     return {
       isAddRow: true, // 保存上一条数据之后，才允许新增
-      loading: true, // 数据加载的loading效果
+      loading: false, // 数据加载的loading效果
       list: {
-        id: '', // id为空表示新增
-        date: '',
+        id: null, // id为空表示新增
+        date: null,
         industry: '',
         projectName: '',
         projectSize: '',
@@ -128,8 +135,8 @@ export default {
       tableData: [
         {
           id: '1', // id为后台传入，后台的增删都是根据id进行的
-          date: '2018-01-01',
-          industry: '2019-02-02',
+          date: [new Date(2018, 8, 4), new Date()],
+          industry: '',
           projectName: '培训机构',
           projectSize: '培训机构',
           role: '培训机构方式',
@@ -141,8 +148,8 @@ export default {
         },
         {
           id: '2',
-          date: '2018-01-01',
-          industry: '2019-02-02',
+          date: [new Date(2018, 8, 4), new Date()],
+          industry: '',
           projectName: '培训机构',
           projectSize: '培训机构',
           role: '培训机构方式',
@@ -156,15 +163,30 @@ export default {
     }
   },
   created () {
+    this.loading = true
     // 参数为用户认证之后的token，token放在http header中,方便以后做api响应拦截
     this.$api.resoftProject.queryResoftProject().then(res => {
       this.tableData = res
+      this.loading = false
     }).catch(res => {
       this.loading = false
       this.$message('获取失败')
     })
   },
   methods: {
+    // 解析日期对象
+    getDateStr1 (row) {
+      if (!row.date) {
+        return ''
+      }
+      let dateArr = []
+      row.date.forEach(item => {
+        var currDateStr = item.getFullYear() + '/' + item.getMonth() + '/' + item.getDay() + '/'
+        dateArr.push(currDateStr)
+      })
+      let dateStr = dateArr[0] + ' 至 ' + dateArr[1]
+      return dateStr
+    },
     // 添加一行
     addRow () {
       if (this.isAddRow) {
@@ -198,6 +220,7 @@ export default {
     },
     // 保存提交
     saveSubmit (row, formData) {
+      console.log(row.date)
       this.$api.resoftProject.saveResoftProject(formData).then(res => {
         this.loading = false
         row = res// 保存此行数据后，后台返回这行数据，更新页面，目的是添加id，保证保存过得数据，数据都有ID
