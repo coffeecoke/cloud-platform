@@ -1,14 +1,42 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import Page404 from '@/views/404'
+import Login from '@/views/login/login'
+import Layout from '@/views/layout/layout'
+import Home from '@/views/home/index'
 // 个人中心路由模块
 import UserRouter from './user-management'
 // 用户中心路由模块
 Vue.use(Router)
-let routes = new Set([...UserRouter]) // 合并多个路由模块
+// let routes = new Set([...UserRouter]) // 合并多个路由模块
+// const router = new Router({
+//   routes
+// })
 const router = new Router({
-  routes
+  routes: [{
+    path: '/404',
+    component: Page404
+  },
+  {
+    path: '/login',
+    component: Login
+  },
+  {
+    path: '/home',
+    component: Home
+  },
+  {
+    path: '/',
+    component: Layout,
+    redirect: '/userManagement',
+    name: '我的情况',
+    children: [
+      // 用户管理路由模块
+      UserRouter
+    ]
+  }
+  ]
 })
-
 router.beforeEach((to, from, next) => {
   if (to.matched.length === 0) {
     from.name ? next({
