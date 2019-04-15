@@ -1,7 +1,4 @@
-import Page404 from '@/views/404'
-import Login from '@/views/login/login'
-import Layout from '@/views/layout/layout'
-import Home from '@/views/home/index'
+
 // 个人中心主页
 import UserManagement from '@/views/user-management/index'
 // 我的情况
@@ -27,24 +24,10 @@ import Quest from '@/views/questionnaire/index'
 
 // import Pm from '@/views/pm/pm'
 
-export default [{
-  path: '/404',
-  component: Page404
-
-},
-{
-  path: '/login',
-  component: Login
-},
-{
-  path: '/home',
-  component: Home
-},
-{
-  path: '/',
-  component: Layout,
-  redirect: '/userManagement',
-  name: '我的情况',
+export default {
+  path: 'userManagement',
+  component: UserManagement,
+  redirect: '/userManagement/',
   children: [
     {
       path: 'userManagement',
@@ -105,4 +88,3 @@ export default [{
     }
   ]
 }
-]
