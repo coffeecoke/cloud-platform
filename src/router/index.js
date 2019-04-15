@@ -6,12 +6,18 @@ import Layout from '@/views/layout/layout'
 import Home from '@/views/home/index'
 // 个人中心路由模块
 import UserRouter from './user-management'
+import Queste from './questionnaire'
 // 用户中心路由模块
 Vue.use(Router)
 // let routes = new Set([...UserRouter]) // 合并多个路由模块
 // const router = new Router({
 //   routes
 // })
+
+let secRouter = []
+secRouter.push(UserRouter)
+secRouter.push(Queste)
+
 const router = new Router({
   routes: [{
     path: '/404',
@@ -30,10 +36,7 @@ const router = new Router({
     component: Layout,
     redirect: '/userManagement',
     name: '我的情况',
-    children: [
-      // 用户管理路由模块
-      UserRouter
-    ]
+    children: secRouter
   }
   ]
 })
