@@ -2,7 +2,8 @@ import axios from '@/utils/http' // 导入http中创建的axios实例
 // import Qs from 'qs'
 const headers = {
   // 'Content-Type': 'multipart/form-data'
-  'Content-Type': 'application/x-www-form-urlencoded'
+  'Content-Type': 'application/x-www-form-urlencoded',
+  'token': '6S2Ng1VO3ifU6fqGUmKNmRpJPEUSzIjI'
   // 'Accept': `*/*`
 }
 const baseInfo = {

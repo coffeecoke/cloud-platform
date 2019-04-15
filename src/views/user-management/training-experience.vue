@@ -4,7 +4,8 @@
       <el-table-column prop="date" label="开始日期">
         <template slot-scope="scope">
           <template v-if="scope.row.edit">
-            <el-input class="ipt" size="small" v-model="scope.row.date"></el-input>
+            <el-date-picker value-format="yyyy-MM-dd" class="ipt" v-model="scope.row.date" type="date" placeholder="选择日期"></el-date-picker>
+            <!-- <el-input class="ipt" size="small" v-model="scope.row.date"></el-input> -->
           </template>
           <span v-else>{{ scope.row.date }}</span>
         </template>
@@ -12,7 +13,8 @@
       <el-table-column prop="endtime" label="结束日期">
         <template slot-scope="scope">
           <template v-if="scope.row.edit">
-            <el-input class="ipt" size="small" v-model="scope.row.endtime"></el-input>
+            <el-date-picker value-format="yyyy-MM-dd" class="ipt" v-model="scope.row.endtime" type="date" placeholder="选择日期"></el-date-picker>
+            <!-- <el-input class="ipt" size="small" v-model="scope.row.endtime"></el-input> -->
           </template>
           <span v-else>{{ scope.row.endtime }}</span>
         </template>

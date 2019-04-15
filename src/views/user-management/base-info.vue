@@ -186,7 +186,6 @@ export default {
   methods: {
     submit (formName) {
       var formData = new FormData()
-      console.log(Object.keys(this.form))
       Object.keys(this.form).forEach(key => {
         if (key === 'education' || key === 'profession') {
           formData.append(key, this.form[key].value)
