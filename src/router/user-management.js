@@ -23,6 +23,8 @@ import TaskList from '@/views/user-management/task-list'
 // 任务体系
 import TaskCreate from '@/views/user-management/task-create'
 
+import Quest from '@/views/questionnaire/index'
+
 // import Pm from '@/views/pm/pm'
 
 export default [{
@@ -95,6 +97,11 @@ export default [{
           component: TaskList
         }
       ]
+    },
+    {
+      path: '/quest',
+      component: Quest,
+      name: '调查问卷'
     }
   ]
 }
