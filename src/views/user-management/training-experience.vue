@@ -211,9 +211,6 @@ export default {
       })
     },
     deleteRow (index, rows) {
-<<<<<<< HEAD
-      rows.splice(index, 1)
-=======
       if (rows[index].edit === true) { // 删除前，如果此行为不可编辑，把isAddRow置为true,防止在编辑状态删除后，出现不可新增的情况
         this.isAddRow = true
       }
@@ -248,16 +245,11 @@ export default {
           message: '已取消删除'
         })
       })
->>>>>>> 739c9ae835396f2bba9c85c3a9f4e086f6a50e59
     }
   }
 }
 
 </script>
-<<<<<<< HEAD
-<style lang="scss">
-=======
 <style lang="scss" scope>
 
->>>>>>> 739c9ae835396f2bba9c85c3a9f4e086f6a50e59
 </style>
