@@ -20,71 +20,56 @@ import TaskList from '@/views/user-management/task-list'
 // 任务体系
 import TaskCreate from '@/views/user-management/task-create'
 
-import Quest from '@/views/questionnaire/index'
-
 // import Pm from '@/views/pm/pm'
 
-export default {
+export default [{
   path: 'userManagement',
   component: UserManagement,
-  redirect: '/userManagement/',
   children: [
     {
-      path: 'userManagement',
-      component: UserManagement,
-      redirect: '/userManagement/',
-      children: [
-        {
-          path: '/',
-          name: '',
-          component: mySituation
-        },
-        {
-          path: '/1-1',
-          name: '基本信息',
-          component: BaseInfo
-        },
-        {
-          path: '/1-2',
-          name: '培训经历',
-          component: TrainingExperience
-        },
-        {
-          path: '/1-3',
-          name: '自我评价',
-          component: SelfEvaluation
-        },
-        {
-          path: '/1-4',
-          name: '任务承接',
-          component: TaskAceeptance
-        },
-        {
-          path: '/1-5',
-          name: '外部项目',
-          component: ExternalProject
-        },
-        {
-          path: '/1-6',
-          name: '融鑫项目',
-          component: RxProject
-        },
-        {
-          path: '/2-1',
-          name: '任务体系',
-          component: TaskCreate
-        },
-        {
-          path: '/2-2',
-          name: '任务列表',
-          component: TaskList
-        }
-      ]
+      path: '/',
+      name: '',
+      component: mySituation
     },
     {
-      path: '/quest',
-      component: Quest,
-      name: '调查问卷'
+      path: '/1-1',
+      name: '基本信息',
+      component: BaseInfo
+    },
+    {
+      path: '/1-2',
+      name: '培训经历',
+      component: TrainingExperience
+    },
+    {
+      path: '/1-3',
+      name: '自我评价',
+      component: SelfEvaluation
+    },
+    {
+      path: '/1-4',
+      name: '任务承接',
+      component: TaskAceeptance
+    },
+    {
+      path: '/1-5',
+      name: '外部项目',
+      component: ExternalProject
+    },
+    {
+      path: '/1-6',
+      name: '融鑫项目',
+      component: RxProject
+    },
+    {
+      path: '/2-1',
+      name: '任务体系',
+      component: TaskCreate
+    },
+    {
+      path: '/2-2',
+      name: '任务列表',
+      component: TaskList
     }
   ]
-}
+}]
