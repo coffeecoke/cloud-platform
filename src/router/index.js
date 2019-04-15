@@ -20,7 +20,11 @@ import TaskAceeptance from '@/views/user-management/task-acceptance'
 import ExternalProject from '@/views/user-management/external-project'
 // 融鑫项目
 import RxProject from '@/views/user-management/rx-project'
+// 任务列表
 import TaskList from '@/views/user-management/task-list'
+// 任务体系
+import TaskCreate from '@/views/user-management/task-create'
+
 import Pm from '@/views/pm/pm'
 
 Vue.use(Router)
@@ -87,6 +91,11 @@ const router = new Router({
           },
           {
             path: '/2-1',
+            name: '任务体系',
+            component: TaskCreate
+          },
+          {
+            path: '/2-2',
             name: '任务列表',
             component: TaskList
           }
