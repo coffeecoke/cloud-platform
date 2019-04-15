@@ -9,7 +9,7 @@
 </el-row>
 
 <el-table
-    :data="tableData"
+    :data="tables.slice((pageIndex-1)*pageSize,pageIndex*pageSize)"
     style="height: 100%"
     :header-cell-style="{background:'#1a74ee',color:'#f9fafc'}">
       <el-table-column width="250px" prop="date"  label="项目" align="center"></el-table-column>
@@ -38,6 +38,9 @@
 export default {
   data () {
     return {
+      pageSize: 2, // 每页大小默认值
+      pageIndex: 1, // 默认第一页
+      search: '',
       input2: '',
       input3: '',
       input4: '',
