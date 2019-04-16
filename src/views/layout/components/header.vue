@@ -25,7 +25,9 @@
         <li class="tab-item">
           <a>产品资料</a>
         </li>
-
+        <router-link tag="li" class="tab-item" to="/quest">
+          <a>调查问卷</a>
+        </router-link>
       </ul>
     </div>
     <div class="user-name">{{userName}}</div>
