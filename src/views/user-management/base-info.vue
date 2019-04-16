@@ -139,32 +139,19 @@ export default {
         contact: '',
         contactInfo: '',
         education: {
-          value: '',
-          options: [{
-            label: '博士生'
-          },
-          {
-            label: '研究生'
-          },
-          {
-            label: '本科'
-          },
-          {
-            label: '专科'
-          }
+          value: [],
+          options: [
+            {
+              label: 'xx'
+            }
           ]
         },
         profession: {
-          value: '计算机科学',
-          options: [{
-            label: '计算机科学'
-          },
-          {
-            label: '金融'
-          },
-          {
-            label: '数学'
-          }
+          value: [],
+          options: [
+            {
+              label: 'hah'
+            }
           ]
         },
         rxChecked: false,
@@ -176,10 +163,13 @@ export default {
       }
     }
   },
-  created () {
+  mounted () {
+    var _this = this
     this.$api.baseInfo.getuserbylognname().then(function (res) {
-      this.form = res.data
+      var result = res.data
+      _this.form = result.data
     }).catch(res => {
+      console.log(res)
       this.$message('基本信息获取失败')
     })
   },
