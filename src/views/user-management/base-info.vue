@@ -167,10 +167,13 @@ export default {
     var _this = this
     this.$api.baseInfo.getuserbylognname().then(function (res) {
       var result = res.data
-      _this.form = result.data
+      if (result.state === '1') {
+        _this.form = result.data
+      } else {
+        this.$message('基本信息获取失败')
+      }
     }).catch(res => {
-      console.log(res)
-      this.$message('基本信息获取失败')
+      // this.$message('服务器被吃了~~')
     })
   },
   methods: {
