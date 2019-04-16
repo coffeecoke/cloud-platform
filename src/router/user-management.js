@@ -22,6 +22,8 @@ import RxProject from '@/views/user-management/rx-project'
 import TaskList from '@/views/user-management/task-list'
 // 任务体系
 import TaskCreate from '@/views/user-management/task-create'
+// 任务发布
+import TaskIssued from '@/views/user-management/task-issue'
 
 // import Pm from '@/views/pm/pm'
 
@@ -93,6 +95,11 @@ export default [{
           path: '/2-2',
           name: '任务列表',
           component: TaskList
+        },
+        {
+          path: '/2-3',
+          name: '任务发布',
+          component: TaskIssued
         }
       ]
     }

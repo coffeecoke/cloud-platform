@@ -2,50 +2,125 @@
   <div class="box-table">
 <el-row :gutter="18">
    <el-col :span="4">
-    <el-autocomplete  class="input1"  v-model="state2" :fetch-suggestions="querySearch"  placeholder="项目编号" :trigger-on-focus="false" @select="handleSelect"></el-autocomplete>
+    <el-autocomplete  class="input1"  v-model="state1" :fetch-suggestions="querySearch"  placeholder="任务/组编码" :trigger-on-focus="false" @select="handleSelect"></el-autocomplete>
   </el-col>
-  <el-col :span="4"><div class="grid-content bg-purple"><el-input placeholder="项目名称" class="input1" v-model="input3"  clearable></el-input></div></el-col>
-  <el-col :span="4"><div class="grid-content bg-purple"><el-input placeholder="项目经理" class="input1" v-model="input4"  clearable></el-input></div></el-col>
-  <el-col :span="4"><div class="grid-content bg-purple"><el-input placeholder="项目总监" class="input1" v-model="input5"  clearable></el-input></div></el-col>
-  <el-col :span="8"><div class="button"><el-button type="primary" style="float:right"   v-on:click="confirm">确定</el-button></div></el-col>
+  <el-col :span="4">
+    <el-autocomplete  class="input1"  v-model="state2" :fetch-suggestions="querySearch"  placeholder="任务/组名称" :trigger-on-focus="false" @select="handleSelect"></el-autocomplete>
+  </el-col>
+   <el-col :span="3"><el-select class="select1" v-model="value" clearable placeholder="类型">
+    <el-option  v-for="item in options"  :key="item.value"  :label="item.label"  :value="item.value"></el-option></el-select></el-col>
+    <el-col :span="3"><el-select class="select1" v-model="value1" clearable placeholder="影响度">
+    <el-option  v-for="item in options1"  :key="item.value1"  :label="item.label1"  :value="item.value1"></el-option></el-select></el-col>
+    <el-col :span="3"><el-select class="select1" v-model="value2" clearable placeholder="依赖度">
+    <el-option  v-for="item in options2"  :key="item.value2"  :label="item.label2"  :value="item.value2"></el-option></el-select></el-col>
+
+  <el-col :span="7"><div class="button"><el-button type="primary" style="float:right"   v-on:click="confirm">确定</el-button></div></el-col>
 </el-row>
 
 <el-table
     :data="tableData"
     style="height: 100%"
     :header-cell-style="{background:'#1a74ee',color:'#f9fafc'}">
-      <el-table-column width="250px" prop="date"  label="项目" align="center"></el-table-column>
-      <el-table-column width="100px" prop="name"  label="立项时间"  align="center"></el-table-column>
-      <el-table-column width="200px" prop="province"  label="项目状态" align="center"></el-table-column>
-      <el-table-column width="200px" prop="city"  label="项目经理" align="center"></el-table-column>
-      <el-table-column width="150px" prop="address"  label="项目总监" align="center"></el-table-column>
-      <el-table-column width="150px" prop="zip"  label="质量管理" align="center"></el-table-column>
-      <el-table-column width="100px" prop="address"  label="任务总数" align="center"></el-table-column>
-      <el-table-column width="200px" prop="city"  label="任务" align="center">
-
-        分配情况<el-progress :text-inside="true" :stroke-width="6" :percentage="66" :show-text="false"></el-progress>
-
-        完成情况<el-progress :text-inside="true" :stroke-width="6" :percentage="32" :show-text="false"></el-progress>
-      </el-table-column>
-      <el-table-column fixed="right" label="操作" width="150px" align="center">
-     <template>
-        <el-button onclick="location.href='http://www.baidu.com';" type="text" size="medium"><i class="el-icon-upload" title="跳转到任务发布"></i></el-button>
-        <el-button  type="text" size="medium"><router-link to="/#/1-2"><i class="el-icon-share" title="跳转到任务脉络"></i></router-link></el-button>
-      </template>
-    </el-table-column>
+      <el-table-column  prop="date"  label="任务/组编码" align="center"></el-table-column>
+      <el-table-column  prop="name"  label="任务/组名称"  align="center"></el-table-column>
+      <el-table-column  prop="province"  label="影响项" align="center"></el-table-column>
+      <el-table-column  prop="city"  label="影响度" align="center"></el-table-column>
+      <el-table-column  prop="address"  label="依赖项" align="center"></el-table-column>
+      <el-table-column  prop="zip"  label="依赖度" align="center"></el-table-column>
+      <el-table-column fixed="right" label="操作"  align="center">
+      <template>
+        <el-button @click="dialogPersonVisible = true" type="text" icon="el-icon-upload">发布任务</el-button>
+        </template>
+        </el-table-column>
   </el-table>
+
+  <el-dialog title="设置任务时间" :visible.sync="dialogPersonVisible">
+   <div class="block">
+    <span class="demonstration">使用 value-format</span>
+    <div class="demonstration">值：{{ value2 }}</div>
+    <el-date-picker
+      v-model="value2"
+      type="date"
+      placeholder="选择日期"
+      format="yyyy 年 MM 月 dd 日"
+      value-format="yyyy-MM-dd">
+    </el-date-picker>
+  </div>
+  <div slot="footer" class="dialog-footer">
+    <el-button @click="dialogPersonVisible = false">取 消</el-button>
+    <el-button type="primary" @click="dialogPersonVisible = false">确 定</el-button>
+  </div>
+</el-dialog>
   </div>
 </template>
 <script>
 export default {
   data () {
     return {
+      dialogPersonVisible: false,
       restaurants: [],
+      state1: '',
       state2: '',
-      input2: '',
-      input3: '',
-      input4: '',
-      input5: '',
+       form: {
+          name: '',
+          region: '',
+          date1: '',
+          date2: '',
+          delivery: false,
+          type: [],
+          resource: '',
+          desc: ''
+        },
+        formLabelWidth: '120px',
+      // select选择框
+    options: [{
+          value: 'T',
+          label: '任务'
+        }, {
+          value: 'G',
+          label: '任务组'
+        }],
+    options1: [{
+          value1: '选项1',
+          label1: '无影响'
+        }, {
+          value1: '选项2',
+          label1: '一级（影响项<=2个）'
+        }, {
+          value1: '选项3',
+          label1: '二级（影响项<=5个）'
+        }, {
+          value1: '选项4',
+          label1: '三级（影响项<=8个）'
+        }, {
+        value1: '选项5',
+        label1: '四级（影响项<=12个）'
+        }, {
+        value1: '选项6',
+        label1: '五级（影响项>12个）'
+        }],
+    options2: [{
+          value2: '选项1',
+          label2: '无依赖'
+        }, {
+          value2: '选项2',
+          label2: '一级（依赖项<=2个）'
+        }, {
+          value2: '选项3',
+          label2: '二级（依赖项<=5个）'
+        }, {
+          value2: '选项4',
+          label2: '三级（依赖项<=8个）'
+        }, {
+          value2: '选项5',
+          label2: '四级（依赖项<=12个）'
+        }, {
+          value2: '选项6',
+          label2: '五级（依赖项>12个）'
+        }],        
+        value: '',
+        value1: '',
+        value2: '',
       // 确定按钮
       confirm: function () {
         alert('1111111')
@@ -189,6 +264,14 @@ export default {
  .el-input__inner {
       height: 40px;
       width: 200px;
+      background: #f0f3f8;
+      border-radius: 8px;
+    }
+}
+ .select1{
+ .el-input__inner {
+      height: 40px;
+      width: 180px;
       background: #f0f3f8;
       border-radius: 8px;
     }
