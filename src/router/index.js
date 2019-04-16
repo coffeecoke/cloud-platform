@@ -7,6 +7,7 @@ import Home from '@/views/home/index'
 // 个人中心路由模块
 import UserRouter from './user-management'
 import Quest from './questionnaire'
+import PersonalManagement from './personal-management'
 // 用户中心路由模块
 Vue.use(Router)
 // let routes = new Set([...UserRouter]) // 合并多个路由模块
@@ -27,14 +28,15 @@ const router = new Router({
     component: Home
   },
   {
-    path: '/',
+    path: '/Layout',
     component: Layout,
     redirect: '/userManagement',
     name: '我的情况',
     children: [
       // 用户管理路由模块
       ...UserRouter,
-      ...Quest
+      ...Quest,
+      ...PersonalManagement
     ]
   }
   ]

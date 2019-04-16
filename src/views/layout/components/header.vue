@@ -13,7 +13,7 @@
         <router-link tag="li" class="tab-item" to="/pm">
           <a>项目信息</a>
         </router-link>
-        <router-link tag="li" class="tab-item" to="/">
+        <router-link tag="li" class="tab-item" to="/userManagement">
           <a>个人中心</a>
         </router-link>
         <li class="tab-item">
@@ -27,6 +27,9 @@
         </li>
         <router-link tag="li" class="tab-item" to="/quest">
           <a>调查问卷</a>
+        </router-link>
+        <router-link tag="li" class="tab-item" to="/">
+          <a>用户管理</a>
         </router-link>
       </ul>
     </div>
