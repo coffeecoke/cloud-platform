@@ -27,6 +27,7 @@ import TaskIssued from '@/views/user-management/task-issue'
 export default [{
   path: 'userManagement',
   component: UserManagement,
+  name: '我的情况',
   children: [
     {
       path: '/',
