@@ -19,17 +19,10 @@ const taskIssue = {
     })
   },
   // 任务发布查看
-  queryTask (params) {
+  getPublishTaskList (params) {
     return axios({
       method: 'post',
-      url: '/taskIssue/queryTask'
-      // data: params
-    })
-  },
-  queryTaskByForm (params) {
-    return axios({
-      method: 'post',
-      url: '/taskIssue/queryTaskByForm',
+      url: '/taskPublish/getPublishTaskList',
       data: params
     })
   }

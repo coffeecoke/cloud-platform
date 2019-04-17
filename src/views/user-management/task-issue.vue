@@ -3,11 +3,11 @@
     <el-form ref="form" :model="form" label-width="80px" label-position="top">
       <el-row type="flex" justify="space-between">
         <el-col :span="4">
-          <el-autocomplete class="input1" v-model="form.state1" :fetch-suggestions="querySearch1" placeholder="任务/组编码"
+          <el-autocomplete class="input1" v-model="form.taskgroupcode" :fetch-suggestions="querySearch1" placeholder="任务/组编码"
             :trigger-on-focus="false" @select="handleSelect"></el-autocomplete>
         </el-col>
         <el-col :span="4">
-          <el-autocomplete class="input1" v-model="form.state2" :fetch-suggestions="querySearch2" placeholder="任务/组名称"
+          <el-autocomplete class="input1" v-model="form.taskgroupname" :fetch-suggestions="querySearch2" placeholder="任务/组名称"
             :trigger-on-focus="false" @select="handleSelect"></el-autocomplete>
         </el-col>
         <el-col :span="4">
@@ -38,10 +38,10 @@
     <el-table :data="tableData" style="height: 100%" :header-cell-style="{background:'#1a74ee',color:'#f9fafc'}">
       <el-table-column prop="date" label="任务/组编码" align="center"></el-table-column>
       <el-table-column prop="name" label="任务/组名称" align="center"></el-table-column>
-      <el-table-column prop="province" label="影响项" align="center"></el-table-column>
-      <el-table-column prop="city" label="影响度" align="center"></el-table-column>
-      <el-table-column prop="address" label="依赖项" align="center"></el-table-column>
-      <el-table-column prop="zip" label="依赖度" align="center"></el-table-column>
+      <el-table-column prop="postTask" label="影响项" align="center"></el-table-column>
+      <el-table-column prop="effectDegree" label="影响度" align="center"></el-table-column>
+      <el-table-column prop="predecessorTask" label="依赖项" align="center"></el-table-column>
+      <el-table-column prop="dependencyDegree" label="依赖度" align="center"></el-table-column>
       <el-table-column fixed="right" label="操作" align="center">
         <template>
           <el-button @click="dialogPersonVisible = true" type="text" icon="el-icon-upload">发布任务</el-button>
@@ -69,19 +69,16 @@ export default {
   data () {
     return {
       dialogPersonVisible: false,
-      restaurants1: [],
-      restaurants2: [],
-      state1: '',
-      state2: '',
+      taskcode: [],
+      taskname: [],
+      taskgroupcode: '',
+      taskgroupname: '',
       form: {
-        name: '',
-        date1: '',
-        date2: '',
-        value: '',
+        value: 'T',
         value1: '',
         value2: ''
       },
-      formLabelWidth: '120px',
+      formLabelWidth: '72px',
       // select选择框
       options: [{
         value: 'T',
@@ -137,25 +134,12 @@ export default {
         Object.keys(this.form, key => {
           formData.append(key, this.form[key])
         })
-        this.$api.taskIssue.queryTaskByForm(formData).then(res => {
+        this.$api.taskIssue.getPublishTaskList(formData).then(res => {
           var result = res.data
           this.tableData = result
         })
       },
       tableData: [{
-        date: '2016-05-02',
-        name: '王小虎',
-        province: '上海',
-        city: '普陀区',
-        address: '上海市普陀区金沙江路 1518 弄',
-        zip: 200333
-      }, {
-        date: '2016-05-04',
-        name: '王小虎',
-        province: '上海',
-        city: '普陀区',
-        address: '上海市普陀区金沙江路 1517 弄',
-        zip: 200333
       }]
     }
   },
@@ -165,15 +149,15 @@ export default {
     },
     // 项目编号查询
     querySearch1 (queryString, cb) {
-      var restaurants = this.restaurants1
-      var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants
+      var taskBlurry = this.taskcode
+      var results = queryString ? taskBlurry.filter(this.createFilter(queryString)) : taskBlurry
       // 调用 callback 返回建议列表的数据
       cb(results)
     },
     // 组名称
     querySearch2 (queryString, cb) {
-      var restaurants = this.restaurants2
-      var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants
+      var taskBlurry = this.taskname
+      var results = queryString ? taskBlurry.filter(this.createFilter(queryString)) : taskBlurry
       // 调用 callback 返回建议列表的数据
       cb(results)
     },
@@ -185,7 +169,7 @@ export default {
     loadAll1 () {
       this.$api.taskIssue.queryByblurry1().then(res => {
         let result = res.data
-        return result.restaurants1
+        return result.taskcode
       })
       // return[{
       //   'value': '三全鲜食（北新泾店）',
@@ -200,7 +184,7 @@ export default {
     loadAll2 () {
       this.$api.taskIssue.queryByblurry2().then(res => {
         let result = res.data
-        return result.restaurants2
+        return result.taskname
       })
       // return[{
       //   'value': '三全鲜食（北新泾店）',
@@ -217,12 +201,12 @@ export default {
     }
   },
   mounted () {
-    this.$api.taskIssue.queryTask().then(res => {
-      let result = res.data
-      this.tableData = result.data
-    })
-    this.restaurants1 = this.loadAll1()
-    this.restaurants2 = this.loadAll2()
+    // this.$api.taskIssue.queryTask().then(res => {
+    //   let result = res.data
+    //   this.tableData = result.data
+    // })
+    this.taskcode = this.loadAll1()
+    this.taskname = this.loadAll2()
   }
 }
 
