@@ -1,4 +1,4 @@
-let defaultToken = '上海'
+let defaultToken = null
 try {
   if (localStorage.token) {
     defaultToken = localStorage.token

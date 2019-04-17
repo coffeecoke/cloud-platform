@@ -15,6 +15,9 @@ import jsnl from './jsnl'
 import yynl from './yynl'
 // 我的情况
 import mySituation from './my-situation'
+import taskAcceptance from './task-acceptance'
+// 任务发布
+import taskIssue from './task-issue'
 // 导出接口
 export default {
   baseInfo,
@@ -23,5 +26,7 @@ export default {
   ywnl,
   jsnl,
   yynl,
-  mySituation
+  mySituation,
+  taskAcceptance,
+  taskIssue
 }
