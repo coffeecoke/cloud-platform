@@ -25,6 +25,7 @@ import TaskCreate from '@/views/user-management/task-create'
 export default [{
   path: 'userManagement',
   component: UserManagement,
+  name: '我的情况',
   children: [
     {
       path: '/',
