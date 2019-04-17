@@ -49,9 +49,9 @@
           <el-row type="flex" justify="space-between">
             <el-col :span="10">
               <el-form-item label="学历">
-                <el-select v-model="form.education.value" placeholder="请选择学历">
-                  <el-option v-for="item in form.education.options" :key="item.label" :label="item.label"
-                    :value="item.label" :disabled="item.disabled">
+                <el-select v-model="form.education" placeholder="请选择学历">
+                  <el-option v-for="item in educationOptions" :key="item.value" :label="item.label" :value="item.value"
+                    :disabled="item.disabled">
                   </el-option>
                 </el-select>
               </el-form-item>
@@ -104,7 +104,7 @@
               </el-form-item>
             </el-col>
           </el-row>
-          <el-row  type="flex" justify="space-between">
+          <el-row type="flex" justify="space-between">
             <el-col :span="24">
               <el-form-item label="账户号">
                 <el-input v-model="form.accountNum" placeholder="请输入账户号">
@@ -124,106 +124,96 @@
 
 </template>
 <script>
-// 自定义box组件，用到了*具名插槽*
-import BoxWrap from '@/components/box.vue'
-export default {
-  components: {
-    BoxWrap
-  },
-  data () {
-    return {
-      form: {
-        name: '',
-        sex: '男',
-        email: '',
-        contact: '',
-        contactInfo: '',
-        education: {
-          value: [],
-          options: [
-            {
-              label: 'xx'
-            }
-          ]
-        },
-        profession: {
-          value: [],
-          options: [
-            {
-              label: 'hah'
-            }
-          ]
-        },
-        rxChecked: false,
-        rxEmail: '',
-        idCard: '',
-        account: '',
-        accountNum: '7438947837483728947324'
+  // 自定义box组件，用到了*具名插槽*
+  import BoxWrap from '@/components/box.vue'
+  export default {
+    components: {
+      BoxWrap
+    },
+    data() {
+      return {
+        form: {
+          name: '',
+          sex: '男',
+          email: '',
+          contact: '',
+          contactInfo: '',
+          education: '本科',
+          profession: '计算机',
+          rxChecked: false,
+          rxEmail: '',
+          idCard: '',
+          account: '',
+          accountNum: '7438947837483728947324'
 
-      }
-    }
-  },
-  mounted () {
-    var _this = this
-    this.$api.baseInfo.getuserbylognname().then(function (res) {
-      var result = res.data
-      if (result.state === '1') {
-        _this.form = result.data
-      } else {
-        this.$message('基本信息获取失败')
-      }
-    }).catch(res => {
-      // this.$message('服务器被吃了~~')
-    })
-  },
-  methods: {
-    submit (formName) {
-      var formData = new FormData()
-      Object.keys(this.form).forEach(key => {
-        if (key === 'education' || key === 'profession') {
-          formData.append(key, this.form[key].value)
-        } else {
-          formData.append(key, this.form[key])
         }
-      })
-      formData.append('haha', 'huan')
-      // const aa = new XMLHttpRequest()
-      // aa.open('post', '/api/user/registerUser')
-      // aa.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
-      // aa.send(formData)
-      // this.$http.post('/api/user/registerUser', {
-      //   params: formData
-      // }, {
-      //   headers: {
-      //     'Content-Type': 'application/x-www-form-urlencoded'
-      //   }
-      // })
-      this.$api.baseInfo.registerUser(formData).then(res => {
-        this.$message('提交成功')
+      }
+    },
+    mounted() {
+      var _this = this
+      this.$api.baseInfo.getuserbylognname().then(function (res) {
+        var result = res.data
+        if (result.state === '1') {
+          _this.form = result.data
+        } else {
+          this.$message('基本信息获取失败')
+        }
       }).catch(res => {
-        this.$message('提交失败!!')
+        // this.$message('服务器被吃了~~')
       })
+    },
+    methods: {
+      submit(formName) {
+        var formData = new FormData()
+        Object.keys(this.form).forEach(key => {
+          if (key === 'education' || key === 'profession') {
+            formData.append(key, this.form[key].value)
+          } else {
+            formData.append(key, this.form[key])
+          }
+        })
+        formData.append('haha', 'huan')
+        // const aa = new XMLHttpRequest()
+        // aa.open('post', '/api/user/registerUser')
+        // aa.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+        // aa.send(formData)
+        // this.$http.post('/api/user/registerUser', {
+        //   params: formData
+        // }, {
+        //   headers: {
+        //     'Content-Type': 'application/x-www-form-urlencoded'
+        //   }
+        // })
+        this.$api.baseInfo.registerUser(formData).then(res => {
+          this.$message('提交成功')
+        }).catch(res => {
+          this.$message('提交失败!!')
+        })
+      }
     }
   }
-}
 
 </script>
 <style lang="scss" scoped>
-.btns-group {
-  text-align: center;
-}
-.feed-email {
-  color:#000;
-  font-size:14px;
-  padding-right:50px;
-}
-.gray-btn {
-  color:#666;
-  font-size:14px;
-  border:none;
-  background-color:#eaeaea;
-}
-.base-info /deep/ .el-form--label-top .el-form-item__label  {
-    padding:0;
-}
+  .btns-group {
+    text-align: center;
+  }
+
+  .feed-email {
+    color: #000;
+    font-size: 14px;
+    padding-right: 50px;
+  }
+
+  .gray-btn {
+    color: #666;
+    font-size: 14px;
+    border: none;
+    background-color: #eaeaea;
+  }
+
+  .base-info /deep/ .el-form--label-top .el-form-item__label {
+    padding: 0;
+  }
+
 </style>
