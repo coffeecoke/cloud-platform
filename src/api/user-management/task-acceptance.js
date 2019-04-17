@@ -6,8 +6,8 @@ const taskAcceptance = {
   queryTaskUndertaking (params) {
     return axios({
       method: 'post',
-      url: '/taskUndertaking/queryTaskUndertaking',
-      data: params
+      url: '/taskUndertaking/queryTaskUndertaking'
+      // data: params
     })
   },
   queryTask (params) {

@@ -3,24 +3,20 @@
  * 请求拦截、响应拦截、错误统一处理
  */
 import axios from 'axios'
-
 import router from '../router'
+import { Message } from 'element-ui'
 // import store from '../store/index'
-import { Toast } from 'vant'
-console.log(Toast)
 /**
  * 提示函数
  * 禁止点击蒙层、显示一秒后关闭
  */
-console.log(Toast)
+
 const tip = msg => {
-  Toast({
+  Message({
     message: msg,
-    duration: 1000,
-    forbidClick: true
+    type: 'error'
   })
 }
-
 /**
  * 跳转登录页
  * 携带当前页面路由，以期在登录页面完成登录后返回当前页面
@@ -61,6 +57,9 @@ const errorHandle = (status, other) => {
       tip('请求的资源不存在')
       break
     case 500:
+      tip('服务器错误')
+      break
+    case 502:
       tip('服务器错误')
       break
     default:

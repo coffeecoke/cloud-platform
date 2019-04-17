@@ -100,8 +100,15 @@ export default {
   },
   methods: {
     submit () {
-      // var loginParams = { taskNum: this.form.taskNum, taskName: this.form.taskName, taskType: this.form.taskType}
-      // this.$api.taskAcceptance.
+      var loginParams = { taskNum: this.form.taskNum, taskName: this.form.taskName, taskType: this.form.taskType }
+      this.$api.taskAcceptance.queryTask(loginParams).then(res => {
+        var result = res.data
+        if (result.state === '1') {
+          this.tableData = result.data
+        } else {
+          this.$message('获取失败')
+        }
+      })
     }
   }
 }
