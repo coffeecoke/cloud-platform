@@ -223,4 +223,7 @@ export default {
   border:none;
   background-color:#eaeaea;
 }
+.base-info /deep/ .el-form--label-top .el-form-item__label  {
+    padding:0;
+}
 </style>

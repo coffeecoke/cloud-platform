@@ -11,7 +11,7 @@
             :trigger-on-focus="false" @select="handleSelect"></el-autocomplete>
         </el-col>
         <el-col :span="4">
-          <el-select class="select1" v-model="form.value" clearable placeholder="类型">
+          <el-select class="select1" v-model="form.value" clearable placeholder="类型" :change="taskTypeChage">
             <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>
         </el-col>
@@ -144,6 +144,9 @@ export default {
     }
   },
   methods: {
+    taskTypeChage (val) {
+      console.log(val)
+    },
     handleClick (row) {
       console.log(row)
     },

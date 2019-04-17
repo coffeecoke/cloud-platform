@@ -112,5 +112,4 @@ instance.interceptors.response.use(
       // store.commit('changeNetwork', false)
     }
   })
-
 export default instance
