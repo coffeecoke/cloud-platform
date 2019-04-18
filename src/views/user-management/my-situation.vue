@@ -71,12 +71,12 @@ export default {
     }
   },
   created () {
-    this.$api.mySituation.situationAll().then(
-      this.$http.spread(function (acct, perms) {
-        // 两个请求现在都执行完成
-        console.log(acct, perms)
-      })
-    )
+    // this.$api.mySituation.situationAll().then(
+    //   this.$http.spread(function (acct, perms) {
+    //     // 两个请求现在都执行完成
+    //     console.log(acct, perms)
+    //   })
+    // )
   },
   components: {
     SituationBar

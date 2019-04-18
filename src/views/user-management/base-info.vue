@@ -58,9 +58,9 @@
             </el-col>
             <el-col :span="10">
               <el-form-item label="专业">
-                <el-select v-model="form.profession.value" multiple placeholder="请选择专业">
-                  <el-option v-for="item in form.profession.options" :key="item.label" :label="item.label"
-                    :value="item.label" :disabled="item.diasbled">
+                <el-select v-model="form.profession" multiple placeholder="请选择专业">
+                  <el-option v-for="item in professionOptions" :key="item.value" :label="item.label"
+                    :value="item.value" :disabled="item.diasbled">
                   </el-option>
                 </el-select>
               </el-form-item>
@@ -124,74 +124,92 @@
 
 </template>
 <script>
-  // 自定义box组件，用到了*具名插槽*
-  import BoxWrap from '@/components/box.vue'
-  export default {
-    components: {
-      BoxWrap
-    },
-    data() {
-      return {
-        form: {
-          name: '',
-          sex: '男',
-          email: '',
-          contact: '',
-          contactInfo: '',
-          education: '本科',
-          profession: '计算机',
-          rxChecked: false,
-          rxEmail: '',
-          idCard: '',
-          account: '',
-          accountNum: '7438947837483728947324'
+// 自定义box组件，用到了*具名插槽*
+import BoxWrap from '@/components/box.vue'
+export default {
+  components: {
+    BoxWrap
+  },
+  data () {
+    return {
+      educationOptions: [
+        {
+          value: 1,
+          label: '本科'
+        },
+        {
+          value: 2,
+          label: '研究生'
+        }
+      ],
+      professionOptions: [
+        {
+          value: 1,
+          label: '计算机'
+        },
+        {
+          value: 2,
+          label: '金融'
+        }
+      ],
+      form: {
+        name: '',
+        sex: '男',
+        email: '',
+        contact: '',
+        contactInfo: '',
+        education: 2,
+        profession: [1, 2],
+        rxChecked: false,
+        rxEmail: '',
+        idCard: '',
+        account: '',
+        accountNum: '7438947837483728947324'
 
-        }
-      }
-    },
-    mounted() {
-      var _this = this
-      this.$api.baseInfo.getuserbylognname().then(function (res) {
-        var result = res.data
-        if (result.state === '1') {
-          _this.form = result.data
-        } else {
-          this.$message('基本信息获取失败')
-        }
-      }).catch(res => {
-        // this.$message('服务器被吃了~~')
-      })
-    },
-    methods: {
-      submit(formName) {
-        var formData = new FormData()
-        Object.keys(this.form).forEach(key => {
-          if (key === 'education' || key === 'profession') {
-            formData.append(key, this.form[key].value)
-          } else {
-            formData.append(key, this.form[key])
-          }
-        })
-        formData.append('haha', 'huan')
-        // const aa = new XMLHttpRequest()
-        // aa.open('post', '/api/user/registerUser')
-        // aa.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
-        // aa.send(formData)
-        // this.$http.post('/api/user/registerUser', {
-        //   params: formData
-        // }, {
-        //   headers: {
-        //     'Content-Type': 'application/x-www-form-urlencoded'
-        //   }
-        // })
-        this.$api.baseInfo.registerUser(formData).then(res => {
-          this.$message('提交成功')
-        }).catch(res => {
-          this.$message('提交失败!!')
-        })
       }
     }
+  },
+  mounted () {
+    // var _this = this
+    // this.$api.baseInfo.getuserbylognname().then(function (res) {
+    //   var result = res.data
+    //   if (result.state === '1') {
+    //     _this.form = result.data
+    //   } else {
+    //     this.$message('基本信息获取失败')
+    //   }
+    // })
+  },
+  methods: {
+    submit (formName) {
+      var formData = new FormData()
+      Object.keys(this.form).forEach(key => {
+        if (key === 'education' || key === 'profession') {
+          formData.append(key, this.form[key].value)
+        } else {
+          formData.append(key, this.form[key])
+        }
+      })
+      formData.append('haha', 'huan')
+      // const aa = new XMLHttpRequest()
+      // aa.open('post', '/api/user/registerUser')
+      // aa.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+      // aa.send(formData)
+      // this.$http.post('/api/user/registerUser', {
+      //   params: formData
+      // }, {
+      //   headers: {
+      //     'Content-Type': 'application/x-www-form-urlencoded'
+      //   }
+      // })
+      this.$api.baseInfo.registerUser(formData).then(res => {
+        this.$message('提交成功')
+      }).catch(res => {
+        this.$message('提交失败!!')
+      })
+    }
   }
+}
 
 </script>
 <style lang="scss" scoped>
