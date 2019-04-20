@@ -7,7 +7,7 @@
           <template slot-scope="scope">
             <template v-if="scope.row.edit">
               <el-select v-model="scope.row.language" placeholder="请选择语种">
-                <el-option v-for="item in languageOptions" :key="item.label" :label="item.label" :value="item.label"
+                <el-option v-for="item in languageOptions" :key="item.label" :label="item.label" :value="item.value"
                   :disabled="item.disabled">
                 </el-option>
               </el-select>
@@ -31,7 +31,7 @@
           <template slot-scope="scope">
             <template v-if="scope.row.edit">
               <el-select v-model="scope.row.lsAblility">
-                <el-option v-for="item in lsAblilityOptions" :key="item.key" :label="item.label" :value="item.key"
+                <el-option v-for="item in lsAblilityOptions" :key="item.key" :label="item.label" :value="item.value"
                   :disabled="item.disabled">
                 </el-option>
               </el-select>
@@ -66,33 +66,33 @@ export default {
     return {
       languageOptions: [
         {
-          value: 1,
+          value: '1',
           label: '英语'
         },
         {
-          value: 2,
+          value: '2',
           label: '日语'
         }
       ],
       // 读写字典表
       literacyOptions: [
         {
-          value: 1,
+          value: '1',
           label: '精通'
         },
         {
-          value: 2,
+          value: '2',
           label: '一般'
         }
       ],
       // 听说字典表
       lsAblilityOptions: [
         {
-          value: 1,
+          value: '1',
           label: '精通'
         },
         {
-          value: 2,
+          value: '2',
           label: '一般'
         }
       ],
@@ -107,21 +107,23 @@ export default {
       },
       tableData: [{
         id: '3232',
-        language: 1,
-        literacy: 2,
-        lsAblility: 1,
+        language: '1',
+        literacy: '2',
+        lsAblility: '1',
         edit: false
       }]
     }
   },
   created () {
     // 参数为用户认证之后的token，token放在http header中,方便以后做api响应拦截
-    // this.$api.yynl.queryLanguageAbility().then(res => {
-    //   this.tableData = res
-    // }).catch(res => {
-    //   this.loading = false
-    //   this.$message('获取失败')
-    // })
+    this.$api.yynl.queryLanguageAbility().then(res => {
+      let result = res.data
+      if (result.status === '1') {
+        this.tableData = result.data || []
+      } else {
+        this.$message('获取语言能力列表失败')
+      }
+    })
   },
   methods: {
     formatLanguage (value) {
@@ -169,19 +171,27 @@ export default {
       Object.keys(this.list).forEach(function (key) {
         formData.append(key, row[key]) // 遍历新增数据，把键值放在formData中传给后台
       })
-      this.saveSubmit(index, formData)
+      this.saveSubmit(row, formData)
     },
     // 保存提交
     saveSubmit (row, formData) {
       this.$api.yynl.saveLanguageAbility(formData).then(res => {
         this.loading = false
-        row.edit = false
-        this.isAddRow = true
-        row = res // 保存此行数据后，后台返回这行数据，更新页面，目的是添加id，保证保存过得数据，数据都有ID
-      }).catch(err => {
-        console.log(err)
-        this.$message('保存失败')
-        this.loading = false
+        let result = res.data// 保存此行数据后，后台返回这行数据，更新页面，目的是添加id，保证保存过得数据，数据都有ID
+        if (result.status === '1') {
+          row.edit = false
+          this.isAddRow = true
+          row = result.data
+          this.$message({
+            type: 'success',
+            message: '保存语言条目成功'
+          })
+        } else {
+          this.$message({
+            type: 'error',
+            message: '保存语言条目失败'
+          })
+        }
       })
     },
     // 删除一行
@@ -201,16 +211,19 @@ export default {
         this.loading = true
         var currData = rows[index]
         this.$api.yynl.delLanguageAbility(currData).then(res => {
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          })
-          this.loading = false
-        }).catch(res => {
-          this.$message({
-            type: 'error',
-            message: '删除失败!'
-          })
+          let result = res.data
+          if (result.status === '1') {
+            this.$message({
+              type: 'success',
+              message: '删除语言能力条目成功!'
+            })
+            rows.splice(index, 1)
+          } else {
+            this.$message({
+              type: 'error',
+              message: '删除语言能力条目失败!'
+            })
+          }
           this.loading = false
         })
       }).catch(() => {
