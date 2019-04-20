@@ -181,7 +181,6 @@ export default {
           row.edit = false
           this.isAddRow = true
           row = result.data
-          console.log(row)
           this.tableData.splice(index, 1, row)
           this.$message({
             type: 'success',
