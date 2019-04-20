@@ -44,6 +44,9 @@ const errorHandle = (status, other) => {
       break
       // 403 token过期
       // 清除token并跳转登录页
+    case 1002:
+      tip('用户名密码错误')
+      break
     case 1003:
       tip('登录过期，请重新登录')
       localStorage.removeItem('token')
@@ -102,7 +105,7 @@ instance.interceptors.response.use(
     if (response) {
       console.log(response)
       // 请求已发出，但是不在2xx的范围
-      errorHandle(response.status, response.data.message)
+      errorHandle(response.data.code, response.data.message)
       return Promise.reject(response)
     } else {
       // 处理断网的情况

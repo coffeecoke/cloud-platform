@@ -49,7 +49,7 @@ export default {
             this.logining = false
             console.log(data)
             let { msg, status, token } = data.data
-            if (status !== '200') {
+            if (status !== '1') {
               this.$message({
                 message: msg,
                 type: 'error'

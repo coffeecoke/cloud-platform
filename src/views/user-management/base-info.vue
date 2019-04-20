@@ -9,15 +9,16 @@
         <template slot="boxBodyInner">
           <el-row type="flex" justify="space-between">
             <el-col :span="10">
-              <el-form-item label="活动名称">
+              <el-form-item label="姓名">
                 <el-input v-model="form.name" placeholder="请输入姓名"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="10">
-              <el-form-item v-model="form.sex" label="性别">
-                <el-radio-group v-model="form.sex">
-                  <el-radio label="男"></el-radio>
-                  <el-radio label="女"></el-radio>
+              <el-form-item label="性别">
+                <el-radio-group v-model="form.D_SEX">
+                  <el-radio v-for="item in D_SEX" :key="item.dictCode" :label="item.dictCode">
+                    {{item.dictName}}
+                  </el-radio>
                 </el-radio-group>
               </el-form-item>
             </el-col>
@@ -50,7 +51,7 @@
             <el-col :span="10">
               <el-form-item label="学历">
                 <el-select v-model="form.education" placeholder="请选择学历">
-                  <el-option v-for="item in educationOptions" :key="item.value" :label="item.label" :value="item.value"
+                  <el-option v-for="item in education" :key="item.dictCode" :label="item.dictName" :value="item.dictCode"
                     :disabled="item.disabled">
                   </el-option>
                 </el-select>
@@ -58,9 +59,30 @@
             </el-col>
             <el-col :span="10">
               <el-form-item label="专业">
-                <el-select v-model="form.profession" multiple placeholder="请选择专业">
-                  <el-option v-for="item in professionOptions" :key="item.value" :label="item.label"
-                    :value="item.value" :disabled="item.diasbled">
+                <el-select v-model="form.major" multiple placeholder="请选择专业">
+                  <el-option v-for="item in major" :key="item.dictCode" :label="item.dictName"
+                    :value="item.dictCode" :disabled="item.diasbled">
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+
+          <el-row type="flex" justify="space-between">
+            <el-col :span="10">
+              <el-form-item label="全日制">
+                <el-select v-model="form.fullTime" placeholder="请选择">
+                  <el-option v-for="item in fullTime" :key="item.dictCode" :label="item.dictName" :value="item.dictCode"
+                    :disabled="item.disabled">
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="10">
+              <el-form-item label="学位">
+                <el-select v-model="form.degree" multiple placeholder="请选择学位">
+                  <el-option v-for="item in degree" :key="item.dictCode" :label="item.dictName"
+                    :value="item.dictCode" :disabled="item.diasbled">
                   </el-option>
                 </el-select>
               </el-form-item>
@@ -132,80 +154,86 @@ export default {
   },
   data () {
     return {
-      educationOptions: [
+      education: [],
+      major: [],
+      D_SEX: [],
+      degree: [
         {
-          value: 1,
-          label: '本科'
+          dictCode: 1,
+          dictName: '硕士'
         },
         {
-          value: 2,
-          label: '研究生'
+          dictCode: 0,
+          dictName: 'MBA'
         }
       ],
-      professionOptions: [
+      fullTime: [
         {
-          value: 1,
-          label: '计算机'
+          dictCode: '1',
+          dictName: '全日制'
         },
         {
-          value: 2,
-          label: '金融'
+          dictCode: '2',
+          dictName: '非全日制'
         }
       ],
       form: {
         name: '',
-        sex: '男',
+        D_SEX: '',
         email: '',
         contact: '',
         contactInfo: '',
-        education: 2,
-        profession: [1, 2],
+        education: '',
+        major: [],
+        degree: [],
+        fullTime: '',
         rxChecked: false,
         rxEmail: '',
         idCard: '',
         account: '',
-        accountNum: '7438947837483728947324'
-
+        accountNum: ''
       }
     }
   },
   mounted () {
-    // var _this = this
-    // this.$api.baseInfo.getuserbylognname().then(function (res) {
-    //   var result = res.data
-    //   if (result.state === '1') {
-    //     _this.form = result.data
-    //   } else {
-    //     this.$message('基本信息获取失败')
-    //   }
-    // })
+    // 获取字典
+    var obj = {
+      dict_code: [ 'major', 'education', 'degree', 'fullTime', 'D_SEX' ]
+    }
+    this.$api.dictionary.getDictionaries(obj).then(res => {
+      let result = res.data
+      let dictionary = {}
+      result.data.forEach(item => {
+        Object.assign(dictionary, item)
+      })
+      this.major = dictionary.major
+      this.education = dictionary.education
+      this.degree = dictionary.degree
+      this.D_SEX = dictionary.D_SEX
+    })
+    this.$api.baseInfo.getuserbyloginname().then(res => {
+      var result = res.data
+      if (result.status === '1') {
+        this.form = result.data || this.form
+      } else {
+        this.$message('基本信息获取失败')
+      }
+    })
   },
   methods: {
     submit (formName) {
       var formData = new FormData()
       Object.keys(this.form).forEach(key => {
-        if (key === 'education' || key === 'profession') {
-          formData.append(key, this.form[key].value)
-        } else {
-          formData.append(key, this.form[key])
-        }
+        formData.append(key, this.form[key])
       })
       formData.append('haha', 'huan')
-      // const aa = new XMLHttpRequest()
-      // aa.open('post', '/api/user/registerUser')
-      // aa.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
-      // aa.send(formData)
-      // this.$http.post('/api/user/registerUser', {
-      //   params: formData
-      // }, {
-      //   headers: {
-      //     'Content-Type': 'application/x-www-form-urlencoded'
-      //   }
-      // })
       this.$api.baseInfo.registerUser(formData).then(res => {
-        this.$message('提交成功')
-      }).catch(res => {
-        this.$message('提交失败!!')
+        let result = res.data
+        if (result.status === '1') {
+          this.$message('提交成功')
+        } else {
+          this.$message('提交失败')
+        }
       })
     }
   }
@@ -233,5 +261,7 @@ export default {
   .base-info /deep/ .el-form--label-top .el-form-item__label {
     padding: 0;
   }
-
+  .el-form-item--mini.el-form-item, .el-form-item--small.el-form-item {
+    margin-bottom:6px;
+  }
 </style>
