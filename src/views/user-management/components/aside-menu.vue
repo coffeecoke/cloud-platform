@@ -19,6 +19,7 @@
         <el-menu-item index="2-2">任务列表</el-menu-item>
         <el-menu-item index="2-3">任务发布</el-menu-item>
         <el-menu-item index="2-4">任务领取</el-menu-item>
+        <el-menu-item index="2-5">任务组</el-menu-item>
       </el-menu-item-group>
     </el-submenu>
   </el-menu>

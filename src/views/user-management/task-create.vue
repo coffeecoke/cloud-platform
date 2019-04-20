@@ -1,5 +1,5 @@
 <template>
-  <div class="box-table">
+  <div class="create-table">
 <el-row :gutter="18">
    <el-col :span="4">
     <el-autocomplete  class="input1"  v-model="state2" :fetch-suggestions="querySearch"  placeholder="项目编号" :trigger-on-focus="false" @select="handleSelect"></el-autocomplete>
@@ -28,8 +28,8 @@
         完成情况<el-progress :text-inside="true" :stroke-width="6" :percentage="32" :show-text="false"></el-progress>
       </el-table-column>
       <el-table-column fixed="right" label="操作" width="150px" align="center">
-     <template>
-        <el-button onclick="location.href='http://www.baidu.com';" type="text" size="medium"><i class="el-icon-upload" title="跳转到任务发布"></i></el-button>
+     <template slot-scope="scope">
+        <el-button @click="taskissue(scope.row.date)" type="text" size="medium"><i class="el-icon-upload" title="跳转到任务发布"></i></el-button>
         <el-button  type="text" size="medium"><router-link to="/#/1-2"><i class="el-icon-share" title="跳转到任务脉络"></i></router-link></el-button>
       </template>
     </el-table-column>
@@ -83,6 +83,13 @@ export default {
     }
   },
   methods: {
+    taskissue (param) {
+      this.$router.push({
+        name: '任务发布',
+        query: {date: param}
+
+      })
+    },
     handleClick (row) {
       console.log(row)
     },
@@ -159,7 +166,7 @@ export default {
   }
 }
 </script>
-<style lang="scss" scope>
+<style lang="scss" scoped>
  .el-row {
     margin-bottom: 30px;
      margin-top: 10px;
@@ -189,8 +196,9 @@ export default {
  .el-input__inner {
       height: 40px;
       width: 200px;
-      background: #f0f3f8;
+      background: #f9fafc;
       border-radius: 8px;
+      border: 1px solid #DCDFE6;
     }
 }
 </style>

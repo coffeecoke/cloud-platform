@@ -2,7 +2,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import axios from 'axios'
-// import '@/permission'
+import '@/permission'
 import api from './api' // 导入api接口
 import 'normalize.css/normalize.css' // css样式重置
 import ElementUI from 'element-ui'
