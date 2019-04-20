@@ -3,7 +3,7 @@
     <el-form ref="form" :model="form" label-width="80px" label-position="top">
       <el-row type="flex" justify="space-between">
         <el-col :span="4">
-          <el-autocomplete class="input1" v-model="form.taskgroupcode" :fetch-suggestions="querySearch1" placeholder="任务/组编码"
+          <el-autocomplete class="input1" v-model="form.taskgroupcode" :fetch-suggestions="querySearch1" :change="change()" placeholder="任务/组编码"
             :trigger-on-focus="false" @select="handleSelect"></el-autocomplete>
         </el-col>
         <el-col :span="4">
@@ -144,6 +144,9 @@ export default {
     }
   },
   methods: {
+    change (value) {
+      console.log(value)
+    },
     taskTypeChage (val) {
       console.log(val)
     },

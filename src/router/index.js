@@ -30,7 +30,6 @@ const router = new Router({
     path: '/',
     component: Layout,
     redirect: '/userManagement',
-    name: '',
     children: [
       // 用户管理路由模块
       ...UserRouter,

@@ -27,7 +27,8 @@
               type="daterange"
               range-separator="至"
               start-placeholder="开始日期"
-              end-placeholder="结束日期">
+              end-placeholder="结束日期"
+              value-format="yyyy-MM-dd">
             </el-date-picker>
           </template>
           <span v-else>{{getDateStr1(scope.row)}}</span>
@@ -36,9 +37,13 @@
       <el-table-column prop="industry" label="所属行业">
         <template slot-scope="scope">
           <template v-if="scope.row.edit">
-            <el-input class="ipt" size="small" v-model="scope.row.industry"></el-input>
+            <el-select v-model="scope.row.industry">
+              <el-option v-for="item in industryOptions" :key="item.value" :label="item.label" :value="item.value"
+                :disabled="item.disabled">
+              </el-option>
+            </el-select>
           </template>
-          <span v-else>{{ scope.row.industry }}</span>
+          <span v-else>{{ formatIndustry(scope.row.industry) }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="projectName" label="项目名称">
@@ -118,22 +123,22 @@ export default {
   },
   data () {
     return {
+      industryOptions: [
+        {
+          value: 1,
+          label: 'IT'
+        },
+        {
+          value: 2,
+          label: '金融'
+        }
+      ],
       isAddRow: true, // 保存上一条数据之后，才允许新增
       loading: false, // 数据加载的loading效果
       list: {
         id: null, // id为空表示新增
         date: null,
-        industry: {
-          value: '',
-          options: [
-            {
-              label: 'IT'
-            },
-            {
-              label: '金融'
-            }
-          ]
-        },
+        industry: 1,
         projectName: '',
         projectSize: '',
         role: '',
@@ -145,8 +150,8 @@ export default {
       tableData: [
         {
           id: '1', // id为后台传入，后台的增删都是根据id进行的
-          date: [new Date(2018, 8, 4), new Date()],
-          industry: '',
+          date: '',
+          industry: 1,
           projectName: '培训机构',
           projectSize: '培训机构',
           role: '培训机构方式',
@@ -158,8 +163,8 @@ export default {
         },
         {
           id: '2',
-          date: [new Date(2018, 8, 4), new Date()],
-          industry: '',
+          date: '',
+          industry: 2,
           projectName: '培训机构',
           projectSize: '培训机构',
           role: '培训机构方式',
@@ -173,28 +178,33 @@ export default {
     }
   },
   created () {
-    this.loading = true
     // 参数为用户认证之后的token，token放在http header中,方便以后做api响应拦截
     this.$api.resoftProject.queryResoftProject().then(res => {
-      this.tableData = res
-      this.loading = false
-    }).catch(res => {
-      this.loading = false
-      this.$message('获取失败')
+      let result = res.data
+      if (result.stauts === '1') {
+        this.tableData = result.data || []
+      } else {
+        this.$message('获取融鑫项目列表失败')
+      }
     })
   },
   methods: {
+    formatIndustry (value) {
+      let currObj = this.industryOptions.filter(obj => {
+        return obj.value === value
+      })
+      if (currObj.length > 0) {
+        return currObj[0].label
+      } else {
+        return ''
+      }
+    },
     // 解析日期对象
     getDateStr1 (row) {
       if (!row.date) {
         return ''
       }
-      let dateArr = []
-      row.date.forEach(item => {
-        var currDateStr = item.getFullYear() + '/' + item.getMonth() + '/' + item.getDay() + '/'
-        dateArr.push(currDateStr)
-      })
-      let dateStr = dateArr[0] + ' 至 ' + dateArr[1]
+      let dateStr = `${row.date[0]} 至  ${row.date[1]}`
       return dateStr
     },
     // 添加一行
@@ -220,24 +230,31 @@ export default {
         return false
       }
       this.loading = true
-      row.edit = false
-      this.isAddRow = true
       let formData = new FormData()
       Object.keys(this.list).forEach(function (key) {
         formData.append(key, row[key]) // 遍历新增数据，把键值放在formData中传给后台
       })
-      this.saveSubmit(index, formData)
+      this.saveSubmit(row, formData)
     },
     // 保存提交
     saveSubmit (row, formData) {
-      console.log(row.date)
       this.$api.resoftProject.saveResoftProject(formData).then(res => {
         this.loading = false
-        row = res// 保存此行数据后，后台返回这行数据，更新页面，目的是添加id，保证保存过得数据，数据都有ID
-      }).catch(err => {
-        console.log(err)
-        this.$message('保存失败')
-        this.loading = false
+        let result = res.data // 保存此行数据后，后台返回这行数据，更新页面，目的是添加id，保证保存过得数据，数据都有ID
+        if (result.status === '1') {
+          row.edit = false
+          this.isAddRow = true
+          row = result.data
+          this.$message({
+            type: 'success',
+            message: '保存融鑫项目条目成功'
+          })
+        } else {
+          this.$message({
+            type: 'success',
+            message: '保存融鑫项目条目失败'
+          })
+        }
       })
     },
     // 删除一行
@@ -257,16 +274,19 @@ export default {
         this.loading = true
         var currData = rows[index]
         this.$api.resoftProject.delresume(currData).then(res => {
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          })
-          this.loading = false
-        }).catch(res => {
-          this.$message({
-            type: 'error',
-            message: '删除失败!'
-          })
+          let result = res.data
+          if (result.status === '1') {
+            this.$message({
+              type: 'success',
+              message: '删除融鑫项目条目成功!'
+            })
+            rows.splice(index, 1)
+          } else {
+            this.$message({
+              type: 'error',
+              message: '删除融鑫项目条目失败!'
+            })
+          }
           this.loading = false
         })
       }).catch(() => {

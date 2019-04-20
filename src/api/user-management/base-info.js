@@ -7,11 +7,11 @@ import axios from '@/utils/http' // 导入http中创建的axios实例
 // }
 const baseInfo = {
   // 获取基本信息
-  getuserbylognname (params) {
+  getuserbyloginname (params) {
     return axios({
       method: 'post',
-      url: '/user/getuserbylognname'
-      // data: params
+      url: '/user/getuserbyloginname'
+      // data: Qs.stringify(params)
     })
   },
   // 提交基本信息
