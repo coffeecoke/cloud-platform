@@ -275,19 +275,14 @@ export default {
     }
   },
   methods: {
-    // 确定按钮
-    confirm: function () {
-      let formData = new FormData()
-      Object.keys(this.form).forEach(key => {
-        console.log(key)
-        formData.append(key, this.form[key])
-      })
-      // console.log(formData.get('tid'))
-      this.$api.taskIssue.getPublishTaskList(formData).then(res => {
-        var result = res.data
-        console.log(result.data)
-        this.tableData = result.data
-      })
+    change (value) {
+      console.log(value)
+    },
+    taskTypeChage (val) {
+      console.log(val)
+    },
+    handleClick (row) {
+      console.log(row)
     },
     // 项目编号查询
     querySearch1 (queryString, cb) {

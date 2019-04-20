@@ -6,13 +6,13 @@
         <el-table-column prop="category" label="业务类型">
           <template slot-scope="scope">
             <template v-if="scope.row.edit">
-              <el-select v-model="scope.row.category.value" placeholder="请选择业务类型">
-                <el-option v-for="item in scope.row.category.options" :key="item.label" :label="item.label" :value="item.label"
+              <el-select v-model="scope.row.category" placeholder="请选择业务类型">
+                <el-option v-for="item in categoryOptions" :key="item.key" :label="item.label" :value="item.value"
                   :disabled="item.disabled">
                 </el-option>
               </el-select>
             </template>
-            <span v-else>{{ scope.row.category.value }}</span>
+            <span v-else>{{ formatCategory(scope.row.category)}}</span>
           </template>
         </el-table-column>
         <el-table-column prop="usageTime" label="使用时间">
@@ -26,13 +26,13 @@
         <el-table-column prop="mastery" label="掌握程度">
           <template slot-scope="scope">
             <template v-if="scope.row.edit">
-              <el-select v-model="scope.row.mastery.value" placeholder="请选择掌握程度">
-                <el-option v-for="item in scope.row.mastery.options" :key="item.label" :label="item.label" :value="item.label"
+              <el-select v-model="scope.row.mastery" placeholder="请选择掌握程度">
+                <el-option v-for="item in masteryOptions" :key="item.value" :label="item.label" :value="item.value"
                   :disabled="item.disabled">
                 </el-option>
               </el-select>
             </template>
-            <span v-else>{{ scope.row.mastery.value }}</span>
+            <span v-else>{{ formatMastery(scope.row.mastery)}}</span>
           </template>
         </el-table-column>
         <el-table-column prop="recentUsage" label="最近使用日期">
@@ -70,60 +70,41 @@ export default {
   data () {
     return {
       isAddRow: true, // 保存上一条数据之后，才允许新增
-      loading: true, // 数据加载的loading效果
+      loading: false, // 数据加载的loading效果
+      categoryOptions: [
+        {
+          value: 1,
+          label: '借款'
+        },
+        {
+          value: 2,
+          label: '贷款'
+        }
+      ],
+      // 掌握程度字典表
+      masteryOptions: [
+        {
+          value: 1,
+          label: '精通'
+        },
+        {
+          value: 2,
+          label: '熟悉'
+        }
+      ],
       list: {
         id: null, // id为空表示新增
-        category: {
-          value: null,
-          options: [
-            {
-              label: '借款'
-            },
-            {
-              label: '存款'
-            }
-          ]
-        },
+        category: 1,
         usageTime: null,
-        mastery: {
-          value: '',
-          options: [
-            {
-              label: '精通'
-            },
-            {
-              label: '熟悉'
-            }
-          ]
-        },
+        mastery: 1,
         recentUsage: null,
         edit: true
       },
       tableData: [{
         id: '1', // id为空表示新增
-        category: {
-          value: '借款',
-          options: [
-            {
-              label: '借款'
-            },
-            {
-              label: '存款'
-            }
-          ]
-        },
+        category: 1,
         usageTime: '23月',
-        mastery: {
-          value: '一般',
-          options: [
-            {
-              label: '精通'
-            },
-            {
-              label: '一般'
-            }
-          ]
-        },
+        mastery: 1,
         recentUsage: '2014-09-08',
         edit: false
       }]
@@ -131,14 +112,26 @@ export default {
   },
   created () {
     // 参数为用户认证之后的token，token放在http header中,方便以后做api响应拦截
-    this.$api.ywnl.queryProfessionalCapability().then(res => {
-      this.tableData = res
-    }).catch(res => {
-      this.loading = false
-      this.$message('获取失败')
-    })
+    // this.$api.ywnl.queryProfessionalCapability().then(res => {
+    //   this.tableData = res
+    // }).catch(res => {
+    //   this.loading = false
+    //   this.$message('获取失败')
+    // })
   },
   methods: {
+    formatCategory (value) {
+      let currObj = this.categoryOptions.filter(obj => {
+        return obj.value === value
+      })
+      return currObj[0].label
+    },
+    formatMastery (value) {
+      let currObj = this.masteryOptions.filter(obj => {
+        return obj.value === value
+      })
+      return currObj[0].label
+    },
     // 添加一行
     addRow () {
       if (this.isAddRow) {
@@ -162,8 +155,6 @@ export default {
         return false
       }
       this.loading = true
-      row.edit = false
-      this.isAddRow = true
       let formData = new FormData()
       Object.keys(this.list).forEach(function (key) {
         formData.append(key, row[key]) // 遍历新增数据，把键值放在formData中传给后台
@@ -174,6 +165,8 @@ export default {
     saveSubmit (row, formData) {
       this.$api.ywnl.saveProfessionalCapability(formData).then(res => {
         this.loading = false
+        row.edit = false
+        this.isAddRow = true
         row = res // 保存此行数据后，后台返回这行数据，更新页面，目的是添加id，保证保存过得数据，数据都有ID
       }).catch(err => {
         console.log(err)

@@ -36,9 +36,13 @@
       <el-table-column prop="industry" label="所属行业">
         <template slot-scope="scope">
           <template v-if="scope.row.edit">
-            <el-input class="ipt" size="small" v-model="scope.row.industry"></el-input>
+            <el-select v-model="scope.row.industry">
+              <el-option v-for="item in industryOptions" :key="item.value" :label="item.label" :value="item.value"
+                :disabled="item.disabled">
+              </el-option>
+            </el-select>
           </template>
-          <span v-else>{{ scope.row.industry }}</span>
+          <span v-else>{{ formatIndustry(scope.row.industry) }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="projectName" label="项目名称">
@@ -118,22 +122,22 @@ export default {
   },
   data () {
     return {
+      industryOptions: [
+        {
+          value: 1,
+          label: 'IT'
+        },
+        {
+          value: 2,
+          label: '金融'
+        }
+      ],
       isAddRow: true, // 保存上一条数据之后，才允许新增
       loading: false, // 数据加载的loading效果
       list: {
         id: null, // id为空表示新增
         date: null,
-        industry: {
-          value: '',
-          options: [
-            {
-              label: 'IT'
-            },
-            {
-              label: '金融'
-            }
-          ]
-        },
+        industry: 1,
         projectName: '',
         projectSize: '',
         role: '',
@@ -145,8 +149,8 @@ export default {
       tableData: [
         {
           id: '1', // id为后台传入，后台的增删都是根据id进行的
-          date: [new Date(2018, 8, 4), new Date()],
-          industry: '',
+          date: [new Date('2018, 8, 4'), new Date()],
+          industry: 1,
           projectName: '培训机构',
           projectSize: '培训机构',
           role: '培训机构方式',
@@ -158,8 +162,8 @@ export default {
         },
         {
           id: '2',
-          date: [new Date(2018, 8, 4), new Date()],
-          industry: '',
+          date: [new Date('2018, 8, 4'), new Date()],
+          industry: 2,
           projectName: '培训机构',
           projectSize: '培训机构',
           role: '培训机构方式',
@@ -173,28 +177,38 @@ export default {
     }
   },
   created () {
-    this.loading = true
     // 参数为用户认证之后的token，token放在http header中,方便以后做api响应拦截
-    this.$api.resoftProject.queryResoftProject().then(res => {
-      this.tableData = res
-      this.loading = false
-    }).catch(res => {
-      this.loading = false
-      this.$message('获取失败')
-    })
+    // this.$api.resoftProject.queryResoftProject().then(res => {
+    //   this.tableData = res
+    //   this.loading = false
+    // }).catch(res => {
+    //   this.loading = false
+    //   this.$message('获取失败')
+    // })
   },
   methods: {
+    formatIndustry (value) {
+      let currObj = this.industryOptions.filter(obj => {
+        return obj.value === value
+      })
+      if (currObj.length > 0) {
+        return currObj[0].label
+      } else {
+        return ''
+      }
+    },
     // 解析日期对象
     getDateStr1 (row) {
       if (!row.date) {
         return ''
       }
       let dateArr = []
+      console.log(row.date)
       row.date.forEach(item => {
-        var currDateStr = item.getFullYear() + '/' + item.getMonth() + '/' + item.getDay() + '/'
+        var currDateStr = `${item.getFullYear()} / ${item.getMonth() + 1} / ${item.getDate()} /`
         dateArr.push(currDateStr)
       })
-      let dateStr = dateArr[0] + ' 至 ' + dateArr[1]
+      let dateStr = `${dateArr[0]} 至  ${dateArr[1]}`
       return dateStr
     },
     // 添加一行

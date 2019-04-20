@@ -13,8 +13,8 @@ const trainingExperience = {
   queryResumeby (params) {
     return axios({
       method: 'post',
-      url: '/resume/queryResumeby',
-      data: params
+      url: '/resume/queryResumeby'
+      // data: params
     })
   },
   // 培训经历删除

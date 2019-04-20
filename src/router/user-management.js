@@ -30,10 +30,11 @@ import TaskGroup from '@/views/user-management/task-group'
 export default [{
   path: 'userManagement',
   component: UserManagement,
+  name: '个人中心',
   children: [
     {
       path: '/',
-      name: '',
+      name: '我的情况',
       component: mySituation
     },
     {

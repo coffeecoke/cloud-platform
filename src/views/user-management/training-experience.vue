@@ -93,7 +93,7 @@ export default {
   data () {
     return {
       isAddRow: true,
-      loading: true,
+      loading: false,
       list: {
         id: '',
         date: '',

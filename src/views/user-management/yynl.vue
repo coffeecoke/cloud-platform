@@ -6,37 +6,37 @@
         <el-table-column prop="language" label="语种">
           <template slot-scope="scope">
             <template v-if="scope.row.edit">
-              <el-select v-model="scope.row.language.value" placeholder="请选择语种">
-                <el-option v-for="item in scope.row.language.options" :key="item.label" :label="item.label" :value="item.label"
+              <el-select v-model="scope.row.language" placeholder="请选择语种">
+                <el-option v-for="item in languageOptions" :key="item.label" :label="item.label" :value="item.label"
                   :disabled="item.disabled">
                 </el-option>
               </el-select>
             </template>
-            <span v-else>{{ scope.row.language.value }}</span>
+            <span v-else>{{ formatLanguage(scope.row.language) }}</span>
           </template>
         </el-table-column>
         <el-table-column prop="literacy" label="读写能力">
           <template slot-scope="scope">
             <template v-if="scope.row.edit">
-              <el-select v-model="scope.row.literacy.value">
-                <el-option v-for="item in scope.row.literacy.options" :key="item.label" :label="item.label" :value="item.label"
+              <el-select v-model="scope.row.literacy">
+                <el-option v-for="item in literacyOptions" :key="item.value" :label="item.label" :value="item.value"
                   :disabled="item.disabled">
                 </el-option>
               </el-select>
             </template>
-            <span v-else>{{ scope.row.literacy.value }}</span>
+            <span v-else>{{ formatLiteracy(scope.row.literacy) }}</span>
           </template>
         </el-table-column>
         <el-table-column prop="lsAblility" label="听说能力">
           <template slot-scope="scope">
             <template v-if="scope.row.edit">
-              <el-select v-model="scope.row.lsAblility.value">
-                <el-option v-for="item in scope.row.lsAblility.options" :key="item.label" :label="item.label" :value="item.label"
+              <el-select v-model="scope.row.lsAblility">
+                <el-option v-for="item in lsAblilityOptions" :key="item.key" :label="item.label" :value="item.key"
                   :disabled="item.disabled">
                 </el-option>
               </el-select>
             </template>
-            <span v-else>{{ scope.row.lsAblility.value }}</span>
+            <span v-else>{{ formatLsAblility(scope.row.lsAblility)}}</span>
           </template>
         </el-table-column>
         <el-table-column label="操作">
@@ -64,94 +64,84 @@ export default {
   },
   data () {
     return {
+      languageOptions: [
+        {
+          value: 1,
+          label: '英语'
+        },
+        {
+          value: 2,
+          label: '日语'
+        }
+      ],
+      // 读写字典表
+      literacyOptions: [
+        {
+          value: 1,
+          label: '精通'
+        },
+        {
+          value: 2,
+          label: '一般'
+        }
+      ],
+      // 听说字典表
+      lsAblilityOptions: [
+        {
+          value: 1,
+          label: '精通'
+        },
+        {
+          value: 2,
+          label: '一般'
+        }
+      ],
       isAddRow: true, // 保存上一条数据之后，才允许新增
-      loading: true, // 数据加载的loading效果
+      loading: false, // 数据加载的loading效果
       list: {
         id: '', // id为空表示新增
-        language: {
-          value: '',
-          options: [
-            {
-              label: '英语'
-            },
-            {
-              label: '日语'
-            }
-          ]
-        },
-        literacy: {
-          value: '',
-          options: [
-            {
-              label: '精通'
-            },
-            {
-              label: '一般'
-            }
-          ]
-        },
-        lsAblility: {
-          value: '',
-          options: [
-            {
-              label: '精通'
-            },
-            {
-              label: '一般'
-            }
-          ]
-        },
+        language: null,
+        literacy: null,
+        lsAblility: null,
         edit: true
       },
       tableData: [{
         id: '3232',
-        language: {
-          value: '英文',
-          options: [
-            {
-              label: '英语'
-            },
-            {
-              label: '日语'
-            }
-          ]
-        },
-        literacy: {
-          value: '精通',
-          options: [
-            {
-              label: '精通'
-            },
-            {
-              label: '一般'
-            }
-          ]
-        },
-        lsAblility: {
-          value: '一般',
-          options: [
-            {
-              label: '精通'
-            },
-            {
-              label: '一般'
-            }
-          ]
-        },
+        language: 1,
+        literacy: 2,
+        lsAblility: 1,
         edit: false
       }]
     }
   },
   created () {
     // 参数为用户认证之后的token，token放在http header中,方便以后做api响应拦截
-    this.$api.yynl.queryLanguageAbility().then(res => {
-      this.tableData = res
-    }).catch(res => {
-      this.loading = false
-      this.$message('获取失败')
-    })
+    // this.$api.yynl.queryLanguageAbility().then(res => {
+    //   this.tableData = res
+    // }).catch(res => {
+    //   this.loading = false
+    //   this.$message('获取失败')
+    // })
   },
   methods: {
+    formatLanguage (value) {
+      let currObj = this.languageOptions.filter(obj => {
+        return obj.value === value
+      })
+      return currObj[0].label
+    },
+    formatLiteracy (value) {
+      let currObj = this.literacyOptions.filter(obj => {
+        return obj.value === value
+      })
+      return currObj[0].label
+    },
+    formatLsAblility (value) {
+      let currObj = this.lsAblilityOptions.filter(obj => {
+        return obj.value === value
+      })
+      return currObj[0].label
+    },
     // 添加一行
     addRow () {
       if (this.isAddRow) {
@@ -175,8 +165,6 @@ export default {
         return false
       }
       this.loading = true
-      row.edit = false
-      this.isAddRow = true
       let formData = new FormData()
       Object.keys(this.list).forEach(function (key) {
         formData.append(key, row[key]) // 遍历新增数据，把键值放在formData中传给后台
@@ -187,6 +175,8 @@ export default {
     saveSubmit (row, formData) {
       this.$api.yynl.saveLanguageAbility(formData).then(res => {
         this.loading = false
+        row.edit = false
+        this.isAddRow = true
         row = res // 保存此行数据后，后台返回这行数据，更新页面，目的是添加id，保证保存过得数据，数据都有ID
       }).catch(err => {
         console.log(err)

@@ -49,18 +49,18 @@
           <el-row type="flex" justify="space-between">
             <el-col :span="10">
               <el-form-item label="学历">
-                <el-select v-model="form.education.value" placeholder="请选择学历">
-                  <el-option v-for="item in form.education.options" :key="item.label" :label="item.label"
-                    :value="item.label" :disabled="item.disabled">
+                <el-select v-model="form.education" placeholder="请选择学历">
+                  <el-option v-for="item in educationOptions" :key="item.value" :label="item.label" :value="item.value"
+                    :disabled="item.disabled">
                   </el-option>
                 </el-select>
               </el-form-item>
             </el-col>
             <el-col :span="10">
               <el-form-item label="专业">
-                <el-select v-model="form.profession.value" multiple placeholder="请选择专业">
-                  <el-option v-for="item in form.profession.options" :key="item.label" :label="item.label"
-                    :value="item.label" :disabled="item.diasbled">
+                <el-select v-model="form.profession" multiple placeholder="请选择专业">
+                  <el-option v-for="item in professionOptions" :key="item.value" :label="item.label"
+                    :value="item.value" :disabled="item.diasbled">
                   </el-option>
                 </el-select>
               </el-form-item>
@@ -104,7 +104,7 @@
               </el-form-item>
             </el-col>
           </el-row>
-          <el-row  type="flex" justify="space-between">
+          <el-row type="flex" justify="space-between">
             <el-col :span="24">
               <el-form-item label="账户号">
                 <el-input v-model="form.accountNum" placeholder="请输入账户号">
@@ -132,28 +132,34 @@ export default {
   },
   data () {
     return {
+      educationOptions: [
+        {
+          value: 1,
+          label: '本科'
+        },
+        {
+          value: 2,
+          label: '研究生'
+        }
+      ],
+      professionOptions: [
+        {
+          value: 1,
+          label: '计算机'
+        },
+        {
+          value: 2,
+          label: '金融'
+        }
+      ],
       form: {
         name: '',
         sex: '男',
         email: '',
         contact: '',
         contactInfo: '',
-        education: {
-          value: [],
-          options: [
-            {
-              label: 'xx'
-            }
-          ]
-        },
-        profession: {
-          value: [],
-          options: [
-            {
-              label: 'hah'
-            }
-          ]
-        },
+        education: 2,
+        profession: [1, 2],
         rxChecked: false,
         rxEmail: '',
         idCard: '',
@@ -164,17 +170,15 @@ export default {
     }
   },
   mounted () {
-    var _this = this
-    this.$api.baseInfo.getuserbylognname().then(function (res) {
-      var result = res.data
-      if (result.state === '1') {
-        _this.form = result.data
-      } else {
-        this.$message('基本信息获取失败')
-      }
-    }).catch(res => {
-      // this.$message('服务器被吃了~~')
-    })
+    // var _this = this
+    // this.$api.baseInfo.getuserbylognname().then(function (res) {
+    //   var result = res.data
+    //   if (result.state === '1') {
+    //     _this.form = result.data
+    //   } else {
+    //     this.$message('基本信息获取失败')
+    //   }
+    // })
   },
   methods: {
     submit (formName) {
@@ -209,18 +213,25 @@ export default {
 
 </script>
 <style lang="scss" scoped>
-.btns-group {
-  text-align: center;
-}
-.feed-email {
-  color:#000;
-  font-size:14px;
-  padding-right:50px;
-}
-.gray-btn {
-  color:#666;
-  font-size:14px;
-  border:none;
-  background-color:#eaeaea;
-}
+  .btns-group {
+    text-align: center;
+  }
+
+  .feed-email {
+    color: #000;
+    font-size: 14px;
+    padding-right: 50px;
+  }
+
+  .gray-btn {
+    color: #666;
+    font-size: 14px;
+    border: none;
+    background-color: #eaeaea;
+  }
+
+  .base-info /deep/ .el-form--label-top .el-form-item__label {
+    padding: 0;
+  }
+
 </style>

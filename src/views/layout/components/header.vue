@@ -13,10 +13,10 @@
         <router-link tag="li" class="tab-item" to="/pm">
           <a>项目信息</a>
         </router-link>
-        <router-link tag="li" class="tab-item" to="/">
+        <router-link tag="li" class="tab-item" to="/userManagement">
           <a>个人中心</a>
         </router-link>
-        <li class="tab-item">
+        <!-- <li class="tab-item">
           <a href="http://www.baidu.com">知识库</a>
         </li>
         <li class="tab-item">
@@ -24,8 +24,8 @@
         </li>
         <li class="tab-item">
           <a>产品资料</a>
-        </li>
-        <router-link tag="li" class="tab-item" to="/quest">
+        </li> -->
+        <router-link tag="li" class="tab-item" to="/qu-1">
           <a>调查问卷</a>
         </router-link>
       </ul>
@@ -72,11 +72,12 @@ export default {
 
     .top-nav {
       position: absolute;
+      width:80%;
       height: 100%;
       left: 50%;
       transform: translateX(-50%);
       display: flex;
-      justify-content: space-between;
+      justify-content: center;
       align-items: center;
       color: #fff;
       font-size: 14px;
