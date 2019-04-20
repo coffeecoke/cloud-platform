@@ -95,7 +95,15 @@ export default {
   },
   created () {
     this.$api.taskAcceptance.queryTaskUndertaking().then(res => {
-      this.tableData = res.data
+      let result = res.data
+      if (result.status === '1') {
+        this.tableData = result.data || []
+      } else {
+        this.$message({
+          type: 'error',
+          message: '获取任务承接列表失败'
+        })
+      }
     })
   },
   methods: {

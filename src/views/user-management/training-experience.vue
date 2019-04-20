@@ -86,7 +86,7 @@
     <div class="add-row" @click.prevent="addRow()"><span>+ 添加培训经历</span></div>
 
     <!-- 上传修改图片的dialog -->
-    <el-dialog title="编辑图片附件" :visible.sync="dialogUploadVisible">
+    <el-dialog title="编辑图片附件" :visible.sync="dialogUploadVisible" width="30%">
       <el-upload class="upload-demo" ref="fileUpload" action="aa" :limit="3" :auto-upload="false"
         list-type="picture" :file-list="currUploadScope && currUploadScope.row.fileList">
         <el-button type="primary" slot="trigger">上传图片<i class="el-icon-upload el-icon--right"></i></el-button>
@@ -200,6 +200,22 @@ export default {
           formData.append('files', file.raw)
         }
       })
+
+      // 上传图片到服务器
+      this.$api.trainingExperience.saveEnclosure(formData).then(res => {
+        let result = res.data
+        if (result.status === '1') {
+          this.$message({
+            type: 'success',
+            message: '上传成功'
+          })
+        } else {
+          this.$message({
+            type: 'error',
+            message: '上传失败'
+          })
+        }
+      })
       console.log(formData.get('id'))
     },
     // 保存
@@ -222,17 +238,18 @@ export default {
       Object.keys(this.list).forEach(function (key) {
         formData.append(key, row[key])
       })
-      this.saveSubmit(row, formData)
+      this.saveSubmit(index, formData)
     },
-    saveSubmit (row, formData) {
+    saveSubmit (index, formData) {
+      let row = this.tableData[index]
       this.$api.trainingExperience.saveresume(formData).then(res => {
         this.loading = false
         let result = res.data // 保存此行数据后，后台返回这行数据，更新页面，目的是添加id，保证保存过得数据，数据都有ID
         if (result.status === '1') {
           row.edit = false
           this.isAddRow = true
-          console.log(result.data)
           row = result.data
+          this.tableData.splice(index, 1, row)
           this.$message({
             type: 'success',
             message: '保存培训经历条目成功'
@@ -294,7 +311,7 @@ export default {
      height:120px;
    }
    .el-dialog__body {
-     height:400px;
+     max-height:400px;
      overflow: auto;
    }
    .el-upload-list--picture .el-upload-list__item {

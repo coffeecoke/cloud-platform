@@ -30,7 +30,10 @@
         </router-link>
       </ul>
     </div>
-    <div class="user-name">{{userName}}</div>
+    <div class="user-name">
+      {{userName}}
+      <span class="logout" @click="logout">登出</span>
+    </div>
   </div>
 </template>
 <script>
@@ -50,6 +53,10 @@ export default {
     },
     clickLi (index) {
       this.select = index
+    },
+    logout () {
+      localStorage.setItem('token', '')
+      this.$router.push({ path: '/login' })
     }
   }
 }
@@ -113,5 +120,9 @@ export default {
       float: right;
       color: #fff;
       line-height: $baseHeight;
+  }
+  .logout {
+    margin-left:20px;
+    cursor: pointer;
   }
 </style>
