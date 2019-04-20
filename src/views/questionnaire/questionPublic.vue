@@ -1,15 +1,15 @@
 <template>
 <div class="box-table">
 <!--查询表单 start-->
-<el-form :inline="true" :model="quer" class="demo-form-inline">
+<el-form :inline="true" :model="questDeploy" class="demo-form-inline">
   <el-form-item label="问卷名称">
-    <el-input v-model="quer.quTitle" placeholder="问卷名称"></el-input>
+    <el-input v-model="questDeploy.quTitle" placeholder="问卷名称"></el-input>
   </el-form-item>
   <el-form-item label="项目名称">
-    <el-input v-model="quer.projectName" placeholder="项目名称"></el-input>
+    <el-input v-model="questDeploy.projectName" placeholder="项目名称"></el-input>
   </el-form-item>
   <el-form-item label="问卷类型">
-    <el-select v-model="quer.quType" placeholder="问卷类型">
+    <el-select v-model="questDeploy.quType" placeholder="问卷类型">
       <el-option label="接口改造类" value="1"></el-option>
       <el-option label="开发实施类" value="2"></el-option>
       <el-option label="人员外包类" value="3"></el-option>
@@ -18,14 +18,14 @@
     </el-select>
   </el-form-item>
   <el-form-item>
-    <el-button type="primary" @click="onSubmit">查询</el-button>
+    <el-button type="primary" @click="initDataTable">查询</el-button>
   </el-form-item>
 </el-form>
 <!--查询表单 end-->
 <!--按钮 start-->
 <el-row>
   <el-col :span="3"><div class="grid-content bg-purple"><el-button type="primary" @click="questAdd = true" icon="el-icon-edit">发布调查问卷</el-button></div></el-col>
-  <el-col :span="3"><div class="grid-content bg-purple"><el-button type="primary" @click="questAdd = true" icon="el-icon-edit-outline">修改调查问卷</el-button></div></el-col>
+  <el-col :span="3"><div class="grid-content bg-purple"><el-button type="primary" @click="editQuestDeploy = true" icon="el-icon-edit-outline">修改调查问卷</el-button></div></el-col>
   <el-col :span="1"><div class="grid-content bg-purple"><el-button type="primary" @click="delData" icon="el-icon-delete" >删除</el-button></div></el-col>
 </el-row>
 <!--按钮 end-->
@@ -48,12 +48,12 @@
 <!--表单分页 end-->
 <!--发布调查问卷 start-->
 <el-dialog title="新增调查问卷" :visible.sync="questAdd"  center>
-<el-form  label-width="80px"  :model="quer" >
+<el-form  label-width="80px"  :model="questDeploy" >
 <el-form-item label="问卷名称"  >
-  <el-input v-model="quer.quTitle"  placeholder="问卷名称" size="medium"  ></el-input>
+  <el-input v-model="questDeploy.quTitle"  placeholder="问卷名称" size="medium"  ></el-input>
 </el-form-item>
 <el-form-item label="问卷类型">
-    <el-select v-model="quer.quType" placeholder="问卷类型" size="medium">
+    <el-select v-model="questDeploy.quType" placeholder="问卷类型" size="medium">
       <el-option label="接口改造类" value="1"></el-option>
       <el-option label="开发实施类" value="2"></el-option>
       <el-option label="人员外包类" value="3"></el-option>
@@ -62,7 +62,7 @@
     </el-select>
 </el-form-item>
 <el-form-item label="归属项目">
-  <el-input v-model="quer.projectName" placeholder="归属项目" ></el-input>
+  <el-input v-model="questDeploy.projectName" placeholder="归属项目" ></el-input>
 </el-form-item>
 <el-form-item>
   <el-button type="primary" @click="questAdd = false"  round>保存</el-button>
@@ -76,10 +76,14 @@
 export default {
   data () {
     return {
-      quer: {
+      multipleSelection: [],
+      questDeploy: {
+        id: '',
         quTitle: '',
         quType: '',
-        projectName: ''
+        projectName: '',
+        createUserName: '',
+        createDate: ''
       },
       questAdd: false,
       tableData: [
@@ -114,26 +118,84 @@ export default {
       ]
     }
   },
+  mounted () {
+    this.initDataTable()
+  },
   methods: {
-    onSubmit () {
-      console.log('submit')
+    initDataTable () {
+      console.log(this.questDeploy)
+      this.$api.questPublic.getQuestionDeployList(this.questDeploy).then(res => {
+        let result = res.data
+        this.tableData = result.data
+      })
+    },
+    saveQuestion (valForm) {
+      console.log(this.questDeploy)
+      this.$refs[valForm].validate((valid) => {
+        if (valid) {
+          this.$api.questPublic.saveQuestionDeploy(this.questDeploy).then(res => {
+            let result = res.data
+            console.log(result)
+            if (result.state === '1') {
+              this.$message({
+                type: 'success',
+                message: '保存数据成功!'
+              })
+              this.initDataTable()
+            } else {
+              this.$message.error('保存数据失败！')
+            }
+            this.questAdd = false
+          })
+        } else {
+          return false
+        }
+      })
+    },
+    editQuestDeploy () {
+      if (this.multipleSelection.length === 1) {
+        this.questDeploy = this.multipleSelection[0]
+        this.questAdd = true
+      } else {
+        this.$message({
+          type: 'warning',
+          message: '请选择一条数据编辑！'
+        })
+      }
     },
     delData () {
-      this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.$message({
-          type: 'success',
-          message: '删除成功!'
+      if (this.multipleSelection.length > 0) {
+        this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$api.questPublic.deleteQuestionDeploy(this.questDeploy).then(res => {
+            let result = res.data
+            console.log(result)
+            if (result.state === '1') {
+              this.$message({
+                type: 'success',
+                message: '删除数据成功!'
+              })
+            } else {
+              this.$message.error('删除数据失败！')
+            }
+          })
+          // 重新加载表格
+          this.initDataTable()
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
         })
-      }).catch(() => {
+      } else {
         this.$message({
-          type: 'info',
-          message: '已取消删除'
+          type: 'warning',
+          message: '请选择数据'
         })
-      })
+      }
     }
   }
 }
