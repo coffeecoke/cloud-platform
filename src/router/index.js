@@ -31,7 +31,6 @@ const router = new Router({
     path: '/Layout',
     component: Layout,
     redirect: '/userManagement',
-    name: '我的情况',
     children: [
       // 用户管理路由模块
       ...UserRouter,

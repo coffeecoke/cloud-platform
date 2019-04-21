@@ -4,8 +4,8 @@
       <el-table-column prop="date" label="开始日期">
         <template slot-scope="scope">
           <template v-if="scope.row.edit">
-            <el-date-picker value-format="yyyy-MM-dd" class="ipt" v-model="scope.row.date" type="date" placeholder="选择日期"></el-date-picker>
-            <!-- <el-input class="ipt" size="small" v-model="scope.row.date"></el-input> -->
+            <el-date-picker value-format="yyyy-MM-dd" class="ipt" v-model="scope.row.date" type="date"
+              placeholder="选择日期"></el-date-picker>
           </template>
           <span v-else>{{ scope.row.date }}</span>
         </template>
@@ -13,8 +13,8 @@
       <el-table-column prop="endtime" label="结束日期">
         <template slot-scope="scope">
           <template v-if="scope.row.edit">
-            <el-date-picker value-format="yyyy-MM-dd" class="ipt" v-model="scope.row.endtime" type="date" placeholder="选择日期"></el-date-picker>
-            <!-- <el-input class="ipt" size="small" v-model="scope.row.endtime"></el-input> -->
+            <el-date-picker value-format="yyyy-MM-dd" class="ipt" v-model="scope.row.endtime" type="date"
+              placeholder="选择日期"></el-date-picker>
           </template>
           <span v-else>{{ scope.row.endtime }}</span>
         </template>
@@ -63,10 +63,8 @@
       <el-table-column prop="enclosure" label="附件">
         <template slot-scope="scope">
           <template v-if="scope.row.edit">
-            <el-upload class="upload-demo" :ref="'upload'+scope.$index" action="aa" :limit="3" :auto-upload="false"
-              :file-list="scope.row.fileList">
-              <el-button icon="el-icon-plus" circle></el-button>
-            </el-upload>
+            <el-button type="primary" @click="dialogUpload(scope)">编辑<i class="el-icon-edit el-icon--right"></i>
+            </el-button>
           </template>
           <ul class="file-list--readonly" v-else>
             <li v-for="(item, index) in scope.row.fileList" :key="index">{{item.name}}</li>
@@ -75,8 +73,8 @@
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-         <div class="btn-icons-group">
-            <i class="edit el-icon-edit"  @click="scope.row.edit=true;isAddRow=false"></i>
+          <div class="btn-icons-group">
+            <i class="edit el-icon-edit" @click="scope.row.edit=true;isAddRow=false"></i>
             <i class="delect el-icon-delete" @click="deleteRow(scope.$index, tableData)">
             </i>
             <i class="save el-icon-upload2" @click="saveClick(scope.$index,scope.row)">
@@ -86,6 +84,15 @@
       </el-table-column>
     </el-table>
     <div class="add-row" @click.prevent="addRow()"><span>+ 添加培训经历</span></div>
+
+    <!-- 上传修改图片的dialog -->
+    <el-dialog title="编辑图片附件" :visible.sync="dialogUploadVisible" width="30%">
+      <el-upload class="upload-demo" ref="fileUpload" action="aa" :limit="3" :auto-upload="false"
+        list-type="picture" :file-list="currUploadScope && currUploadScope.row.fileList">
+        <el-button type="primary" slot="trigger">上传图片<i class="el-icon-upload el-icon--right"></i></el-button>
+         <el-button type="primary" @click = "submitUpload">上传至服务器</el-button>
+      </el-upload>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -93,7 +100,10 @@ export default {
   data () {
     return {
       isAddRow: true,
-      loading: true,
+      loading: false,
+      dialogUploadVisible: false,
+      currUploadScope: null,
+      files: [],
       list: {
         id: '',
         date: '',
@@ -104,66 +114,67 @@ export default {
         technology: '',
         diploma: '',
         enclosure: '',
-        files: [],
         fileList: [],
         edit: true
       },
-      tableData: [
-        {
-          id: '1',
-          date: '2018-01-01',
-          endtime: '2019-02-02',
-          trainingmode: '培训机构',
-          trainname: '培训机构',
-          traincon: '培训机构方式',
-          technology: 'java开发',
-          diploma: 'java',
-          enclosure: 'jdc',
-          fileList: [{
-            name: 'img1.png',
-            url: ''
-          },
+      tableData: [{
+        id: '1',
+        date: '2018-01-01',
+        endtime: '2019-02-02',
+        trainingmode: '培训机构',
+        trainname: '培训机构',
+        traincon: '培训机构方式',
+        technology: 'java开发',
+        diploma: 'java',
+        enclosure: 'jdc',
+        fileList: [{
+          name: '学历1.jpeg',
+          url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
+        }, {
+          name: 'food2.jpeg',
+          url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
+        }],
+        edit: false
+      },
+      {
+        id: '2',
+        date: '2018-01-01',
+        endtime: '2019-02-02',
+        trainingmode: '培训机构',
+        trainname: '培训机构',
+        traincon: '培训机构方式',
+        technology: 'java开发',
+        diploma: 'java',
+        enclosure: 'jdc',
+        fileList: [
           {
-            name: 'img2.png',
-            url: ''
-          }
-          ],
-          edit: false
-        },
-        {
-          id: '2',
-          date: '2018-01-01',
-          endtime: '2019-02-02',
-          trainingmode: '培训机构',
-          trainname: '培训机构',
-          traincon: '培训机构方式',
-          technology: 'java开发',
-          diploma: 'java',
-          enclosure: 'jdc',
-          fileList: [{
-            name: 'img1.png',
-            url: ''
-          },
-          {
-            name: 'img2.png',
-            url: ''
-          }
-          ],
-          edit: false
-        }
+            name: '学历1.jpeg',
+            url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
+          }, {
+            name: '学历2.jpeg',
+            url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
+          }],
+        edit: false
+      }
       ]
     }
   },
   created () {
     // 参数需要用户认证，获取token
     this.$api.trainingExperience.queryResumeby().then(res => {
-      console.log(res)
-    }).catch(res => {
-      this.loading = false
-      this.$message('获取失败')
+      let result = res.data
+      if (result.status === '1') {
+        this.tableData = result.data || []
+      } else {
+        this.$message('获取培训经历列表失败')
+      }
     })
   },
   methods: {
+    dialogUpload (scope) {
+      this.dialogUploadVisible = true
+      this.currUploadScope = scope
+    },
     addRow (rows) {
       if (this.isAddRow) {
         this.tableData.push(Object.assign({}, this.list))
@@ -178,6 +189,35 @@ export default {
         return false
       }
     },
+    // 上传图片到服务器
+    submitUpload () {
+      let formData = new FormData()
+      formData.append('id', this.currUploadScope.row.id)
+      this.$refs.fileUpload.uploadFiles.forEach(file => {
+        if (!file.raw) {
+          return false
+        } else {
+          formData.append('files', file.raw)
+        }
+      })
+
+      // 上传图片到服务器
+      this.$api.trainingExperience.saveEnclosure(formData).then(res => {
+        let result = res.data
+        if (result.status === '1') {
+          this.$message({
+            type: 'success',
+            message: '上传成功'
+          })
+        } else {
+          this.$message({
+            type: 'error',
+            message: '上传失败'
+          })
+        }
+      })
+      console.log(formData.get('id'))
+    },
     // 保存
     saveClick (index, row) {
       if (row.edit === false) {
@@ -185,37 +225,48 @@ export default {
         return false
       }
       this.loading = true
-      row.edit = false
-      this.isAddRow = true
       let formData = new FormData()
-      var currUpload = 'upload' + index
-      row.fileList = []
-      Object.entries(this.$refs[currUpload].uploadFiles).forEach(file => {
-        formData.append('files', file[1].raw)
-        formData.append('fileUid', file[1].uid)
-        row.fileList.push({
-          name: file[1].name
-        })
-      })
+      // var currUpload = 'upload' + index
+      // row.fileList = []
+      // Object.entries(this.$refs[currUpload].uploadFiles).forEach(file => {
+      //   formData.append('files', file[1].raw)
+      //   formData.append('fileUid', file[1].uid)
+      //   row.fileList.push({
+      //     name: file[1].name
+      //   })
+      // })
       Object.keys(this.list).forEach(function (key) {
         formData.append(key, row[key])
       })
-      this.saveSubmit(formData)
+      this.saveSubmit(index, formData)
     },
-    saveSubmit (formData) {
+    saveSubmit (index, formData) {
+      let row = this.tableData[index]
       this.$api.trainingExperience.saveresume(formData).then(res => {
-        console.log(res)
         this.loading = false
-      }).catch(err => {
-        console.log(err)
-        this.$message('保存失败')
-        this.loading = false
+        let result = res.data // 保存此行数据后，后台返回这行数据，更新页面，目的是添加id，保证保存过得数据，数据都有ID
+        if (result.status === '1') {
+          row.edit = false
+          this.isAddRow = true
+          row = result.data
+          this.tableData.splice(index, 1, row)
+          this.$message({
+            type: 'success',
+            message: '保存培训经历条目成功'
+          })
+        } else {
+          this.$message({
+            type: 'success',
+            message: '保存培训经历条目失败'
+          })
+        }
       })
     },
     deleteRow (index, rows) {
       if (rows[index].edit === true) { // 删除前，如果此行为不可编辑，把isAddRow置为true,防止在编辑状态删除后，出现不可新增的情况
         this.isAddRow = true
       }
+      // console.log(rows[index])
       if (!rows[index].id) {
         rows.splice(index, 1) // 如果id为空，说明没有进行过保存操作，前台直接删除，不同调用后台
         return false
@@ -228,17 +279,19 @@ export default {
         this.loading = true
         var currData = rows[index]
         this.$api.trainingExperience.delresume(currData).then(res => {
-          rows.splice(index, 1)
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          })
-          this.loading = false
-        }).catch(res => {
-          this.$message({
-            type: 'error',
-            message: '删除失败!'
-          })
+          let result = res.data
+          if (result.status === '1') {
+            this.$message({
+              type: 'success',
+              message: '删除培训经历条目成功!'
+            })
+            rows.splice(index, 1)
+          } else {
+            this.$message({
+              type: 'error',
+              message: '删除培训经历条目失败!'
+            })
+          }
           this.loading = false
         })
       }).catch(() => {
@@ -253,5 +306,15 @@ export default {
 
 </script>
 <style lang="scss" scope>
-
+   .el-upload-list--picture .el-upload-list__item-thumbnail {
+     width:auto;
+     height:120px;
+   }
+   .el-dialog__body {
+     max-height:400px;
+     overflow: auto;
+   }
+   .el-upload-list--picture .el-upload-list__item {
+     height:auto;
+   }
 </style>

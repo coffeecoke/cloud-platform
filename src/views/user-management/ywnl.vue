@@ -3,16 +3,21 @@
     <template slot="boxHeaderTitle">业务能力</template>
     <template slot="boxBodyInner">
       <el-table :data="tableData" border style="width: 100%" v-loading="loading">
+        <el-table-column :show = 'false'>
+          <template slot-scope="scope">
+            {{scope.row.id}}
+          </template>
+        </el-table-column>
         <el-table-column prop="category" label="业务类型">
           <template slot-scope="scope">
             <template v-if="scope.row.edit">
-              <el-select v-model="scope.row.category.value" placeholder="请选择业务类型">
-                <el-option v-for="item in scope.row.category.options" :key="item.label" :label="item.label" :value="item.label"
+              <el-select v-model="scope.row.category" placeholder="请选择业务类型">
+                <el-option v-for="item in categoryOptions" :key="item.key" :label="item.label" :value="item.value"
                   :disabled="item.disabled">
                 </el-option>
               </el-select>
             </template>
-            <span v-else>{{ scope.row.category.value }}</span>
+            <span v-else>{{ formatCategory(scope.row.category)}}</span>
           </template>
         </el-table-column>
         <el-table-column prop="usageTime" label="使用时间">
@@ -26,19 +31,19 @@
         <el-table-column prop="mastery" label="掌握程度">
           <template slot-scope="scope">
             <template v-if="scope.row.edit">
-              <el-select v-model="scope.row.mastery.value" placeholder="请选择掌握程度">
-                <el-option v-for="item in scope.row.mastery.options" :key="item.label" :label="item.label" :value="item.label"
+              <el-select v-model="scope.row.mastery" placeholder="请选择掌握程度">
+                <el-option v-for="item in masteryOptions" :key="item.value" :label="item.label" :value="item.value"
                   :disabled="item.disabled">
                 </el-option>
               </el-select>
             </template>
-            <span v-else>{{ scope.row.mastery.value }}</span>
+            <span v-else>{{ formatMastery(scope.row.mastery)}}</span>
           </template>
         </el-table-column>
         <el-table-column prop="recentUsage" label="最近使用日期">
           <template slot-scope="scope">
             <template v-if="scope.row.edit">
-              <el-date-picker v-model="scope.row.recentUsage" type="date" placeholder="选择日期">
+              <el-date-picker v-model="scope.row.recentUsage" type="date" placeholder="选择日期" value-format="yyyy-MM-dd">
               </el-date-picker>
             </template>
             <span v-else>{{ scope.row.recentUsage }}</span>
@@ -70,75 +75,73 @@ export default {
   data () {
     return {
       isAddRow: true, // 保存上一条数据之后，才允许新增
-      loading: true, // 数据加载的loading效果
+      loading: false, // 数据加载的loading效果
+      categoryOptions: [
+        {
+          value: '1',
+          label: '借款'
+        },
+        {
+          value: '2',
+          label: '贷款'
+        }
+      ],
+      // 掌握程度字典表
+      masteryOptions: [
+        {
+          value: '1',
+          label: '精通'
+        },
+        {
+          value: '2',
+          label: '熟悉'
+        }
+      ],
       list: {
         id: null, // id为空表示新增
-        category: {
-          value: null,
-          options: [
-            {
-              label: '借款'
-            },
-            {
-              label: '存款'
-            }
-          ]
-        },
-        usageTime: null,
-        mastery: {
-          value: '',
-          options: [
-            {
-              label: '精通'
-            },
-            {
-              label: '熟悉'
-            }
-          ]
-        },
-        recentUsage: null,
+        category: '1',
+        usageTime: '',
+        mastery: '1',
+        recentUsage: '',
         edit: true
       },
       tableData: [{
         id: '1', // id为空表示新增
-        category: {
-          value: '借款',
-          options: [
-            {
-              label: '借款'
-            },
-            {
-              label: '存款'
-            }
-          ]
-        },
+        category: '1',
         usageTime: '23月',
-        mastery: {
-          value: '一般',
-          options: [
-            {
-              label: '精通'
-            },
-            {
-              label: '一般'
-            }
-          ]
-        },
+        mastery: '1',
         recentUsage: '2014-09-08',
         edit: false
       }]
     }
   },
   created () {
-    // 参数为用户认证之后的token，token放在http header中,方便以后做api响应拦截
     this.$api.ywnl.queryProfessionalCapability().then(res => {
-      this.tableData = res
-    }).catch(res => {
-      this.loading = false
-      this.$message('获取失败')
+      let result = res.data
+      if (result.status === '1') {
+        if (!result.data) {
+          this.tableData = []
+        } else {
+          this.tableData = result.data
+        }
+      } else {
+        this.$message('获取业务能力列表失败')
+      }
     })
   },
   methods: {
+    formatCategory (value) {
+      let currObj = this.categoryOptions.filter(obj => {
+        return obj.value === value
+      })
+      return currObj[0].label
+    },
+    formatMastery (value) {
+      let currObj = this.masteryOptions.filter(obj => {
+        return obj.value === value
+      })
+      return currObj[0].label
+    },
     // 添加一行
     addRow () {
       if (this.isAddRow) {
@@ -162,8 +165,6 @@ export default {
         return false
       }
       this.loading = true
-      row.edit = false
-      this.isAddRow = true
       let formData = new FormData()
       Object.keys(this.list).forEach(function (key) {
         formData.append(key, row[key]) // 遍历新增数据，把键值放在formData中传给后台
@@ -171,14 +172,26 @@ export default {
       this.saveSubmit(index, formData)
     },
     // 保存提交
-    saveSubmit (row, formData) {
+    saveSubmit (index, formData) {
+      let row = this.tableData[index]
       this.$api.ywnl.saveProfessionalCapability(formData).then(res => {
         this.loading = false
-        row = res // 保存此行数据后，后台返回这行数据，更新页面，目的是添加id，保证保存过得数据，数据都有ID
-      }).catch(err => {
-        console.log(err)
-        this.$message('保存失败')
-        this.loading = false
+        let result = res.data // 保存此行数据后，后台返回这行数据，更新页面，目的是添加id，保证保存过得数据，数据都有ID
+        if (result.status === '1') {
+          row.edit = false
+          this.isAddRow = true
+          row = result.data
+          this.tableData.splice(index, 1, row)
+          this.$message({
+            type: 'success',
+            message: '保存业务能力条目成功'
+          })
+        } else {
+          this.$message({
+            type: 'error',
+            message: '保存业务能力条目失败'
+          })
+        }
       })
     },
     // 删除一行
@@ -186,7 +199,9 @@ export default {
       if (rows[index].edit === true) { // 删除前，如果此行为不可编辑，把isAddRow置为true,防止在编辑状态删除后，出现不可新增的情况
         this.isAddRow = true
       }
+      console.log(rows[index])
       if (!rows[index].id) {
+        alert(1)
         rows.splice(index, 1) // 如果id为空，说明没有进行过保存操作，前台直接删除，不用调用后台
         return false
       }
@@ -198,16 +213,20 @@ export default {
         this.loading = true
         var currData = rows[index]
         this.$api.ywnl.delProfessionalCapability(currData).then(res => {
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          })
-          this.loading = false
-        }).catch(res => {
-          this.$message({
-            type: 'error',
-            message: '删除失败!'
-          })
+          let result = res.data
+          if (result.status === '1') {
+            this.$message({
+              type: 'success',
+              message: '删除业务能力条目成功!'
+            })
+            console.log(rows.splice(index, 1))
+            rows.splice(index, 1)
+          } else {
+            this.$message({
+              type: 'error',
+              message: '删除业务能力条目失败!'
+            })
+          }
           this.loading = false
         })
       }).catch(() => {

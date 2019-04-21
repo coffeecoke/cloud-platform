@@ -16,7 +16,7 @@
         <router-link tag="li" class="tab-item" to="/userManagement">
           <a>个人中心</a>
         </router-link>
-        <li class="tab-item">
+        <!-- <li class="tab-item">
           <a href="http://www.baidu.com">知识库</a>
         </li>
         <li class="tab-item">
@@ -24,8 +24,8 @@
         </li>
         <li class="tab-item">
           <a>产品资料</a>
-        </li>
-        <router-link tag="li" class="tab-item" to="/quest">
+        </li> -->
+        <router-link tag="li" class="tab-item" to="/qu-1">
           <a>调查问卷</a>
         </router-link>
         <router-link tag="li" class="tab-item" to="/">
@@ -33,7 +33,10 @@
         </router-link>
       </ul>
     </div>
-    <div class="user-name">{{userName}}</div>
+    <div class="user-name">
+      {{userName}}
+      <span class="logout" @click="logout">登出</span>
+    </div>
   </div>
 </template>
 <script>
@@ -53,6 +56,10 @@ export default {
     },
     clickLi (index) {
       this.select = index
+    },
+    logout () {
+      localStorage.setItem('token', '')
+      this.$router.push({ path: '/login' })
     }
   }
 }
@@ -75,11 +82,12 @@ export default {
 
     .top-nav {
       position: absolute;
+      width:80%;
       height: 100%;
       left: 50%;
       transform: translateX(-50%);
       display: flex;
-      justify-content: space-between;
+      justify-content: center;
       align-items: center;
       color: #fff;
       font-size: 14px;
@@ -115,5 +123,9 @@ export default {
       float: right;
       color: #fff;
       line-height: $baseHeight;
+  }
+  .logout {
+    margin-left:20px;
+    cursor: pointer;
   }
 </style>

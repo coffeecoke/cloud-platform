@@ -1,4 +1,4 @@
-
+/* eslint-disable no-tabs */
 <template>
 <div class="box-table">
 <el-row :gutter="18">
@@ -458,7 +458,7 @@ export default {
     },
     createFilter (queryString) {
       return (restaurant) => {
-        return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
+        return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) > -1)
       }
     },
     loadAll () {
@@ -555,5 +555,9 @@ export default {
       background: #f0f3f8;
       border-radius: 8px;
     }
+}
+.aaaaa {
+   background: #f0f3f8;
+      border-radius: 8px;
 }
 </style>

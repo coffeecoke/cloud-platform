@@ -15,7 +15,7 @@ module.exports = {
         target: 'http://cloud.chinaresoft.com:9005/',
         changeOrigin: true,
         pathRewrite: {
-          '^/api': ''
+          // '^/api': ''
         }
       }
     },
@@ -82,3 +82,4 @@ module.exports = {
     bundleAnalyzerReport: process.env.npm_config_report
   }
 }
+
