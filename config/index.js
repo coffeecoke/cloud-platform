@@ -58,7 +58,7 @@ module.exports = {
     // Paths
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'static',
-    assetsPublicPath: '/',
+    assetsPublicPath: '/test',
 
     /**
      * Source Maps
@@ -82,4 +82,3 @@ module.exports = {
     bundleAnalyzerReport: process.env.npm_config_report
   }
 }
-

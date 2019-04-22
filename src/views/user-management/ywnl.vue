@@ -3,11 +3,6 @@
     <template slot="boxHeaderTitle">业务能力</template>
     <template slot="boxBodyInner">
       <el-table :data="tableData" border style="width: 100%" v-loading="loading">
-        <el-table-column :show = 'false'>
-          <template slot-scope="scope">
-            {{scope.row.id}}
-          </template>
-        </el-table-column>
         <el-table-column prop="category" label="业务类型">
           <template slot-scope="scope">
             <template v-if="scope.row.edit">
