@@ -21,7 +21,10 @@ import TaskList from '@/views/user-management/task-list'
 import TaskCreate from '@/views/user-management/task-create'
 // 任务发布
 import TaskIssued from '@/views/user-management/task-issue'
-
+// 任务领取
+import TaskCollection from '@/views/user-management/task-collection'
+// 任务组
+import TaskGroup from '@/views/user-management/task-group'
 // import Pm from '@/views/pm/pm'
 
 export default [{
@@ -78,6 +81,16 @@ export default [{
       path: '/2-3',
       name: '任务发布',
       component: TaskIssued
+    },
+    {
+      path: '/2-4',
+      name: '任务领取',
+      component: TaskCollection
+    },
+    {
+      path: '/2-5',
+      name: '任务组',
+      component: TaskGroup
     }
   ]
 }]

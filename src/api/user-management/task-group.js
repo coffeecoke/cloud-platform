@@ -1,7 +1,7 @@
 
 import axios from '@/utils/http' // 导入http中创建的axios实例
 // import Qs from 'qs'
-const taskIssue = {
+const TaskGroup = {
   // 模糊查询1
   getProject (params) {
     return axios({
@@ -11,21 +11,21 @@ const taskIssue = {
     })
   },
   // 级联查询
-  getTaskGroupTree (params) {
+  initTaskGroupTree (params) {
     return axios({
       method: 'post',
-      url: '/taskSet/getTaskGroupTree',
+      url: '/taskSet/initTaskGroupTree',
       data: params
     })
   },
-  // 任务发布查询
-  getPublishTaskList (params) {
+  // 任务组查询
+  getTaskList (params) {
     return axios({
       method: 'post',
-      url: '/taskPublish/getPublishTaskList',
+      url: '/taskSet/getTaskList',
       data: params
     })
   }
 
 }
-export default taskIssue
+export default TaskGroup
