@@ -226,7 +226,6 @@ export default {
       Object.keys(this.form).forEach(key => {
         formData.append(key, this.form[key])
       })
-      formData.append('haha', 'huan')
       this.$api.baseInfo.registerUser(formData).then(res => {
         let result = res.data
         if (result.status === '1') {

@@ -24,6 +24,21 @@ const trainingExperience = {
       url: '/resume/delresume',
       data: params
     })
+  },
+  // 附件保存，上传服务器
+  saveEnclosure (params) {
+    return axios({
+      method: 'post',
+      url: '/enclosure/saveEnclosure',
+      data: params
+    })
+  },
+  delEnclosure (params) {
+    return axios({
+      method: 'post',
+      url: '/enclosure/delEnclosure',
+      data: params
+    })
   }
 }
 export default trainingExperience

@@ -21,7 +21,7 @@ export default {
     return {
       logining: false,
       ruleForm2: {
-        loginName: '',
+        loginName: 'test',
         password: ''
       },
       rules2: {

@@ -171,10 +171,11 @@ export default {
       Object.keys(this.list).forEach(function (key) {
         formData.append(key, row[key]) // 遍历新增数据，把键值放在formData中传给后台
       })
-      this.saveSubmit(row, formData)
+      this.saveSubmit(index, formData)
     },
     // 保存提交
-    saveSubmit (row, formData) {
+    saveSubmit (index, formData) {
+      let row = this.tableData[index]
       this.$api.yynl.saveLanguageAbility(formData).then(res => {
         this.loading = false
         let result = res.data// 保存此行数据后，后台返回这行数据，更新页面，目的是添加id，保证保存过得数据，数据都有ID
@@ -182,6 +183,7 @@ export default {
           row.edit = false
           this.isAddRow = true
           row = result.data
+          this.tableData.splice(index, 1, row)
           this.$message({
             type: 'success',
             message: '保存语言条目成功'

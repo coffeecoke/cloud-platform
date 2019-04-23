@@ -86,11 +86,18 @@
     <div class="add-row" @click.prevent="addRow()"><span>+ 添加培训经历</span></div>
 
     <!-- 上传修改图片的dialog -->
-    <el-dialog title="编辑图片附件" :visible.sync="dialogUploadVisible">
-      <el-upload class="upload-demo" ref="fileUpload" action="aa" :limit="3" :auto-upload="false"
-        list-type="picture" :file-list="currUploadScope && currUploadScope.row.fileList">
-        <el-button type="primary" slot="trigger">上传图片<i class="el-icon-upload el-icon--right"></i></el-button>
-         <el-button type="primary" @click = "submitUpload">上传至服务器</el-button>
+    <el-dialog title="编辑图片附件" :visible.sync="dialogUploadVisible" width="30%">
+      <el-upload class="upload-demo"
+        ref="fileUpload"
+        action="aa"
+        :limit="3"
+        :auto-upload="false"
+        list-type="picture"
+        :file-list="currUploadScope && currUploadScope.row.fileList"
+        :on-remove="handleRemove"
+        multiple>
+        <el-button type="primary" slot="trigger">添加图片</el-button>
+         <el-button type="primary" @click = "submitUpload">上传至服务器<i class="el-icon-upload el-icon--right"></i></el-button>
       </el-upload>
     </el-dialog>
   </div>
@@ -114,7 +121,7 @@ export default {
         technology: '',
         diploma: '',
         enclosure: '',
-        fileList: [],
+        // fileList: [],
         edit: true
       },
       tableData: [{
@@ -128,9 +135,11 @@ export default {
         diploma: 'java',
         enclosure: 'jdc',
         fileList: [{
+          id: '222',
           name: '学历1.jpeg',
           url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
         }, {
+          id: null,
           name: 'food2.jpeg',
           url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
         }],
@@ -191,16 +200,55 @@ export default {
     },
     // 上传图片到服务器
     submitUpload () {
+      let currRow = this.currUploadScope.row
+
+      console.log(this.tableData)
       let formData = new FormData()
       formData.append('id', this.currUploadScope.row.id)
       this.$refs.fileUpload.uploadFiles.forEach(file => {
-        if (!file.raw) {
-          return false
-        } else {
+        if (file.raw && !file.id) { // 只上传本次上传的附件，排除之前上传的
           formData.append('files', file.raw)
+        } else {
+          return false
         }
       })
-      console.log(formData.get('id'))
+      // 请求接口
+      this.$api.trainingExperience.saveEnclosure(formData).then(res => {
+        let result = res.data
+        if (result.status === '1') {
+          currRow.fileList = result.data // 根据后台更新fileList
+          this.$message({
+            type: 'success',
+            message: '上传附件成功'
+          })
+        } else {
+          this.$message({
+            type: 'error',
+            message: '上传附件失败'
+          })
+        }
+      })
+    },
+    handleRemove (file, fileList) {
+      console.log(file)
+      console.log(fileList)
+      if (file.id) {
+        this.$api.trainingExperience.delEnclosure({fileId: file.id}).then(res => {
+          let result = res.data
+          if (result.status === '1') {
+            this.$message({
+              type: 'success',
+              message: '删除图片成功!'
+            })
+          } else {
+            this.$message({
+              type: 'error',
+              message: '删除图片失败!'
+            })
+          }
+          this.loading = false
+        })
+      }
     },
     // 保存
     saveClick (index, row) {
@@ -222,17 +270,18 @@ export default {
       Object.keys(this.list).forEach(function (key) {
         formData.append(key, row[key])
       })
-      this.saveSubmit(row, formData)
+      this.saveSubmit(index, formData)
     },
-    saveSubmit (row, formData) {
+    saveSubmit (index, formData) {
+      let row = this.tableData[index]
       this.$api.trainingExperience.saveresume(formData).then(res => {
         this.loading = false
         let result = res.data // 保存此行数据后，后台返回这行数据，更新页面，目的是添加id，保证保存过得数据，数据都有ID
         if (result.status === '1') {
           row.edit = false
           this.isAddRow = true
-          console.log(result.data)
           row = result.data
+          this.tableData.splice(index, 1, row)
           this.$message({
             type: 'success',
             message: '保存培训经历条目成功'
@@ -294,7 +343,7 @@ export default {
      height:120px;
    }
    .el-dialog__body {
-     height:400px;
+     max-height:400px;
      overflow: auto;
    }
    .el-upload-list--picture .el-upload-list__item {

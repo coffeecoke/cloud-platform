@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Page404 from '@/views/404'
+import WxCodePage from '@/views/login/wx-qrcode'
+import Register from '@/views/login/register'
 import Login from '@/views/login/login'
 import Layout from '@/views/layout/layout'
 import Home from '@/views/home/index'
@@ -25,6 +27,15 @@ const router = new Router({
   {
     path: '/home',
     component: Home
+  },
+  {
+    path: '/wxCodePage',
+    component: WxCodePage
+
+  },
+  {
+    path: '/register',
+    component: Register
   },
   {
     path: '/',
