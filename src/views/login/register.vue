@@ -33,7 +33,7 @@
   </div>
 </template>
 <script>
-import '@/styles/wx-login.scss'
+
 export default {
   data () {
     return {
@@ -136,9 +136,12 @@ export default {
     }
   }
 }
-
 </script>
+<style scope src="../../styles/wx-login.scss">
+</style>
+
 <style scoped lang="scss">
+
   /* css */
   .el-form {
     padding: 0 20px;

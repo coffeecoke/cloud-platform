@@ -25,6 +25,9 @@
         <router-link tag="li" class="tab-item" to="/qu-1">
           <a>调查问卷</a>
         </router-link>
+        <router-link tag="li" class="tab-item" to="/">
+          <a>用户管理</a>
+        </router-link>
       </ul>
     </div>
     <div class="user-name">

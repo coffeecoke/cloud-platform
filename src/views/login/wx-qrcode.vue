@@ -10,7 +10,7 @@
   </div>
 </template>
 <script>
-import '@/styles/wx-login.scss'
+// import '@/styles/wx-login.scss'
 export default {
   data () {
     return {
@@ -75,6 +75,4 @@ export default {
 }
 
 </script>
-<style scoped lang="scss">
-
-</style>
+<style scope src="../../styles/wx-login.scss">

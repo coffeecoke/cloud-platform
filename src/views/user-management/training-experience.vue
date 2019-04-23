@@ -1,5 +1,6 @@
 <template>
   <div class="box-table">
+
     <img src="src='data:image/png;base64,50Mn/P3thG+CnFW4xu8Y" alt="">
     <el-table :data="tableData" border style="width: 100%" v-loading="loading">
       <el-table-column prop="date" label="开始日期">
@@ -217,7 +218,11 @@ export default {
       this.$api.trainingExperience.saveEnclosure(formData).then(res => {
         let result = res.data
         if (result.status === '1') {
+          result.data.forEach((item, index) => {
+            item.url = `data:image/png;base64,${item.url}`
+          })
           currRow.fileList = result.data // 根据后台更新fileList
+          console.log(currRow.fileList)
           this.$message({
             type: 'success',
             message: '上传附件成功'
