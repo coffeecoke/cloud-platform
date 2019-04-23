@@ -18,6 +18,12 @@ import mySituation from './my-situation'
 import taskAcceptance from './task-acceptance'
 // 任务发布
 import taskIssue from './task-issue'
+// 任务组
+import TaskGroup from './task-group'
+// 任务领取
+import TaskCollection from './task-collection'
+// 任务领取
+import TaskCreate from './task-create'
 // 导出接口
 export default {
   baseInfo,
@@ -28,5 +34,8 @@ export default {
   yynl,
   mySituation,
   taskAcceptance,
-  taskIssue
+  taskIssue,
+  TaskGroup,
+  TaskCollection,
+  TaskCreate
 }

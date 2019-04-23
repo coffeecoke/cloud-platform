@@ -25,6 +25,22 @@ const TaskGroup = {
       url: '/taskSet/getTaskList',
       data: params
     })
+  },
+  // 新增任务组
+  saveTaskGroupInfo (params) {
+    return axios({
+      method: 'post',
+      url: '/taskSet/saveTaskGroupInfo',
+      data: params
+    })
+  },
+  // 新增任务组
+  deleteTaskGroupInfo (params) {
+    return axios({
+      method: 'post',
+      url: '/taskSet/deleteTaskGroupInfo',
+      data: params
+    })
   }
 
 }

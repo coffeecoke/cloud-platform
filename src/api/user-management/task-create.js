@@ -1,30 +1,30 @@
 import axios from '@/utils/http' // 导入http中创建的axios实例
 // import Qs from 'qs'
-const taskIssue = {
+const TaskCreate = {
   // 模糊查询1
   getProject () {
     return axios({
       method: 'post',
-      url: '/taskPublish/getProject'
+      url: '/taskCount/getProject'
       // data: params
     })
   },
-  // 级联查询
-  getTaskGroupTree (params) {
+  //  任务功能
+  claim (params) {
     return axios({
       method: 'post',
-      url: '/taskSet/getTaskGroupTree',
+      url: '/taskClaim/claim',
       data: params
     })
   },
-  // 任务发布查询
-  getPublishTaskList (params) {
+  // 任务体系查询
+  getCountTaskList (params) {
     return axios({
       method: 'post',
-      url: '/taskPublish/getPublishTaskList',
+      url: '/taskCount/getCountTaskList',
       data: params
     })
   }
 
 }
-export default taskIssue
+export default TaskCreate
