@@ -10,7 +10,7 @@
         <router-link tag="li" class="tab-item" to="/home">
           <a>我的首页</a>
         </router-link>
-        <router-link tag="li" class="tab-item" to="/pm">
+        <router-link tag="li" class="tab-item" to="/personalManagement">
           <a>项目信息</a>
         </router-link>
         <router-link tag="li" class="tab-item" to="/userManagement">
@@ -21,9 +21,6 @@
         </router-link>
         <li class="tab-item">
           <a>工作台</a>
-        </li>
-        <li class="tab-item">
-          <a>产品资料</a>
         </li>
         <router-link tag="li" class="tab-item" to="/qu-1">
           <a>调查问卷</a>
