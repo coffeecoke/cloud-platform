@@ -14,9 +14,10 @@ export default [{
   path: 'taskSystem',
   component: TaskSystem,
   name: '项目管理',
+  redirect: '/2-1',
   children: [
     {
-      path: '/',
+      path: '/2-1',
       name: '任务体系',
       component: TaskCreate
     },
