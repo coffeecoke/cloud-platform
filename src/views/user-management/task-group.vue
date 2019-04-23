@@ -2,38 +2,30 @@
   <div class="tasktable">
     <el-row :gutter="24">
       <el-col :span="6">
-        <div v-loading="isLoading" class="comp-tree">
-          <el-button class="comp-tr-top" type="primary" @click="handleAddTop">添加顶级节点</el-button>
-          <!-- tree -->
-          <el-tree ref="SlotTree" :data="setTree" :props="defaultProps"
-            :node-key="NODE_KEY"  @node-click="confirm" >
-            <div class="comp-tr-node" slot-scope="{ node, data }">
-              <!-- 编辑状态 -->
-              <template v-if="node.isEdit">
-                <el-input v-model="data.name" autofocus size="mini" :ref="'slotTreeInput'+data[NODE_KEY]"
-                  @blur.stop="handleInput(node, data)" @keyup.enter.native="handleInput(node, data)"></el-input>
-              </template>
-              <!-- 非编辑状态 -->
-              <template v-else>
-                <!-- 名称： 新增节点增加class（is-new） -->
-                <span :class="[data[NODE_KEY] < NODE_ID_START ? 'is-new' : '', 'comp-tr-node--name']">
-                  {{ node.label }}
-                </span>
-                <!-- 按钮 -->
-                <span class="comp-tr-node--btns">
-                  <!-- 新增 -->
-                  <el-button icon="el-icon-plus" size="mini" circle type="primary" @click="handleAdd(node, data)">
-                  </el-button>
-                  <!-- 编辑 -->
-                  <el-button icon="el-icon-edit" size="mini" circle type="info" @click="handleEdit(node, data)">
-                  </el-button>
-                  <!-- 删除 -->
-                  <el-button icon="el-icon-delete" size="mini" circle type="danger" @click="handleDelete(node, data)">
-                  </el-button>
-                </span>
-              </template>
-            </div>
+        <div class="slot-tree">
+          <el-tree ref="eventCategoryTree" :data="eventCategoryTree" :props="defaultProps" node-key="id"
+             :render-content="renderContent" :expand-on-click-node="false" @node-click="confirm">
           </el-tree>
+          <el-dialog title="新增事件分类" width="25%" class="add-event-dialog" :visible.sync="addEventdialogVisible"
+            size="tiny">
+            <el-form ref="addEventForm" :model="addEventForm" :rules="addEventNodeRules">
+              <template  slot-scope="scope">
+              <el-form-item label="父节点" prop="taskGroupParentName">
+                <el-input v-model="addEventForm.taskGroupParentName"></el-input>
+              </el-form-item>
+              </template>
+              <el-form-item label="任务组编号" prop="taskGroupId">
+                <el-input v-model="addEventForm.taskGroupId"></el-input>
+              </el-form-item>
+              <el-form-item label="任务组名称" prop="taskGroupName">
+                <el-input v-model="addEventForm.taskGroupName"></el-input>
+              </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+              <el-button @click="addEventFormCancleBtn = true">取 消</el-button>
+              <el-button type="primary" @click="addEventFormSubmitBtn('addEventForm')">确 定</el-button>
+            </span>
+          </el-dialog>
         </div>
       </el-col>
       <el-col :span="18">
@@ -41,7 +33,7 @@
           <el-row>
             <el-col :span="4">
               <div class="group">
-                <el-autocomplete class="input1" v-model="form.projectId" :fetch-suggestions="querySearch1"
+                <el-autocomplete class="input1" v-model="form.projectId"
                   placeholder="项目编号" :trigger-on-focus="false" @select="handleSelect"></el-autocomplete>
               </div>
             </el-col>
@@ -80,9 +72,9 @@
           <el-table-column prop="taskTarget" label="任务标的" align="center"></el-table-column>
           <el-table-column prop="postTask" label="后置任务" align="center"></el-table-column>
           <el-table-column fixed="right" label="操作" align="center" width="200px">
-        <template>
-          <el-button @click="dialogTimeandCondition = true" type="text" icon="el-icon-setting">结构调整</el-button>
-        </template>
+            <template>
+              <el-button @click="dialogTimeandCondition = true" type="text" icon="el-icon-setting">结构调整</el-button>
+            </template>
           </el-table-column>
         </el-table>
       </el-col>
@@ -92,14 +84,30 @@
 
 <script>
 import api from '@/resource/api'
-
+import TreeRender from './tree_render.vue'
 export default {
-  name: 'component-tree',
+  name: 'slot-tree',
   data () {
     return {
+      addEventFormCancleBtn: false,
+      eventCategoryTree: [],
+      defaultProps: {
+        children: 'children',
+        label: 'label'
+      },
+
+      // /* 触发的当前的节点，放到全局，方便调用*/
+      triggerCurrenNodeData: {},
+      // /* 触发的当前节点*/
+      triggerCurrenNode: {},
+      // /* 新增事件弹窗的输入框数据*/
+      addEventdialogVisible: false,
+      addEventForm: {
+        taskGroupId: '',
+        taskGroupName: ''
+      },
       tableData3: [{
         suggestOrder: '111',
-        actualOrder: '1111',
         taskName: '1111',
         taskId: '111',
         taskTarget: '111',
@@ -111,218 +119,219 @@ export default {
         taskName: '',
         taskTarget: '',
         predecessorTask: '',
-        currTreeId: ''
+        taskGroupId: ''
       },
-      isLoading: false, // 是否加载
-      setTree: api.treelist || [], // tree数据
-      NODE_KEY: 'id', // id对应字段
-      MAX_LEVEL: 3, // 设定最大层级
-      NODE_ID_START: 0, // 新增节点id，逐次递减
-      startId: null,
-      defaultProps: { // 默认设置
-        children: 'children',
-        label: 'name'
-      },
-      initParam: { // 新增参数
-        name: '新增节点',
-        pid: '',
-        children: []
-      }
+      maxexpandId: api.maxexpandId, // 新增节点开始id
+      non_maxexpandId: api.maxexpandId, // 新增节点开始id(不更改)
+      isLoadingTree: true, // 是否加载节点树
+      setTree: api.treelist, // 节点树数据
+      iconSize: 'mini'
+      // defaultProps: {
+      //   children: 'children',
+      //   label: 'name'
+      // }
     }
-  },
-  created () {
-    // 初始值
-    this.startId = this.NODE_ID_START
-    // console.log('当前id为' + this.startId)
   },
   methods: {
     confirm (data, node) {
       let formData = new FormData()
-      this.form.currTreeId = data.id
+      this.form.taskGroupId = data.id
       Object.keys(this.form).forEach(key => {
         console.log(key)
         formData.append(key, this.form[key])
       })
-      this.$api.taskIssue.getPublishTaskList(formData).then(res => {
+      this.$api.TaskGroup.getTaskList(formData).then(res => {
         var result = res.data
         console.log(result.data)
         this.tableData3 = result.data
       })
       console.log(data.id)
     },
-    handleDelete (_node, _data) { // 删除节点
-      // console.log(_node, _data)
-      // 判断是否存在子节点
-      if (_data.children && _data.children.length !== 0) {
-        this.$message.error('此节点有子级，不可删除！')
-        return false
-      } else {
-        // 删除操作
-        let DeletOprate = () => {
-          this.$nextTick(() => {
-            if (this.$refs.SlotTree) {
-              this.$refs.SlotTree.remove(_data)
-              this.$message.success('删除成功！')
-            }
-          })
-        }
-
-        // 二次确认
-        let ConfirmFun = () => {
-          this.$confirm('是否删除此节点？', '提示', {
-            confirmButtonText: '确认',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }).then(() => {
-            DeletOprate()
-          }).catch(() => {})
-        }
-
-        // 判断是否新增： 新增节点直接删除，已存在的节点要二次确认
-        _data[this.NODE_KEY] < this.NODE_ID_START ? DeletOprate() : ConfirmFun()
-      }
-    },
-    handleInput (_node, _data) { // 修改节点
-      console.log(_node, _data)
-      // 退出编辑状态
-      if (_node.isEdit) {
-        this.$set(_node, 'isEdit', false)
-      }
-    },
-    handleEdit (_node, _data) { // 编辑节点
-      console.log(_node, _data)
-      // 设置编辑状态
-      if (!_node.isEdit) {
-        this.$set(_node, 'isEdit', true)
-      }
-
-      // 输入框聚焦
-      this.$nextTick(() => {
-        if (this.$refs['slotTreeInput' + _data[this.NODE_KEY]]) {
-          this.$refs['slotTreeInput' + _data[this.NODE_KEY]].$refs.input.focus()
+    /* 渲染函数 */
+    renderContent (h, {
+      node,
+      data,
+      store
+    }) {
+      let that = this // 指向vue
+      return h(TreeRender, {
+        props: {
+          NODE: node,
+          DATA: data,
+          STORE: store
+        },
+        on: {
+          // 新增
+          Append: (s, d, n) => that.appendEvent(s, d, n),
+          // 编辑
+          Edit: (s, d, n) => that.appendEvent(s, d, n),
+          // 删除节点
+          Delete: (s, d, n) => that.removeEvent(s, d, n),
+          // 查看
+          WatchInfo: (s, d, n) => that.changeMainRegion(s, d, n)
         }
       })
     },
-    handleAdd (_node, _data) { // 新增节点
-      // alert(_node, _data)
-      console.log('111111' + _node, _data)
-      // 判断层级
-      if (_node.level >= this.MAX_LEVEL) {
-        this.$message.warning('当前已达到' + this.MAX_LEVEL + '级，无法新增！')
+    /* 树形控件添加节点，添加弹窗出现 */
+    appendEvent (s, d, n) {
+      this.addEventdialogVisible = true
+      this.triggerCurrenNodeData = d
+      this.triggerCurrenNode = n
+    },
+    /* 树形控件删除节点 */
+    removeEvent (s, d, n) {
+      // const parent = n.parent
+      // const children = parent.data.children || parent.data
+      // const index = children.findIndex(data => data.id === d.id)
+      // console.log(index, '索引')
+      if (d.children && d.children.length !== 0) {
+        this.$message.error('此节点有子级，不可删除！')
         return false
       }
-
-      // 参数修改
-      let obj = JSON.parse(JSON.stringify(this.initParam)) // copy参数
-      obj.pid = _data[this.NODE_KEY] // 父id
-      console.log('当前id为' + obj.pid)
-      obj[this.NODE_KEY] = --this.startId // 节点id：逐次递减id
-      // 判断字段是否存在
-      if (!_data.children) {
-        this.$set(_data, 'children', [])
-      }
-      // 新增数据
-      _data.children.push(obj)
-
-      // 展开节点
-      if (!_node.expanded) {
-        _node.expanded = true
-      }
+      this.$confirm('确认删除该节点吗？', '温馨提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$api.TaskGroup.deleteTaskGroupInfo({
+          taskGroupId: d.id,
+          projectId: this.form.projectId
+        }).then((res) => {
+          var result1 = res.data
+          if (result1.status === '1') {
+            // children.splice(index, 1)
+            this.$api.TaskGroup.initTaskGroupTree({
+              projectId: this.form.projectId
+            }).then(res => {
+              var result = res.data
+              console.log(result.data)
+              this.eventCategoryTree = result.data
+            })
+            this.$message({
+              message: '删除成功',
+              type: 'success'
+            })
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
     },
-    handleAddTop () { // 添加顶部节点
-      let obj = JSON.parse(JSON.stringify(this.initParam)) // copy参数
-      obj[this.NODE_KEY] = --this.startId // 节点id：逐次递减id
-      this.setTree.push(obj)
+    /* 节点新增，新增树形菜单事件分类弹窗，提交按钮 */
+    addEventFormSubmitBtn (formname) {
+      // this.$refs[formname].validate((valid) => {
+      // if (valid) {
+      console.log('验证成功')
+      /* 获取当前input上输入的文字 */
+      // let dataPost = {
+      //   taskGroupName: this.addEventForm.taskGroupName.trim(),
+      //   taskGroupId: this.addEventForm.taskGroupId.trim(),
+      //   taskGroupParentId: this.triggerCurrenNodeData.id // 当前节点id
+      //   // depth: this.triggerCurrenNode.level // 当前节点层级
+      // }
+      this.$api.TaskGroup.saveTaskGroupInfo({
+        projectId: this.form.projectId,
+        taskGroupName: this.addEventForm.taskGroupName.trim(),
+        taskGroupId: this.addEventForm.taskGroupId.trim(),
+        taskGroupParentId: this.triggerCurrenNodeData.id,
+        addOrEdit: 'add'
+      })
+      //  queryParams: dataPost
+        .then((res) => {
+          console.log('请求成功')
+          // if (res.status === '1') {
+          let result = res.data
+          console.log(this.triggerCurrenNodeData.children)
+          // /* 点击弹窗的确定按钮可以得到输入的数据，作为新的节点名称插入*/
+          // /* 如果没有子节点，就创建一个子节点插入*/
+          if (!this.triggerCurrenNodeData.children) {
+            this.$set(this.triggerCurrenNodeData, 'children', [])
+          };
+          // 如果已有子节点，就把返回的数据push进去，插入到树形数据中
+          this.triggerCurrenNodeData.children.push(result)
+          // /*关闭弹窗，重置输入框 */
+          this.addEventdialogVisible = false
+          this.$refs[formname].resetFields()
+
+          // /* 刷新树形菜单*/
+          this.$api.TaskGroup.initTaskGroupTree({
+            projectId: this.form.projectId
+          }).then(res => {
+            var result = res.data
+            console.log(result.data)
+            this.eventCategoryTree = result.data
+          })
+          // }
+        })
+        .catch((e) => {
+          console.log('请求失败', e)
+        })
+        // } else {
+        //   console.log('验证未通过')
+        //   return false
+        // }
+      // })
     }
   },
   mounted () {
-    this.$api.TaskGroup.initTaskGroupTree(this.from.projectId).then(res => {
+    // var projectId = this.form.projectId
+    this.$api.TaskGroup.initTaskGroupTree({
+      projectId: this.form.projectId
+    }).then(res => {
       var result = res.data
-      console.log(result)
-      this.setTree = result.data
+      console.log(result.data)
+      this.eventCategoryTree = result.data
     })
   }
 }
 
 </script>
 
-<style lang="scss" scope>
-  /* common */
-  // 显示按钮
-  .show-btns {
-    opacity: 1;
+<style>
+  .slot-tree {
+    width: 100%;
+    height: 100%;
+    margin: 0 auto;
+    padding: 1em;
+    max-width: 600px;
+    overflow-y: auto;
   }
 
-  .el-row {
-    width: 100%;
-    margin-bottom: 30px;
-    margin-top: 10px;
+  /*顶部按钮*/
+  .slot-tree .slot-t-top {
+    margin-bottom: 15px;
   }
 
-  /* common end */
+  .slot-tree .slot-t-node span {
+    display: inline-block;
+  }
 
-  .comp-tree {
-    width: 100%;
-    max-width: 300px;
-    max-height: 50vh;
-    padding: 2em;
-    overflow: auto;
+  /*节点*/
+  .slot-tree .slot-t-node--label {
+    font-weight: 60;
+  }
 
-    // 顶部按钮
-    .comp-tr-top {
-      width: 200px;
-      margin-bottom: 2em;
-    }
+  /*输入框*/
+  .slot-tree .slot-t-input .el-input__inner {
+    height: 26px;
+    line-height: 26px;
+  }
 
-    // 自定义节点
-    .comp-tr-node {
+  /*按钮列表*/
+  .slot-tree .slot-t-node .slot-t-icons {
+    display: none;
+    margin-left: 8px;
+  }
 
-      // label
-      .comp-tr-node--name {
-        display: inline-block;
-        line-height: 40px;
-        min-height: 40px;
+  .slot-tree .slot-t-icons .el-button+.el-button {
+    margin-left: 6px;
+  }
 
-        // 新增
-        &.is-new {
-          font-weight: bold;
-        }
-      }
-
-      // button
-      .comp-tr-node--btns {
-        margin-left: 10px;
-        opacity: 0;
-        transition: opacity .1s;
-        background-color: #f9fafc;
-
-        .el-button {
-          transform: scale(0.8); // 缩小按钮
-
-          &+.el-button {
-            margin-left: -1px;
-          }
-        }
-      }
-    }
-
-    // 高亮显示按钮
-    .is-current {
-      &>.el-tree-node__content {
-        .comp-tr-node--btns {
-          @extend .show-btns;
-        }
-      }
-    }
-
-    // 悬浮显示按钮
-    .el-tree-node__content {
-      &:hover {
-        .comp-tr-node--btns {
-          @extend .show-btns;
-        }
-      }
-    }
+  .slot-tree .el-tree-node__content:hover .slot-t-icons {
+     display: inline-block;
   }
 
   .group /deep/ .el-input__inner {
