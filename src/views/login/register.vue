@@ -38,8 +38,8 @@ export default {
   data () {
     return {
       logining: false,
-      isShowRegister: true,
-      isShowForm: true,
+      isShowRegister: false,
+      isShowForm: false,
       isShowInCert: false,
       formTitleImg: require('@/assets/imgs/identity-proving.png'),
       ruleForm2: {
@@ -70,13 +70,15 @@ export default {
   },
   activated () {},
   mounted () {
-    let wxCode = window.location.search.split('&')[0].split('=')[1] // 从地址中截取到微信code
+    let wxCode = window.location.hash.split('&')[0].split('=')[1] // 从地址中截取到微信code
+    console.log(wxCode)
     localStorage.setItem('wxCode', wxCode)
     this.$api.userInfo.submitWxCode({wxCode: wxCode}).then(res => { // 把code传给后台获取token
       let result = res.data
       console.log('提交code~')
       console.log(result)
-      let {status, code} = result
+      let {status, code, unionID} = result
+      localStorage.setItem('unionID', unionID)
       // 转到认证
       if (status === '1' && code === '1205') {
         this.isShowRegister = true // 显示认证页面div
@@ -91,10 +93,9 @@ export default {
         // 直接登录成功
       } else if (status === '1' && code === '200') {
         this.isShowRegister = false // 用户已存在，扫码成功后直接跳转到首页，不需要显示注册页div
-        let { token, loginName, unionID } = result
+        let { token, loginName } = result
         localStorage.setItem('token', token)
         localStorage.setItem('loginName', loginName)
-        localStorage.setItem('unionID', unionID)
       }
     })
   },
@@ -105,6 +106,7 @@ export default {
         if (valid && unionID) {
           this.logining = true
           var userInfo = {
+            unionID: localStorage.getItem('unionID'),
             userOrgNm: this.ruleForm2.userOrgNm,
             userName: this.ruleForm2.userName,
             userPhone: this.ruleForm2.userPhone,

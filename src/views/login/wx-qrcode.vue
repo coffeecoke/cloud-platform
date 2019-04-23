@@ -15,7 +15,8 @@ export default {
   data () {
     return {
       imgSrc: '',
-      uuid: null
+      uuid: null,
+      wxLoginObj: null
     }
   },
   activated () {},
@@ -42,9 +43,9 @@ export default {
       }
     }
 
-    const wxlogin = new WxLogin({
+    const wxLoginObj = new WxLogin({
       self_redirect: false,
-      redirect_uri: 'http://cloud.chinaresoft.com/test/%23/register',
+      redirect_uri: 'http://cloud.chinaresoft.com/%23/register',
       id: 'wechat_container',
       appid: 'wx369cd05ac05c6c1f',
       scope: 'snsapi_login',
@@ -53,7 +54,8 @@ export default {
       // href:  "http://cloud.chinaresoft.com/static/deliver/login/css/wechatstyle.css"
       // href: 'https://qywx.chinaresoft.com/wechatstyle.css'
     })
-    console.log(wxlogin)
+
+    this.wxLoginObj = wxLoginObj
 
     // 项目外部化后台生成代码（未使用）
     // this.$api.userInfo.loadQRCode().then(res => {

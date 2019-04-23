@@ -16,15 +16,15 @@
         <router-link tag="li" class="tab-item" to="/userManagement">
           <a>个人中心</a>
         </router-link>
-        <!-- <li class="tab-item">
-          <a href="http://www.baidu.com">知识库</a>
-        </li>
+        <router-link tag="li" class="tab-item" to="/knowledge">
+          <a>知识库</a>
+        </router-link>
         <li class="tab-item">
           <a>工作台</a>
         </li>
         <li class="tab-item">
           <a>产品资料</a>
-        </li> -->
+        </li>
         <router-link tag="li" class="tab-item" to="/qu-1">
           <a>调查问卷</a>
         </router-link>
@@ -57,6 +57,8 @@ export default {
     logout () {
       localStorage.setItem('token', '')
       this.$router.push({ path: '/login' })
+    },
+    toRCDP () {
     }
   }
 }

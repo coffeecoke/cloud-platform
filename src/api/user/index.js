@@ -26,7 +26,7 @@ const userInfo = {
   submitWxCode (params) {
     return axios({
       method: 'post',
-      url: '/wechat/callback',
+      url: '/user/callback',
       data: Qs.stringify(params)
     })
   },
@@ -34,7 +34,7 @@ const userInfo = {
   saveWechatInfo (params) {
     return axios({
       method: 'post',
-      url: '/wechat/saveWechatInfoExt',
+      url: '/user/saveWechatInfoExt',
       data: Qs.stringify(params)
     })
   }
