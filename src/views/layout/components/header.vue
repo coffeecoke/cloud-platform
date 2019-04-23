@@ -36,8 +36,8 @@
         </router-link> -->
       </ul>
     </div>
-    <div class="user-name">
-      欢迎您 <span @click = 'toUserManagement'>[{{userName}}]</span>
+    <div class="right-options">
+      欢迎您 <span @click = 'toUserManagement' class="user-name">[{{userName}}]</span>
       <span class="logout" @click="logout">登出</span>
     </div>
   </div>
@@ -125,10 +125,13 @@ export default {
       }
     }
   }
-  .user-name {
+  .right-options {
       float: right;
       color: #fff;
       line-height: $baseHeight;
+      .user-name {
+        cursor: pointer;
+      }
   }
   .logout {
     margin-left:20px;

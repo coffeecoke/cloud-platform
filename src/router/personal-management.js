@@ -6,6 +6,8 @@ import MatchingQuery from '@/views/personal-management/matching-query'
 export default [{
   path: '/personalManagement',
   component: PersonalManagement,
+  name: '合伙人管理',
+  redirect: '/nav1',
   children: [
     {
       path: '/nav1',

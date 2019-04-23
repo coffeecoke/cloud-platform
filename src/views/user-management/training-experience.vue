@@ -92,11 +92,13 @@
       <el-upload class="upload-demo"
         ref="fileUpload"
         action="aa"
+        accept="image/jpeg, image/png"
         :limit="3"
         :auto-upload="false"
         list-type="picture"
         :file-list="currUploadScope && currUploadScope.row.fileList"
         :on-remove="handleRemove"
+        :before-upload="beforeAvatarUpload"
         multiple>
         <el-button type="primary" slot="trigger">添加图片</el-button>
          <el-button type="primary" @click = "submitUpload">上传至服务器<i class="el-icon-upload el-icon--right"></i></el-button>
@@ -123,7 +125,7 @@ export default {
         technology: '',
         diploma: '',
         enclosure: '',
-        // fileList: [],
+        fileList: [],
         edit: true
       },
       tableData: [{
@@ -200,6 +202,9 @@ export default {
         return false
       }
     },
+    beforeAvatarUpload () {
+      alert(1)
+    },
     // 上传图片到服务器
     submitUpload () {
       let currRow = this.currUploadScope.row
@@ -218,9 +223,6 @@ export default {
       this.$api.trainingExperience.saveEnclosure(formData).then(res => {
         let result = res.data
         if (result.status === '1') {
-          result.data.forEach((item, index) => {
-            item.url = `data:image/png;base64,${item.url}`
-          })
           currRow.fileList = result.data // 根据后台更新fileList
           console.log(currRow.fileList)
           this.$message({

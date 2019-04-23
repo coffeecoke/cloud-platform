@@ -5,7 +5,8 @@ import WxCodePage from '@/views/login/wx-qrcode'
 import Register from '@/views/login/register'
 import Login from '@/views/login/login'
 import Layout from '@/views/layout/layout'
-import Home from '@/views/home/index'
+// 首页
+import Home from './home'
 // 个人中心路由模块
 import UserRouter from './user-management'
 import Quest from './questionnaire'
@@ -28,10 +29,6 @@ const router = new Router({
     component: Login
   },
   {
-    path: '/home',
-    component: Home
-  },
-  {
     path: '/wxCodePage',
     component: WxCodePage
 
@@ -45,6 +42,7 @@ const router = new Router({
     component: Layout,
     redirect: '/userManagement',
     children: [
+      ...Home,
       // 用户管理路由模块
       ...UserRouter,
       ...Quest,
