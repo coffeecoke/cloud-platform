@@ -10,28 +10,34 @@
         <router-link tag="li" class="tab-item" to="/home">
           <a>我的首页</a>
         </router-link>
-        <router-link tag="li" class="tab-item" to="/personalManagement">
-          <a>项目信息</a>
-        </router-link>
-        <router-link tag="li" class="tab-item" to="/userManagement">
-          <a>个人中心</a>
-        </router-link>
         <router-link tag="li" class="tab-item" to="/knowledge">
           <a>知识库</a>
+        </router-link>
+        <router-link tag="li" class="tab-item" to="/taskSystem">
+          <a>项目管理</a>
         </router-link>
         <li class="tab-item">
           <a>工作台</a>
         </li>
-        <router-link tag="li" class="tab-item" to="/qu-1">
+        <li class="tab-item">
+          <a>产品资料</a>
+        </li>
+        <li class="tab-item">
+          <a>系统管理</a>
+        </li>
+         <router-link tag="li" class="tab-item" to="/personalManagement">
+          <a>合伙人管理</a>
+        </router-link>
+        <li class="tab-item">
+          <a>云环境</a>
+        </li>
+        <!-- <router-link tag="li" class="tab-item" to="/qu-1">
           <a>调查问卷</a>
-        </router-link>
-        <router-link tag="li" class="tab-item" to="/">
-          <a>用户管理</a>
-        </router-link>
+        </router-link> -->
       </ul>
     </div>
     <div class="user-name">
-      {{userName}}
+      欢迎您 <span @click = 'toUserManagement'>[{{userName}}]</span>
       <span class="logout" @click="logout">登出</span>
     </div>
   </div>
@@ -58,7 +64,8 @@ export default {
       localStorage.setItem('token', '')
       this.$router.push({ path: '/login' })
     },
-    toRCDP () {
+    toUserManagement () {
+      this.$router.push({ path: '/userManagement' })
     }
   }
 }

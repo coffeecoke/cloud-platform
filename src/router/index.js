@@ -9,8 +9,10 @@ import Home from '@/views/home/index'
 // 个人中心路由模块
 import UserRouter from './user-management'
 import Quest from './questionnaire'
-import PersonalManagement from './personal-management'
 // 用户中心路由模块
+import PersonalManagement from './personal-management'
+// 项目管理
+import TaskSystem from './task-system'
 Vue.use(Router)
 // let routes = new Set([...UserRouter]) // 合并多个路由模块
 // const router = new Router({
@@ -46,7 +48,8 @@ const router = new Router({
       // 用户管理路由模块
       ...UserRouter,
       ...Quest,
-      ...PersonalManagement
+      ...PersonalManagement,
+      ...TaskSystem
     ]
   }
   ]
