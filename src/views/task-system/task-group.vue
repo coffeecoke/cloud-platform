@@ -214,13 +214,10 @@ export default {
     },
     confirm (data, node) {
       console.log(data)
-      // this.addEventForm.taskGroupParentName = data.label
-      // console.log(this.addEventForm.taskGroupParentName)
       if (!(data.children && data.children.length !== 0)) {
         let formData = new FormData()
         this.form.taskGroupId = data.id
         Object.keys(this.form).forEach(key => {
-          // console.log(key)
           formData.append(key, this.form[key])
         })
         this.$api.TaskGroup.getTaskList(formData).then(res => {
@@ -228,26 +225,18 @@ export default {
           console.log(result.data)
           this.tableData3 = result.data
         })
-        // console.log(data.id)
       }
     },
     confirm1 (value) {
-      // this.addEventForm.taskGroupParentName = data.label
-      // console.log(this.addEventForm.taskGroupParentName)
       let formData = new FormData()
-      Object.keys(this.form1).forEach(key => {
-        console.log(key)
-        formData.append(key, this.form1[key])
+      Object.keys(this.form).forEach(key => {
+        formData.append(key, this.form[key])
       })
-      console.log(formData.get('taskGroupId'))
-      formData.append('taskGroupId', this.form.taskGroupId)
-
       this.$api.TaskGroup.getTaskList(formData).then(res => {
         var result = res.data
         console.log(result.data)
         this.tableData3 = result.data
       })
-      // console.log(data.id)
     },
     /* 渲染函数 */
     renderContent (h, {
@@ -428,15 +417,16 @@ export default {
           message: '任务组编码和名称不能为空'
         })
       }
+    },
+
+    handleAddTop () { // 添加顶级节点
+      this.setTree.push({
+        id: ++this.maxexpandId,
+        name: '新增顶级节点',
+        pid: '',
+        children: []
+      })
     }
-  },
-  handleAddTop () { // 添加顶级节点
-    this.setTree.push({
-      id: ++this.maxexpandId,
-      name: '新增顶级节点',
-      pid: '',
-      children: []
-    })
   },
   mounted () {
     // var projectId = this.form.projectId
