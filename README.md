@@ -1,6 +1,7 @@
-# cloud-platform
+# 微服务架构下的前后端分离项目
 
-> A Vue.js project
+> 微服务架构下的前后端分离项目
+> 设计技术： vue+vuex+axios+elementUI+webpack+eslint
 
 ## Build Setup
 
