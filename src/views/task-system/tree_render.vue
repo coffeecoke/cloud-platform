@@ -4,13 +4,13 @@
           <span>{{DATA.label}}</span>
         </span>
         <span class="span_icon">
-          <el-button style="font-size: 12px;" type="text" v-if="DATA.addAble" @click="Append(STORE,DATA,NODE)">
+          <el-button style="font-size: 12px;" type="text" v-if="DATA.addAble" @click.stop="Append(STORE,DATA,NODE)">
             <i class="el-icon-plus"></i>
           </el-button>
-           <el-button style="font-size: 12px;" type="text" v-if="DATA.editAble" @click="Edit(STORE,DATA,NODE)">
+           <el-button style="font-size: 12px;" type="text" v-if="DATA.editAble" @click.stop="Edit(STORE,DATA,NODE)">
             <i class="el-icon-edit"></i>
           </el-button>
-          <el-button style="font-size: 12px;" type="text" v-if="DATA.delAble" @click="Delete(STORE,DATA,NODE)">
+          <el-button style="font-size: 12px;" type="text" v-if="DATA.delAble" @click.stop="Delete(STORE,DATA,NODE)">
             <i class="el-icon-delete"></i>
           </el-button>
         </span>

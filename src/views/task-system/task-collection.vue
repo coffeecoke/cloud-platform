@@ -46,8 +46,7 @@
       <el-table-column prop="dependencyDegree" label="依赖度" align="center"></el-table-column>
       <el-table-column fixed="right" label="操作" align="center">
         <template slot-scope="scope">
-          <el-button @click.native.prevent="taskCollection(scope.$index,scope.row)" type="text" icon="el-icon-sold-out">
-            任务领取</el-button>
+          <el-button @click.native.prevent="taskCollection(scope.$index,scope.row)" type="text" icon="el-icon-sold-out">任务领取</el-button>
         </template>
       </el-table-column>
     </el-table>
