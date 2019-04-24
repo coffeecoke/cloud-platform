@@ -7,8 +7,14 @@ export default [{
   path: '/personalManagement',
   component: PersonalManagement,
   name: '合伙人管理',
-  redirect: '/nav1',
+  // redirect: '/nav1',
   children: [
+    {
+      path: '/',
+      name: '用户概括',
+      component: UserProfile,
+      redirect: '/nav1'
+    },
     {
       path: '/nav1',
       name: '用户概括',

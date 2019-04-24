@@ -2,7 +2,7 @@
   <div class="header">
     <div class="logo"></div>
     <div class="top-nav">
-      <ul class="top-nav__list">
+      <ul class="top-nav__list" ref="topNav">
         <!-- <li class="nav-item" v-for="(item, i) in topNavs" :key="item.id" :class="{selected:select == i}" @click="clickLi(i)">
           {{item.name}}
         </li> -->
@@ -53,6 +53,8 @@ export default {
     }
   },
   activated () {},
+  mounted () {
+  },
   methods: {
     handleClick (tab, event) {
       console.log(tab, event)
@@ -109,7 +111,7 @@ export default {
           color:#fff;
           text-decoration: none;
         }
-        &.router-link-active {
+        &.router-link-exact-active {
           color: #fff;
 
           &:after {

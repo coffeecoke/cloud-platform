@@ -197,10 +197,10 @@ export default {
   },
   mounted () {
     // 获取字典
-    var obj = {
+    var dictionaryObj = {
       dict_code: [ 'major', 'education', 'degree', 'fullTime', 'D_SEX' ]
     }
-    this.$api.dictionary.getDictionaries(obj).then(res => {
+    this.$api.dictionary.getDictionaries(dictionaryObj).then(res => {
       let result = res.data
       let dictionary = {}
       result.data.forEach(item => {

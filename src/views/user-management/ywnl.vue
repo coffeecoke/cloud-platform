@@ -3,16 +3,16 @@
     <template slot="boxHeaderTitle">业务能力</template>
     <template slot="boxBodyInner">
       <el-table :data="tableData" border style="width: 100%" v-loading="loading">
-        <el-table-column prop="category" label="业务类型">
+        <el-table-column prop="businessCategory" label="业务类型">
           <template slot-scope="scope">
             <template v-if="scope.row.edit">
-              <el-select v-model="scope.row.category" placeholder="请选择业务类型">
-                <el-option v-for="item in categoryOptions" :key="item.key" :label="item.label" :value="item.value"
+              <el-select v-model="scope.row.businessCategory" placeholder="请选择业务类型">
+                <el-option v-for="item in businessCategory" :key="item.dictCode" :label="item.dictName" :value="item.dictCode"
                   :disabled="item.disabled">
                 </el-option>
               </el-select>
             </template>
-            <span v-else>{{ formatCategory(scope.row.category)}}</span>
+            <span v-else>{{ formatCategory(scope.row.businessCategory)}}</span>
           </template>
         </el-table-column>
         <el-table-column prop="usageTime" label="使用时间">
@@ -23,16 +23,16 @@
             <span v-else>{{ scope.row.usageTime }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="mastery" label="掌握程度">
+        <el-table-column prop="masteryLevel" label="掌握程度">
           <template slot-scope="scope">
             <template v-if="scope.row.edit">
-              <el-select v-model="scope.row.mastery" placeholder="请选择掌握程度">
-                <el-option v-for="item in masteryOptions" :key="item.value" :label="item.label" :value="item.value"
+              <el-select v-model="scope.row.masteryLevel" placeholder="请选择掌握程度">
+                <el-option v-for="item in masteryLevel" :key="item.dictCode" :label="item.dictName" :value="item.dictCode"
                   :disabled="item.disabled">
                 </el-option>
               </el-select>
             </template>
-            <span v-else>{{ formatMastery(scope.row.mastery)}}</span>
+            <span v-else>{{ formatMastery(scope.row.masteryLevel)}}</span>
           </template>
         </el-table-column>
         <el-table-column prop="recentUsage" label="最近使用日期">
@@ -71,46 +71,59 @@ export default {
     return {
       isAddRow: true, // 保存上一条数据之后，才允许新增
       loading: false, // 数据加载的loading效果
-      categoryOptions: [
+      businessCategory: [
         {
-          value: '1',
-          label: '借款'
+          dictCode: '1',
+          dictName: '借款'
         },
         {
-          value: '2',
-          label: '贷款'
+          dictCode: '2',
+          dictName: '贷款'
         }
       ],
       // 掌握程度字典表
-      masteryOptions: [
+      masteryLevel: [
         {
-          value: '1',
-          label: '精通'
+          dictCode: '1',
+          dictName: '精通'
         },
         {
-          value: '2',
-          label: '熟悉'
+          dictCode: '2',
+          dictName: '熟悉'
         }
       ],
       list: {
         id: null, // id为空表示新增
-        category: '1',
+        businessCategory: '',
         usageTime: '',
-        mastery: '1',
+        masteryLevel: '',
         recentUsage: '',
         edit: true
       },
       tableData: [{
         id: '1', // id为空表示新增
-        category: '1',
+        businessCategory: '1',
         usageTime: '23月',
-        mastery: '1',
+        masteryLevel: '1',
         recentUsage: '2014-09-08',
         edit: false
       }]
     }
   },
   created () {
+    let dictionaryObj = {
+      dict_code: [ 'businessCategory', 'masteryLevel' ]
+    }
+    this.$api.dictionary.getDictionaries(dictionaryObj).then(res => {
+      let result = res.data
+      let dictionary = {}
+      result.data.forEach(item => {
+        Object.assign(dictionary, item)
+      })
+      this.businessCategory = dictionary.businessCategory
+      this.masteryLevel = dictionary.masteryLevel
+    })
+
     this.$api.ywnl.queryProfessionalCapability().then(res => {
       let result = res.data
       if (result.status === '1') {
@@ -126,16 +139,16 @@ export default {
   },
   methods: {
     formatCategory (value) {
-      let currObj = this.categoryOptions.filter(obj => {
-        return obj.value === value
+      let currObj = this.businessCategory.filter(obj => {
+        return obj.dictCode === value
       })
-      return currObj[0].label
+      return currObj.length > 0 ? currObj[0].dictName : ''
     },
     formatMastery (value) {
-      let currObj = this.masteryOptions.filter(obj => {
-        return obj.value === value
+      let currObj = this.masteryLevel.filter(obj => {
+        return obj.dictCode === value
       })
-      return currObj[0].label
+      return currObj.length > 0 ? currObj[0].dictName : ''
     },
     // 添加一行
     addRow () {

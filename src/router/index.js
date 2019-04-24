@@ -5,12 +5,13 @@ import WxCodePage from '@/views/login/wx-qrcode'
 import Register from '@/views/login/register'
 import Login from '@/views/login/login'
 import Layout from '@/views/layout/layout'
-// 首页
+// 首页模块
 import Home from './home'
 // 个人中心路由模块
 import UserRouter from './user-management'
+// 问卷调查
 import Quest from './questionnaire'
-// 用户中心路由模块
+// 用户管理路由模块
 import PersonalManagement from './personal-management'
 // 项目管理
 import TaskSystem from './task-system'

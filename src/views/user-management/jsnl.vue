@@ -3,28 +3,28 @@
     <template slot="boxHeaderTitle">技术能力</template>
     <template slot="boxBodyInner">
       <el-table :data="tableData" border style="width: 100%" v-loading="loading">
-        <el-table-column prop="category" label="技能类别">
+        <el-table-column prop="skillCategory" label="技能类别">
           <template slot-scope="scope">
             <template v-if="scope.row.edit">
-              <el-select v-model="scope.row.category" placeholder="请选择技能类别">
-                <el-option v-for="item in categoryOptions" :key="item.value" :label="item.label" :value="item.value"
+              <el-select v-model="scope.row.skillCategory" placeholder="请选择技能类别">
+                <el-option v-for="item in skillCategory" :key="item.dictCode" :label="item.dictName" :value="item.dictCode"
                   :disabled="item.disabled">
                 </el-option>
               </el-select>
             </template>
-            <span v-else>{{ formatCategory(scope.row.category) }}</span>
+            <span v-else>{{ formatCategory(scope.row.skillCategory) }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="profession" label="专业技能">
+        <el-table-column prop="skill" label="专业技能">
           <template slot-scope="scope">
             <template v-if="scope.row.edit">
-              <el-select v-model="scope.row.professional" placeholder="请选择专业技能">
-                <el-option v-for="item in professionOptions" :key="item.value" :label="item.label" :value="item.value"
+              <el-select v-model="scope.row.skill" placeholder="请选择专业技能">
+                <el-option v-for="item in skill" :key="item.dictCode" :label="item.dictName" :value="item.dictCode"
                   :disabled="item.disabled">
                 </el-option>
               </el-select>
             </template>
-            <span v-else>{{ formatProfession(scope.row.professional) }}</span>
+            <span v-else>{{ formatProfession(scope.row.skill) }}</span>
           </template>
         </el-table-column>
         <el-table-column prop="usageTime" label="使用时间">
@@ -35,16 +35,16 @@
             <span v-else>{{ scope.row.usageTime }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="mastery" label="掌握程度">
+        <el-table-column prop="masteryLevel" label="掌握程度">
           <template slot-scope="scope">
             <template v-if="scope.row.edit">
-              <el-select v-model="scope.row.mastery" placeholder="请选择掌握程度">
-                <el-option v-for="item in masteryOptions" :key="item.key" :label="item.label" :value="item.value"
+              <el-select v-model="scope.row.masteryLevel" placeholder="请选择掌握程度">
+                <el-option v-for="item in masteryLevel" :key="item.dictCode" :label="item.dictName" :value="item.dictCode"
                   :disabled="item.disabled">
                 </el-option>
               </el-select>
             </template>
-            <span v-else>{{ formatMastery(scope.row.mastery) }}</span>
+            <span v-else>{{ formatMastery(scope.row.masteryLevel) }}</span>
           </template>
         </el-table-column>
         <el-table-column prop="recentUsage" label="最近使用日期">
@@ -83,68 +83,78 @@ export default {
     return {
       isAddRow: true, // 保存上一条数据之后，才允许新增
       loading: false, // 数据加载的loading效果
-      // 业务字典表
-      categoryOptions: [
+      // 技能类别
+      skillCategory: [
         {
-          value: '1',
-          label: '借款'
+          dictCode: '1',
+          dictName: '后端'
         },
         {
-          value: '2',
-          label: '贷款'
-        },
-        {
-          value: '3',
-          label: '贷款1'
+          dictCode: '2',
+          dictName: '前端'
         }
       ],
       // 专业字典表
-      professionOptions: [
+      skill: [
         {
-          value: '1',
-          label: 'Js'
+          dictCode: '1',
+          dictName: 'Js'
         },
         {
-          value: '2',
-          label: 'Java'
+          dictCode: '2',
+          dictName: 'Java'
         },
         {
-          value: '3',
-          label: 'vue'
+          dictCode: '3',
+          dictName: 'vue'
         }
       ],
       // 掌握程度字典表
-      masteryOptions: [
+      masteryLevel: [
         {
-          value: '1',
-          label: '精通'
+          dictCode: '1',
+          dictName: '精通'
         },
         {
-          value: '2',
-          label: '熟悉'
+          dictCode: '2',
+          dictName: '熟悉'
         }
       ],
       list: {
         id: null, // id为空表示新增
-        category: '1',
-        professional: '2',
+        skillCategory: '',
+        skill: '',
         usageTime: '',
-        mastery: '1',
+        masteryLevel: '',
         recentUsage: '',
         edit: true
       },
       tableData: [{
         id: '1', // id为空表示新增
-        category: '1',
-        professional: '2',
+        skillCategory: '1',
+        skill: '2',
         usageTime: '',
-        mastery: '1',
+        masteryLevel: '1',
         recentUsage: '2018-09-07',
         edit: false
       }]
     }
   },
   created () {
+    let dictionaryObj = {
+      dict_code: [ 'skillCategory', 'skill', 'masteryLevel' ]
+    }
+    this.$api.dictionary.getDictionaries(dictionaryObj).then(res => {
+      let result = res.data
+      let dictionary = {}
+      result.data.forEach(item => {
+        Object.assign(dictionary, item)
+      })
+      this.skillCategory = dictionary.skillCategory
+      this.skill = dictionary.skill
+      this.masteryLevel = dictionary.masteryLevel
+    })
+
     // 参数为用户认证之后的token，token放在http header中,方便以后做api响应拦截
     this.$api.jsnl.queryTechnologicalCapability().then(res => {
       let result = res.data
@@ -161,22 +171,22 @@ export default {
   },
   methods: {
     formatCategory (value) {
-      let currObj = this.categoryOptions.filter(obj => {
-        return obj.value === value
+      let currObj = this.skillCategory.filter(obj => {
+        return obj.dictCode === value
       })
-      return currObj[0].label
+      return currObj.length > 0 ? currObj[0].dictName : ''
     },
     formatProfession (value) {
-      let currObj = this.professionOptions.filter(obj => {
-        return obj.value === value
+      let currObj = this.skill.filter(obj => {
+        return obj.dictCode === value
       })
-      return currObj[0].label
+      return currObj.length > 0 ? currObj[0].dictName : ''
     },
     formatMastery (value) {
-      let currObj = this.masteryOptions.filter(obj => {
-        return obj.value === value
+      let currObj = this.masteryLevel.filter(obj => {
+        return obj.dictCode === value
       })
-      return currObj[0].label
+      return currObj.length > 0 ? currObj[0].dict : ''
     },
     // 添加一行
     addRow () {

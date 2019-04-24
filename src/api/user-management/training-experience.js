@@ -33,10 +33,10 @@ const trainingExperience = {
       data: params
     })
   },
-  delEnclosure (params) {
+  delEnclosureSingle (params) {
     return axios({
       method: 'post',
-      url: '/enclosure/delEnclosure',
+      url: '/enclosure/delEnclosureSingle',
       data: params
     })
   }
