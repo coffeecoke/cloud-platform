@@ -3,6 +3,7 @@ import Quest from '@/views/questionnaire/index'
 import QuestBanks from '@/views/questionnaire/questionBanks'
 import Questionnaire from '@/views/questionnaire/questionnaire'
 import QuestionPublic from '@/views/questionnaire/questionPublic'
+import QuestionShow from '@/views/questionnaire/showquestionnaire'
 export default [{
   path: '/quest',
   component: Quest,
@@ -23,6 +24,11 @@ export default [{
       path: '/qu-3',
       name: '问卷发布',
       component: QuestionPublic
+    },
+    {
+      path: '/qu-4',
+      name: '问卷预览',
+      component: QuestionShow
     }
   ]
 }]

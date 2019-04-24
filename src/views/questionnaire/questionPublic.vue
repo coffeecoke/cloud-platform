@@ -1,15 +1,15 @@
 <template>
 <div class="box-table">
 <!--查询表单 start-->
-<el-form :inline="true" :model="questDeploy" class="demo-form-inline">
+<el-form :inline="true" :model="deployForm" class="demo-form-inline">
   <el-form-item label="问卷名称">
-    <el-input v-model="questDeploy.quTitle" placeholder="问卷名称"></el-input>
+    <el-input v-model="deployForm.quTitle" placeholder="问卷名称"></el-input>
   </el-form-item>
   <el-form-item label="项目名称">
-    <el-input v-model="questDeploy.projectName" placeholder="项目名称"></el-input>
+    <el-input v-model="deployForm.projectName" placeholder="项目名称"></el-input>
   </el-form-item>
   <el-form-item label="问卷类型">
-    <el-select v-model="questDeploy.quType" placeholder="问卷类型">
+    <el-select v-model="deployForm.quType" placeholder="问卷类型">
       <el-option label="接口改造类" value="1"></el-option>
       <el-option label="开发实施类" value="2"></el-option>
       <el-option label="人员外包类" value="3"></el-option>
@@ -47,19 +47,13 @@
 </el-row>
 <!--表单分页 end-->
 <!--发布调查问卷 start-->
-<el-dialog title="新增调查问卷" :visible.sync="questAdd"  center>
+<el-dialog title="发布调查问卷" :visible.sync="questAdd"  center>
 <el-form  label-width="80px"  :model="questDeploy" >
-<el-form-item label="问卷名称"  >
-  <el-input v-model="questDeploy.quTitle"  placeholder="问卷名称" size="medium"  ></el-input>
+<el-form-item label="选择问卷"  >
+  <el-autocomplete v-model="questDeploy.quTitle" :fetch-suggestions="quTitleSearchAsync" placeholder="请选择问卷" @select="quTitleHandleSelect"></el-autocomplete>
 </el-form-item>
-<el-form-item label="问卷类型">
-    <el-select v-model="questDeploy.quType" placeholder="问卷类型" size="medium">
-      <el-option label="接口改造类" value="1"></el-option>
-      <el-option label="开发实施类" value="2"></el-option>
-      <el-option label="人员外包类" value="3"></el-option>
-      <el-option label="业务咨询类" value="4"></el-option>
-      <el-option label="制度升级类" value="5"></el-option>
-    </el-select>
+<el-form-item label="归属项目">
+    <el-autocomplete v-model="questDeploy.projectName" :fetch-suggestions="projectSearchAsync" placeholder="请选择归属项目" @select="projectHandleSelect"></el-autocomplete>
 </el-form-item>
 <el-form-item label="归属项目">
   <el-input v-model="questDeploy.projectName" placeholder="归属项目" ></el-input>
@@ -76,6 +70,12 @@
 export default {
   data () {
     return {
+      timeout: null,
+      deployForm: {
+        quTitle: '',
+        quType: '',
+        projectName: ''
+      },
       multipleSelection: [],
       questDeploy: {
         id: '',
@@ -86,36 +86,7 @@ export default {
         createDate: ''
       },
       questAdd: false,
-      tableData: [
-        {
-          quTitle: '测试问卷1',
-          quType: '开发实施类',
-          projectName: '广州农商',
-          createUserName: 'admin',
-          createDate: '2019-4-16'
-        },
-        {
-          quTitle: '测试问卷1',
-          quType: '开发实施类',
-          projectName: '广州农商',
-          createUserName: 'admin',
-          createDate: '2019-4-16'
-        },
-        {
-          quTitle: '测试问卷1',
-          quType: '开发实施类',
-          projectName: '广州农商',
-          createUserName: 'admin',
-          createDate: '2019-4-16'
-        },
-        {
-          quTitle: '测试问卷1',
-          quType: '开发实施类',
-          projectName: '广州农商',
-          createUserName: 'admin',
-          createDate: '2019-4-16'
-        }
-      ]
+      tableData: []
     }
   },
   mounted () {
@@ -124,7 +95,8 @@ export default {
   methods: {
     initDataTable () {
       console.log(this.questDeploy)
-      this.$api.questPublic.getQuestionDeployList(this.questDeploy).then(res => {
+      this.$api.questionPublic.getQuestionDeployList(this.formatForm(this.deployForm)).then(res => {
+        console.log(res)
         let result = res.data
         this.tableData = result.data
       })
@@ -136,7 +108,7 @@ export default {
           this.$api.questPublic.saveQuestionDeploy(this.questDeploy).then(res => {
             let result = res.data
             console.log(result)
-            if (result.state === '1') {
+            if (result.status === '1') {
               this.$message({
                 type: 'success',
                 message: '保存数据成功!'
@@ -196,8 +168,51 @@ export default {
           message: '请选择数据'
         })
       }
+    },
+    formatForm (val) {
+      let formData = new FormData()
+      Object.keys(val).forEach(key => {
+        formData.append(key, val[key])
+      })
+      return formData
+    },
+    quTitleSearchAsync (queryString, cb) {
+      var restaurants = []
+      this.$api.questionPublic.loadQuestAsync({key: queryString}).then(res => {
+        let result = res.data
+        restaurants = result.data
+        var results = queryString ? restaurants.filter(this.createTitleFilter(queryString)) : restaurants
+        cb(results)
+      })
+    },
+    projectSearchAsync (queryString, cb) {
+      var restaurants = []
+      this.$api.questionPublic.loadProjectAsync({key: queryString}).then(res => {
+        let result = res.data
+        restaurants = result.data
+        var results = queryString ? restaurants.filter(this.createProjectFilter(queryString)) : restaurants
+        cb(results)
+      })
+    },
+    createTitleFilter (queryString) {
+      return (state) => {
+        return (state.value.toLowerCase().indexOf(queryString.toLowerCase()) > 0)
+      }
+    },
+    createProjectFilter (queryString) {
+      return (state) => {
+        return (state.value.toLowerCase().indexOf(queryString.toLowerCase()) > 0)
+      }
+    },
+    quTitleHandleSelect (item) {
+      console.log(item)
+    },
+    projectHandleSelect (item) {
+      console.log(item)
     }
+
   }
+
 }
 </script>
 <style lang="scss" scoped>

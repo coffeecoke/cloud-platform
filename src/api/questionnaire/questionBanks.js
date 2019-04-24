@@ -1,4 +1,5 @@
 import axios from '@/utils/http' // 导入http中创建的axios实例
+import Qs from 'qs'
 
 const questionBank = {
   // 问题管理---获取列表信息
@@ -22,7 +23,7 @@ const questionBank = {
     return axios({
       method: 'post',
       url: '/question/deleteQuestionBank',
-      data: params
+      data: Qs.stringify(params)
     })
   },
   // 问题管理--添加选项信息
@@ -46,7 +47,7 @@ const questionBank = {
     return axios({
       method: 'post',
       url: '/question/deleteQuestionOption',
-      data: params
+      data: Qs.stringify(params)
     })
   },
   // 问题管理--添加选项信息--获取选项列表信息

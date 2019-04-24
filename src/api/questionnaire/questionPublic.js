@@ -1,4 +1,5 @@
 import axios from '@/utils/http' // 导入http中创建的axios实例
+import Qs from 'qs'
 
 const questPublic = {
   // 问卷发布---获取列表信息
@@ -23,6 +24,14 @@ const questPublic = {
       method: 'post',
       url: '/question/deleteQuestionDeploy',
       data: params
+    })
+  },
+  // 根据用户输入---加载所有符合条件问卷
+  loadQuestAsync: (params) => {
+    return axios({
+      method: 'post',
+      url: '/question/loadQuestAsync',
+      data: Qs.stringify(params)
     })
   }
 }

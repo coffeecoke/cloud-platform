@@ -1,4 +1,5 @@
 import axios from '@/utils/http' // 导入http中创建的axios实例
+import Qs from 'qs'
 
 const questionnaire = {
   // 问卷管理---获取列表信息
@@ -22,7 +23,7 @@ const questionnaire = {
     return axios({
       method: 'post',
       url: '/question/deleteQuestionnaire',
-      data: params
+      data: Qs.stringify(params)
     })
   },
   // 问卷管理--添加问题信息
@@ -46,15 +47,24 @@ const questionnaire = {
     return axios({
       method: 'post',
       url: '/question/loadQuestDataList',
-      data: params
+      data: Qs.stringify(params)
     })
   },
   // 保存问卷选择问题
   saveQuestDataList: (params) => {
+    console.log(Qs.parse(params))
     return axios({
       method: 'post',
       url: '/question/saveQuestDataList',
-      data: params
+      data: Qs.stringify(params)
+    })
+  },
+  // 问卷预览
+  showQuestionnaire: (params) => {
+    return axios({
+      method: 'post',
+      url: '/question/showQuestionnaire',
+      data: Qs.stringify(params)
     })
   }
 }

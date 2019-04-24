@@ -1,11 +1,11 @@
 <template>
 <div class="box-table">
-<el-form :inline="true" :model="questionnaire" class="demo-form-inline">
+<el-form :inline="true" :model="qu_naire_form" class="demo-form-inline">
   <el-form-item label="问卷名称" prop="quTitle">
-    <el-input v-model="questionnaire.quTitle" placeholder="问卷名称"></el-input>
+    <el-input v-model="qu_naire_form.quTitle" placeholder="问卷名称"></el-input>
   </el-form-item>
   <el-form-item label="问卷类型" prop="quType">
-    <el-select v-model="questionnaire.quType" placeholder="问卷类型">
+    <el-select v-model="qu_naire_form.quType" clearable placeholder="问卷类型">
       <el-option label="接口改造类" value="1"></el-option>
       <el-option label="开发实施类" value="2"></el-option>
       <el-option label="人员外包类" value="3"></el-option>
@@ -20,19 +20,26 @@
 
 <el-row>
   <el-col :span="2"><div class="grid-content bg-purple"><el-button type="primary" @click="questAdd = true" icon="el-icon-edit">新增</el-button></div></el-col>
-  <el-col :span="2"><div class="grid-content bg-purple"><el-button type="primary" @click="questAdd = true" icon="el-icon-edit">修改</el-button></div></el-col>
+  <el-col :span="2"><div class="grid-content bg-purple"><el-button type="primary" @click="editQuestion" icon="el-icon-edit">修改</el-button></div></el-col>
   <el-col :span="3"><div class="grid-content bg-purple"><el-button type="primary" @click="addQuestion" icon="el-icon-document" >添加问题</el-button></div></el-col>
   <el-col :span="1"><div class="grid-content bg-purple"><el-button type="primary" @click="delData" icon="el-icon-delete" >删除</el-button></div></el-col>
 </el-row>
 <el-row>
-   <el-table :data="tableData" @selection-change="handleSelectionChange" border style="width: 100%">
+   <el-table :data="tableData" @selection-change="handleSelectionChange"  border style="width: 100%">
     <el-table-column  type="selection"  width="55"  align="center"></el-table-column>
     <el-table-column prop="quTitle" label="问卷名称" width="200"></el-table-column>
-    <el-table-column prop="quType" label="问卷类型" width="200"></el-table-column>
-    <el-table-column prop="quDescFlag" label="是否有简介" width="200"></el-table-column>
-    <el-table-column prop="quDesc" label="简介" width="230"></el-table-column>
-    <el-table-column prop="createUserName" label="创建人" width="200"></el-table-column>
-    <el-table-column prop="createDate" label="创建时间" width="200"></el-table-column>
+    <el-table-column prop="quType" label="问卷类型" width="200">
+      <template slot-scope="scope">{{scope.row.quType | formatquType }}</template>
+    </el-table-column>
+    <el-table-column prop="quDescFlag" label="是否有简介" width="200">
+      <template slot-scope="scope">{{scope.row.quDescFlag | formatquDescFlag }}</template>
+    </el-table-column>
+    <el-table-column prop="quDesc"  label="简介" width="200"></el-table-column>
+    <el-table-column prop="createUser" label="创建人" width="200"></el-table-column>
+    <el-table-column prop="createDate" label="创建时间" width="120"></el-table-column>
+    <el-table-column label="操作" width="100">
+    <el-button slot-scope="scope" type="primary"  icon="el-icon-document"  @click="handleShow(scope.$index, scope.row)" round>预览</el-button>
+    </el-table-column>
   </el-table>
 </el-row>
 <el-row >
@@ -86,6 +93,10 @@
 export default {
   data () {
     return {
+      qu_naire_form: {
+        quTitle: '',
+        quType: ''
+      },
       multipleSelection: [],
       questionnaire: {
         id: '',
@@ -93,7 +104,7 @@ export default {
         quType: '',
         quDescFlag: 0,
         quDesc: '',
-        createUserName: '',
+        createUser: '',
         createDate: ''
       },
       questionnaireRules: {
@@ -105,73 +116,35 @@ export default {
           {required: true, message: '请选择问卷类型', trigger: 'change'}
         ]
       },
-      dataOpts: [
-        {
-          label: '上海',
-          key: 0
-        },
-        {
-          label: '北京',
-          key: 1
-        },
-        {
-          label: '广州',
-          key: 2
-        },
-        {
-          label: '深圳',
-          key: 3
-        },
-        {
-          label: '南京',
-          key: 4
-        },
-        {
-          label: '西安',
-          key: 5
-        },
-        {
-          label: '成都',
-          key: 6
-        }
-      ],
+      dataOpts: [],
       leftCheck: [],
       rightCheck: [],
       questAdd: false,
       questSel: false,
       value4: [],
-      tableData: [
-        {
-          // 表格数据
-          id: '11111111',
-          quTitle: '测试问卷1',
-          quType: '开发实施类',
-          quDescFlag: '是',
-          quDesc: '发生发生发射点发111111111',
-          createUserName: 'admin',
-          createDate: '2019-4-16'
-        },
-        {
-          // 表格数据
-          id: '222222',
-          quTitle: '测试问卷1',
-          quType: '开发实施类',
-          quDescFlag: '是',
-          quDesc: '发生发生发射点发111111111',
-          createUserName: 'admin',
-          createDate: '2019-4-16'
-        },
-        {
-          // 表格数据
-          id: '333333',
-          quTitle: '测试问卷1',
-          quType: '开发实施类',
-          quDescFlag: '是',
-          quDesc: '发生发生发射点发111111111',
-          createUserName: 'admin',
-          createDate: '2019-4-16'
-        }
-      ]
+      tableData: []
+    }
+  },
+  filters: {
+    formatquType (val) {
+      if (val === '1') {
+        return '接口改造类'
+      } else if (val === '2') {
+        return '开发实施类'
+      } else if (val === '3') {
+        return '人员外包类'
+      } else if (val === '4') {
+        return '业务咨询类'
+      } else if (val === '5') {
+        return '制度升级类'
+      }
+    },
+    formatquDescFlag (val) {
+      if (val) {
+        return '是'
+      } else {
+        return '否'
+      }
     }
   },
   mounted () {
@@ -179,8 +152,7 @@ export default {
   },
   methods: {
     initTableData () {
-      console.log(this.questionnaire)
-      this.$api.questionnaire.getQuestionnaireList(this.questionnaire).then(res => {
+      this.$api.questionnaire.getQuestionnaireList(this.formatForm(this.qu_naire_form)).then(res => {
         let result = res.data
         this.tableData = result.data
       })
@@ -189,10 +161,10 @@ export default {
       console.log(this.questionnaire)
       this.$refs[valForm].validate((valid) => {
         if (valid) {
-          this.$api.questionnaire.saveQuestionnaire(this.questionnaire).then(res => {
+          this.$api.questionnaire.saveQuestionnaire(this.formatForm(this.questionnaire)).then(res => {
             let result = res.data
             console.log(result)
-            if (result.state === '1') {
+            if (result.status === '1') {
               this.$message({
                 type: 'success',
                 message: '保存数据成功!'
@@ -201,6 +173,7 @@ export default {
               this.$message.error('保存数据失败！')
             }
             this.questAdd = false
+            this.initTableData()
           })
         } else {
           return false
@@ -213,14 +186,19 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$api.questionnaire.deleteQuestionnaire(this.questionnaire).then(res => {
+        let values = []
+        this.multipleSelection.forEach((val) => {
+          values.push(val.id)
+        })
+        let param = {qid: values.join(',')}
+        this.$api.questionnaire.deleteQuestionnaire(param).then(res => {
           let result = res.data
-          console.log(result)
-          if (result.state === '1') {
+          if (result.status === '1') {
             this.$message({
               type: 'success',
               message: '删除数据成功!'
             })
+            this.initTableData()
           } else {
             this.$message.error('删除数据失败！')
           }
@@ -241,7 +219,7 @@ export default {
     switchToggle (val) {
       let quDescRule = [
         {required: val, message: '请填写简介', trigger: 'blur'},
-        { min: 1, max: 10, message: '长度在 1 到 200 个字符', trigger: 'blur' }
+        { min: 1, max: 2000, message: '长度在 1 到 2000 个字符', trigger: 'blur' }
       ]
       if (val) {
         this.questionnaireRules.quDesc = quDescRule
@@ -251,7 +229,7 @@ export default {
     },
     editQuestion () {
       if (this.multipleSelection.length === 1) {
-        this.questionnaire = this.multipleSelection[0]
+        this.questionnaire = Object.assign({}, this.multipleSelection[0])
         this.questAdd = true
       } else {
         this.$message({
@@ -265,13 +243,16 @@ export default {
     },
     addQuestion () {
       if (this.multipleSelection.length === 1) {
-        this.questionnaire = this.multipleSelection[0]
-        this.$api.questionnaire.loadQuestDataList(this.questionnaire).then(res => {
+        this.questionnaire = Object.assign({}, this.multipleSelection[0])
+        let param = {quId: this.questionnaire.id}
+        this.$api.questionnaire.loadQuestDataList(param).then(res => {
           let result = res.data
-          console.log(result)
-          this.dataOpts = result.dataOpts
-          this.leftCheck = result.leftCheck
-          this.rightCheck = result.rightCheck
+          // console.log(result)
+          this.dataOpts = result.data.allData
+          console.log(result.data.checkData)
+          // this.leftCheck = result.leftCheck
+          this.value4 = result.data.checkData
+          this.rightCheck = result.data.checkData
         })
         this.questSel = true
       } else {
@@ -286,12 +267,12 @@ export default {
       let param = []
       param.quId = this.questionnaire.id
       param.operation = direction === 'left' ? 'delete' : 'insert'
-      param.movedKeys = movedKeys
+      param.movedKeys = movedKeys.join(',')
       console.log(param)
       this.$api.questionnaire.saveQuestDataList(param).then(res => {
         let result = res.data
         console.log(result)
-        if (result.state === '1') {
+        if (result.status === '1') {
           this.$message({
             type: 'success',
             message: '保存数据成功!'
@@ -301,6 +282,17 @@ export default {
           this.$message.error('保存数据失败！')
         }
       })
+    },
+    formatForm (val) {
+      let formData = new FormData()
+      Object.keys(val).forEach(key => {
+        formData.append(key, val[key])
+      })
+      return formData
+    },
+    handleShow (index, row) {
+      console.log(row.id)
+      this.$router.push({path: '/qu-4', query: {id: row.id}})
     }
   }
 }
