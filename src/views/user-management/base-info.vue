@@ -229,9 +229,15 @@ export default {
       this.$api.baseInfo.registerUser(formData).then(res => {
         let result = res.data
         if (result.status === '1') {
-          this.$message('提交成功')
+          this.$message({
+            type: 'success',
+            message: '提交成功'
+          })
         } else {
-          this.$message('提交失败')
+          this.$message({
+            type: 'error',
+            message: '提交失败'
+          })
         }
       })
     }

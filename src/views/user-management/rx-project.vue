@@ -197,8 +197,8 @@ export default {
       loading: false, // 数据加载的loading效果
       list: {
         id: null, // id为空表示新增
-        date: null,
-        industry: null,
+        date: '',
+        industry: '',
         projectName: '',
         projectScale: '',
         projectRole: '',
@@ -210,7 +210,7 @@ export default {
       tableData: [
         {
           id: '1', // id为后台传入，后台的增删都是根据id进行的
-          date: '',
+          date: ['2019-04-05', '2019-09-08'],
           industry: 1,
           projectName: '',
           projectScale: '',
@@ -257,7 +257,7 @@ export default {
     // 参数为用户认证之后的token，token放在http header中,方便以后做api响应拦截
     this.$api.resoftProject.queryResoftProject().then(res => {
       let result = res.data
-      if (result.stauts === '1') {
+      if (result.status === '1') {
         this.tableData = result.data || []
       } else {
         this.$message('获取融鑫项目列表失败')

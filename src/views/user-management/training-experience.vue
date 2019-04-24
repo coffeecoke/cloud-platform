@@ -106,7 +106,6 @@
         list-type="picture"
         :file-list="currUploadScope && currUploadScope.row.fileList"
         :on-remove="handleRemove"
-        :before-upload="beforeAvatarUpload"
         multiple>
         <el-button type="primary" slot="trigger">添加图片</el-button>
          <!-- <el-button type="primary" @click = "submitUpload">上传至服务器<i class="el-icon-upload el-icon--right"></i></el-button> -->
@@ -233,15 +232,15 @@ export default {
   methods: {
     formatTrainingMode (value) {
       let currObj = this.trainingMode.filter(obj => {
-        return obj.value === value
+        return obj.dictCode === value
       })
-      return currObj.length > 0 ? currObj[0].label : ''
+      return currObj.length > 0 ? currObj[0].dictName : ''
     },
     formatSkill (value) {
       let currObj = this.skill.filter(obj => {
-        return obj.value === value
+        return obj.dictCode === value
       })
-      return currObj.length > 0 ? currObj[0].label : ''
+      return currObj.length > 0 ? currObj[0].dictName : ''
     },
     dialogUpload (scope) {
       this.dialogUploadVisible = true
@@ -261,23 +260,21 @@ export default {
         return false
       }
     },
-    beforeAvatarUpload () {
-      alert(1)
-    },
     // 上传图片到服务器
     submitUpload () {
       let currRow = this.currUploadScope.row
-
-      console.log(this.tableData)
       let formData = new FormData()
       formData.append('id', this.currUploadScope.row.id)
-      this.$refs.fileUpload.uploadFiles && this.$refs.fileUpload.uploadFiles.forEach(file => {
-        if (file.raw && !file.id) { // 只上传本次上传的附件，排除之前上传的
-          formData.append('files', file.raw)
-        } else {
-          return false
-        }
-      })
+      if (this.$refs.fileUpload && this.$refs.fileUpload.uploadFiles.length > 0) {
+        this.$refs.fileUpload.uploadFiles && this.$refs.fileUpload.uploadFiles.forEach(file => {
+          if (file.raw && !file.id) { // 只上传本次上传的附件，排除之前上传的
+            formData.append('files', file.raw)
+          } else {
+            return false
+          }
+        })
+      }
+
       // 请求接口
       this.$api.trainingExperience.saveEnclosure(formData).then(res => {
         let result = res.data
@@ -325,13 +322,15 @@ export default {
       }
       this.loading = true
       let formData = new FormData()
-      this.$refs.fileUpload.uploadFiles.forEach(file => {
-        if (file.raw && !file.id) { // 只上传本次上传的附件，排除之前上传的
-          formData.append('files', file.raw)
-        } else {
-          return false
-        }
-      })
+      if (this.$refs.fileUpload && this.$refs.fileUpload.uploadFiles.length > 0) {
+        this.$refs.fileUpload.uploadFiles.forEach(file => {
+          if (file.raw && !file.id) { // 只上传本次上传的附件，排除之前上传的
+            formData.append('files', file.raw)
+          } else {
+            return false
+          }
+        })
+      }
       Object.keys(this.list).forEach(function (key) {
         formData.append(key, row[key])
       })
@@ -375,7 +374,7 @@ export default {
       }).then(() => {
         this.loading = true
         var currData = rows[index]
-        this.$api.trainingExperience.delresume(currData).then(res => {
+        this.$api.trainingExperience.delresume({id: currData.id}).then(res => {
           let result = res.data
           if (result.status === '1') {
             this.$message({

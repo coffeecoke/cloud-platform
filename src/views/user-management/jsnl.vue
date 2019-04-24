@@ -186,7 +186,7 @@ export default {
       let currObj = this.masteryLevel.filter(obj => {
         return obj.dictCode === value
       })
-      return currObj.length > 0 ? currObj[0].dict : ''
+      return currObj.length > 0 ? currObj[0].dictName : ''
     },
     // 添加一行
     addRow () {
