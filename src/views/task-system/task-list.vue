@@ -5,7 +5,7 @@
  <el-col :span="4">
     <el-autocomplete
       class="input1"
-      v-model="state2"
+      v-model="projectId"
       :fetch-suggestions="querySearch"
       placeholder="项目编号"
       :trigger-on-focus="false"
@@ -113,207 +113,14 @@
 export default {
   data () {
     return {
-      options: [{
-        value: 'zhinan',
-        label: '指南',
-        children: [{
-          value: 'shejiyuanze',
-          label: '设计原则',
-          children: [{
-            value: 'yizhi',
-            label: '一致'
-          }, {
-            value: 'fankui',
-            label: '反馈'
-          }, {
-            value: 'xiaolv',
-            label: '效率'
-          }, {
-            value: 'kekong',
-            label: '可控'
-          }]
-        }, {
-          value: 'daohang',
-          label: '导航',
-          children: [{
-            value: 'cexiangdaohang',
-            label: '侧向导航'
-          }, {
-            value: 'dingbudaohang',
-            label: '顶部导航'
-          }]
-        }]
-      }, {
-        value: 'zujian',
-        label: '组件',
-        children: [{
-          value: 'basic',
-          label: 'Basic',
-          children: [{
-            value: 'layout',
-            label: 'Layout 布局'
-          }, {
-            value: 'color',
-            label: 'Color 色彩'
-          }, {
-            value: 'typography',
-            label: 'Typography 字体'
-          }, {
-            value: 'icon',
-            label: 'Icon 图标'
-          }, {
-            value: 'button',
-            label: 'Button 按钮'
-          }]
-        }, {
-          value: 'form',
-          label: 'Form',
-          children: [{
-            value: 'radio',
-            label: 'Radio 单选框'
-          }, {
-            value: 'checkbox',
-            label: 'Checkbox 多选框'
-          }, {
-            value: 'input',
-            label: 'Input 输入框'
-          }, {
-            value: 'input-number',
-            label: 'InputNumber 计数器'
-          }, {
-            value: 'select',
-            label: 'Select 选择器'
-          }, {
-            value: 'cascader',
-            label: 'Cascader 级联选择器'
-          }, {
-            value: 'switch',
-            label: 'Switch 开关'
-          }, {
-            value: 'slider',
-            label: 'Slider 滑块'
-          }, {
-            value: 'time-picker',
-            label: 'TimePicker 时间选择器'
-          }, {
-            value: 'date-picker',
-            label: 'DatePicker 日期选择器'
-          }, {
-            value: 'datetime-picker',
-            label: 'DateTimePicker 日期时间选择器'
-          }, {
-            value: 'upload',
-            label: 'Upload 上传'
-          }, {
-            value: 'rate',
-            label: 'Rate 评分'
-          }, {
-            value: 'form',
-            label: 'Form 表单'
-          }]
-        }, {
-          value: 'data',
-          label: 'Data',
-          children: [{
-            value: 'table',
-            label: 'Table 表格'
-          }, {
-            value: 'tag',
-            label: 'Tag 标签'
-          }, {
-            value: 'progress',
-            label: 'Progress 进度条'
-          }, {
-            value: 'tree',
-            label: 'Tree 树形控件'
-          }, {
-            value: 'pagination',
-            label: 'Pagination 分页'
-          }, {
-            value: 'badge',
-            label: 'Badge 标记'
-          }]
-        }, {
-          value: 'notice',
-          label: 'Notice',
-          children: [{
-            value: 'alert',
-            label: 'Alert 警告'
-          }, {
-            value: 'loading',
-            label: 'Loading 加载'
-          }, {
-            value: 'message',
-            label: 'Message 消息提示'
-          }, {
-            value: 'message-box',
-            label: 'MessageBox 弹框'
-          }, {
-            value: 'notification',
-            label: 'Notification 通知'
-          }]
-        }, {
-          value: 'navigation',
-          label: 'Navigation',
-          children: [{
-            value: 'menu',
-            label: 'NavMenu 导航菜单'
-          }, {
-            value: 'tabs',
-            label: 'Tabs 标签页'
-          }, {
-            value: 'breadcrumb',
-            label: 'Breadcrumb 面包屑'
-          }, {
-            value: 'dropdown',
-            label: 'Dropdown 下拉菜单'
-          }, {
-            value: 'steps',
-            label: 'Steps 步骤条'
-          }]
-        }, {
-          value: 'others',
-          label: 'Others',
-          children: [{
-            value: 'dialog',
-            label: 'Dialog 对话框'
-          }, {
-            value: 'tooltip',
-            label: 'Tooltip 文字提示'
-          }, {
-            value: 'popover',
-            label: 'Popover 弹出框'
-          }, {
-            value: 'card',
-            label: 'Card 卡片'
-          }, {
-            value: 'carousel',
-            label: 'Carousel 走马灯'
-          }, {
-            value: 'collapse',
-            label: 'Collapse 折叠面板'
-          }]
-        }]
-      }, {
-        value: 'ziyuan',
-        label: '资源',
-        children: [{
-          value: 'axure',
-          label: 'Axure Components'
-        }, {
-          value: 'sketch',
-          label: 'Sketch Templates'
-        }, {
-          value: 'jiaohu',
-          label: '组件交互文档'
-        }]
-      }],
+      options: [{'children': [{'id': 'G17.CARD', 'label': 'G17.卡'}, {'id': 'L_AGRE_CARD_INFO.CARD', 'label': 'L_AGRE_CARD_INFO.卡'}], 'id': 'P-CARD', 'label': '卡'}, {'children': [{'children': [], 'id': 'G21.CHALLENGE', 'label': 'G21.综合'}, {'children': [], 'id': 'G44.CHALLENGE', 'label': 'G44.综合'}, {'children': [], 'id': 'L_ACCT_COUNTRYRISK_MANAGE.CHALLENGE', 'label': 'L_ACCT_COUNTRYRISK_MANAGE.综合'}, {'children': [], 'id': 'L_AGRE_OBSTACLE_INFO.CHALLENGE', 'label': 'L_AGRE_OBSTACLE_INFO.综合'}], 'id': 'P-CHALLENGE', 'label': '综合'}, {'children': [{'children': [], 'id': 'L_CUST_ALL.CUSTOMER', 'label': 'L_CUST_ALL.客户'}], 'id': 'P-CUSTOMER', 'label': '客户'}, {'children': [{'children': [], 'id': 'G01.DEP', 'label': 'G01.普通存款'}, {'children': [], 'id': 'G01.STUDEP', 'label': 'G01.结构性存款'}, {'children': [], 'id': 'L_ACCT_DEPOSIT.DEP', 'label': 'L_ACCT_DEPOSIT.普通存款'}, {'children': [], 'id': 'L_ACCT_DEPOSIT.STUDEP', 'label': 'L_ACCT_DEPOSIT.结构性存款'}], 'id': 'P-DEP', 'label': '存款'}, {'children': [{'children': [], 'id': 'G01.FIMM', 'label': 'G01.理财'}, {'children': [], 'id': 'L_FIMM_PRODUCT.FIMM', 'label': 'L_FIMM_PRODUCT.理财'}], 'id': 'P-FIMM', 'label': '理财'}, {'children': [{'children': [], 'id': 'G01.FINANCE', 'label': 'G01.财务'}, {'children': [], 'id': 'L_FINA_GL.FINANCE', 'label': 'L_FINA_GL.财务'}, {'children': [], 'id': 'L_PUBL_CDE_DATE.FINANCE', 'label': 'L_PUBL_CDE_DATE.财务'}, {'children': [], 'id': 'L_PUBL_RATE.FINANCE', 'label': 'L_PUBL_RATE.财务'}], 'id': 'P-FINANCE', 'label': '财务'}, {'children': [{'children': [], 'id': 'G01.DERIVATIVE', 'label': 'G01.衍生品'}, {'children': [], 'id': 'G01.INVEST', 'label': 'G01.投资'}, {'children': [], 'id': 'G01.ISSUE', 'label': 'G01.发行'}, {'children': [], 'id': 'G01.MMFUND', 'label': 'G01.资金往来'}, {'children': [], 'id': 'G01.REPO', 'label': 'G01.回购'}, {'children': [], 'id': 'L_ACCT_EXCHANGE_INFO.FX', 'label': 'L_ACCT_EXCHANGE_INFO.外汇'}, {'children': [], 'id': 'L_ACCT_FUND_BOND_ISSUE.ISSUE', 'label': 'L_ACCT_FUND_BOND_ISSUE.发行'}, {'children': [], 'id': 'L_ACCT_FUND_CDS_BAL.ISSUE', 'label': 'L_ACCT_FUND_CDS_BAL.发行'}, {'children': [], 'id': 'L_ACCT_FUND_EQUITY_INVESTED.ISSUE', 'label': 'L_ACCT_FUND_EQUITY_INVESTED.发行'}, {'children': [], 'id': 'L_ACCT_FUND_INVEST.INVEST', 'label': 'L_ACCT_FUND_INVEST.投资'}, {'children': [], 'id': 'L_ACCT_FUND_REPURCHASE.REPO', 'label': 'L_ACCT_FUND_REPURCHASE.回购'}, {'children': [], 'id': 'L_AGRE_CREDITLINE.OBSLOAN', 'label': 'L_AGRE_CREDITLINE.资金往来'}, {'children': [], 'id': 'L_AGRE_DERIVE_SUBJECT_INFO.DERIVATIVE', 'label': 'L_AGRE_DERIVE_SUBJECT_INFO.衍生品'}], 'id': 'P-INTERBANK', 'label': '同业'}, {'children': [{'children': [], 'id': 'G01.BILLLOAN', 'label': 'G01.票据融资'}, {'children': [], 'id': 'G01.LEASELOAN', 'label': 'G01.融资租赁'}, {'children': [], 'id': 'G01.LOAN', 'label': 'G01.普通贷款'}, {'children': [], 'id': 'G01.REPOLOAN', 'label': 'G01.非金融机构买入返售'}, {'children': [], 'id': 'G01.TRDLOAN', 'label': 'G01.贸易融资'}, {'children': [], 'id': 'G0101.OBSLOAN', 'label': 'G0101.表外贷款'}, {'children': [], 'id': 'G17.ODLOAN', 'label': 'G17.透支'}, {'children': [], 'id': 'L_ACCT_FUND_REPURCHASE.REPOLOAN', 'label': 'L_ACCT_FUND_REPURCHASE.非金融机构买入返售'}, {'children': [], 'id': 'L_AGRE_BILL_INFO.BILLLOAN', 'label': 'L_AGRE_BILL_INFO.票据融资'}, {'children': [], 'id': 'L_AGRE_CREDITLINE.LEASELOAN', 'label': 'L_AGRE_CREDITLINE.融资租赁'}, {'children': [], 'id': 'L_AGRE_CREDITLINE.LOAN', 'label': 'L_AGRE_CREDITLINE.普通贷款'}, {'children': [], 'id': 'L_AGRE_CREDITLINE.ODLOAN', 'label': 'L_AGRE_CREDITLINE.透支'}, {'children': [], 'id': 'L_AGRE_CREDITLINE.TRDLOAN', 'label': 'L_AGRE_CREDITLINE.贸易融资'}], 'id': 'P-LOAN', 'label': '贷款'}, {'children': [{'children': [], 'id': 'G07.MANAGEMENT', 'label': 'G07.组织架构'}, {'children': [], 'id': 'G17.MANAGEMENT', 'label': 'G17.组织架构'}, {'children': [], 'id': 'L_PUBL_ORG_BRA.MANAGEMENT', 'label': 'L_PUBL_ORG_BRA.组织架构'}], 'id': 'P-MANAGEMENT', 'label': '组织架构'}, {'children': [{'children': [], 'id': 'L_AGRE_EXGUARCONTRACTTAB.OVERSEAS', 'label': 'L_AGRE_EXGUARCONTRACTTAB.国际业务'}], 'id': 'P-OVERSEAS', 'label': '国际业务'}, {'children': [{'children': [], 'id': 'L_CUST_EPAYINFO.PAYMENT', 'label': 'L_CUST_EPAYINFO.支付系统'}], 'id': 'P-PAYMENT', 'label': '支付系统'}],
       // 设置按钮
       dialogPersonVisible: false,
       dialogGroupVisible: false,
       // 项目编号输入框
       restaurants: [],
       state2: '',
+      projectId: '2018725-020B',
       // 普通文本输入框
       input2: '',
       input3: '',
@@ -518,11 +325,19 @@ export default {
     }
   },
   mounted () {
+    var pro = this.projectId
+    console.log(pro)
+    // console.log(formData.get('tid'))
+    this.$api.taskList.getTaskGroupTree(pro).then(res => {
+      var result = res.data
+      // console.log(result.data)
+      this.options = result.data
+    })
     this.restaurants = this.loadAll()
   }
 }
 </script>
-<style lang="scss" scope>
+<style lang="scss" scoped>
  .el-row {
     margin-bottom: 30px;
      margin-top: 10px;

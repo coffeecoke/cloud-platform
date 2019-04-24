@@ -2,7 +2,7 @@
   <div class="header">
     <div class="logo"></div>
     <div class="top-nav">
-      <ul class="top-nav__list">
+      <ul class="top-nav__list" ref="topNav">
         <!-- <li class="nav-item" v-for="(item, i) in topNavs" :key="item.id" :class="{selected:select == i}" @click="clickLi(i)">
           {{item.name}}
         </li> -->
@@ -10,28 +10,34 @@
         <router-link tag="li" class="tab-item" to="/home">
           <a>我的首页</a>
         </router-link>
-        <router-link tag="li" class="tab-item" to="/pm">
-          <a>项目信息</a>
+        <router-link tag="li" class="tab-item" to="/knowledge">
+          <a>知识库</a>
         </router-link>
-        <router-link tag="li" class="tab-item" to="/userManagement">
-          <a>个人中心</a>
+        <router-link tag="li" class="tab-item" to="/taskSystem">
+          <a>项目管理</a>
         </router-link>
-        <!-- <li class="tab-item">
-          <a href="http://www.baidu.com">知识库</a>
-        </li>
         <li class="tab-item">
           <a>工作台</a>
         </li>
         <li class="tab-item">
           <a>产品资料</a>
-        </li> -->
-        <router-link tag="li" class="tab-item" to="/qu-1">
-          <a>调查问卷</a>
+        </li>
+        <li class="tab-item">
+          <a>系统管理</a>
+        </li>
+         <router-link tag="li" class="tab-item" to="/personalManagement">
+          <a>合伙人管理</a>
         </router-link>
+        <li class="tab-item">
+          <a>云环境</a>
+        </li>
+        <!-- <router-link tag="li" class="tab-item" to="/qu-1">
+          <a>调查问卷</a>
+        </router-link> -->
       </ul>
     </div>
-    <div class="user-name">
-      {{userName}}
+    <div class="right-options">
+      欢迎您 <span @click = 'toUserManagement' class="user-name">[{{userName}}]</span>
       <span class="logout" @click="logout">登出</span>
     </div>
   </div>
@@ -47,6 +53,8 @@ export default {
     }
   },
   activated () {},
+  mounted () {
+  },
   methods: {
     handleClick (tab, event) {
       console.log(tab, event)
@@ -57,6 +65,9 @@ export default {
     logout () {
       localStorage.setItem('token', '')
       this.$router.push({ path: '/login' })
+    },
+    toUserManagement () {
+      this.$router.push({ path: '/userManagement' })
     }
   }
 }
@@ -100,7 +111,7 @@ export default {
           color:#fff;
           text-decoration: none;
         }
-        &.router-link-active {
+        &.router-link-exact-active {
           color: #fff;
 
           &:after {
@@ -116,10 +127,13 @@ export default {
       }
     }
   }
-  .user-name {
+  .right-options {
       float: right;
       color: #fff;
       line-height: $baseHeight;
+      .user-name {
+        cursor: pointer;
+      }
   }
   .logout {
     margin-left:20px;

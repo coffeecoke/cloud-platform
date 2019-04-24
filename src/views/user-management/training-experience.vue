@@ -1,5 +1,7 @@
 <template>
   <div class="box-table">
+
+    <img src="src='data:image/png;base64,50Mn/P3thG+CnFW4xu8Y" alt="">
     <el-table :data="tableData" border style="width: 100%" v-loading="loading">
       <el-table-column prop="date" label="开始日期">
         <template slot-scope="scope">
@@ -19,13 +21,17 @@
           <span v-else>{{ scope.row.endtime }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="trainingmode" label="培训方式">
+      <el-table-column prop="trainingMode" label="培训方式">
         <template slot-scope="scope">
           <template v-if="scope.row.edit">
-            <el-input class="ipt" size="small" v-model="scope.row.trainingmode"></el-input>
-
+            <el-select v-model="scope.row.trainingMode" placeholder="请选择培训方式">
+                <el-option v-for="item in trainingMode" :key="item.dictCode" :label="item.dictName" :value="item.dictCode"
+                  :disabled="item.disabled">
+                </el-option>
+              </el-select>
           </template>
-          <span v-else>{{ scope.row.trainingmode }}</span>
+          <span v-else>{{ formatTrainingMode(scope.row.trainingMode) }}</span>
+
         </template>
       </el-table-column>
       <el-table-column prop="trainname" label="培训机构名称">
@@ -44,12 +50,16 @@
           <span v-else>{{scope.row.traincon}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="technology" label="技能">
+      <el-table-column prop="skill" label="技能">
         <template slot-scope="scope">
           <template v-if="scope.row.edit">
-            <el-input class="ipt" size="small" v-model="scope.row.technology"></el-input>
+            <el-select v-model="scope.row.skill" placeholder="请选择技能">
+                <el-option v-for="item in skill" :key="item.dictCode" :label="item.dictName" :value="item.dictCode"
+                  :disabled="item.disabled">
+                </el-option>
+              </el-select>
           </template>
-          <span v-else>{{scope.row.technology}}</span>
+          <span v-else>{{ formatSkill(scope.row.skill) }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="diploma" label="证书">
@@ -87,10 +97,19 @@
 
     <!-- 上传修改图片的dialog -->
     <el-dialog title="编辑图片附件" :visible.sync="dialogUploadVisible" width="30%">
-      <el-upload class="upload-demo" ref="fileUpload" action="aa" :limit="3" :auto-upload="false"
-        list-type="picture" :file-list="currUploadScope && currUploadScope.row.fileList">
-        <el-button type="primary" slot="trigger">上传图片<i class="el-icon-upload el-icon--right"></i></el-button>
-         <el-button type="primary" @click = "submitUpload">上传至服务器</el-button>
+      <el-upload class="upload-demo"
+        ref="fileUpload"
+        action="aa"
+        accept="image/jpeg, image/png"
+        :limit="3"
+        :auto-upload="false"
+        list-type="picture"
+        :file-list="currUploadScope && currUploadScope.row.fileList"
+        :on-remove="handleRemove"
+        :before-upload="beforeAvatarUpload"
+        multiple>
+        <el-button type="primary" slot="trigger">添加图片</el-button>
+         <!-- <el-button type="primary" @click = "submitUpload">上传至服务器<i class="el-icon-upload el-icon--right"></i></el-button> -->
       </el-upload>
     </el-dialog>
   </div>
@@ -104,16 +123,44 @@ export default {
       dialogUploadVisible: false,
       currUploadScope: null,
       files: [],
+      trainingMode: [
+        {
+          dictCode: 1,
+          dictName: '网教育'
+        },
+        {
+          dictCode: 2,
+          dictName: '1对1'
+        },
+        {
+          dictCode: 3,
+          dictName: '课堂'
+        }
+
+      ],
+      skill: [
+        {
+          dictCode: 1,
+          dictName: 'js'
+        },
+        {
+          dictCode: 2,
+          dictName: 'java'
+        },
+        {
+          dictCode: 3,
+          dictName: 'c语言'
+        }
+      ],
       list: {
         id: '',
         date: '',
         endtime: '',
-        trainingmode: '',
+        trainingMode: '',
         trainname: '',
         traincon: '',
-        technology: '',
+        skill: '',
         diploma: '',
-        enclosure: '',
         fileList: [],
         edit: true
       },
@@ -121,16 +168,17 @@ export default {
         id: '1',
         date: '2018-01-01',
         endtime: '2019-02-02',
-        trainingmode: '培训机构',
-        trainname: '培训机构',
-        traincon: '培训机构方式',
-        technology: 'java开发',
-        diploma: 'java',
-        enclosure: 'jdc',
+        trainingMode: '培训方式',
+        trainname: '培训机构名称',
+        traincon: '培训内容',
+        skill: '1',
+        diploma: '证书',
         fileList: [{
+          id: '222',
           name: '学历1.jpeg',
           url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
         }, {
+          id: null,
           name: 'food2.jpeg',
           url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
         }],
@@ -140,12 +188,11 @@ export default {
         id: '2',
         date: '2018-01-01',
         endtime: '2019-02-02',
-        trainingmode: '培训机构',
-        trainname: '培训机构',
-        traincon: '培训机构方式',
-        technology: 'java开发',
-        diploma: 'java',
-        enclosure: 'jdc',
+        trainingMode: '培训方式',
+        trainname: '培训名称',
+        traincon: '培训内容',
+        skill: 'java开发',
+        diploma: '',
         fileList: [
           {
             name: '学历1.jpeg',
@@ -160,6 +207,19 @@ export default {
     }
   },
   created () {
+    let dictionaryObj = {
+      dict_code: [ 'trainingMode', 'skill' ]
+    }
+    this.$api.dictionary.getDictionaries(dictionaryObj).then(res => {
+      let result = res.data
+      let dictionary = {}
+      result.data.forEach(item => {
+        Object.assign(dictionary, item)
+      })
+      this.trainingMode = dictionary.trainingMode
+      this.skill = dictionary.skill
+    })
+
     // 参数需要用户认证，获取token
     this.$api.trainingExperience.queryResumeby().then(res => {
       let result = res.data
@@ -171,6 +231,18 @@ export default {
     })
   },
   methods: {
+    formatTrainingMode (value) {
+      let currObj = this.trainingMode.filter(obj => {
+        return obj.value === value
+      })
+      return currObj.length > 0 ? currObj[0].label : ''
+    },
+    formatSkill (value) {
+      let currObj = this.skill.filter(obj => {
+        return obj.value === value
+      })
+      return currObj.length > 0 ? currObj[0].label : ''
+    },
     dialogUpload (scope) {
       this.dialogUploadVisible = true
       this.currUploadScope = scope
@@ -189,34 +261,61 @@ export default {
         return false
       }
     },
+    beforeAvatarUpload () {
+      alert(1)
+    },
     // 上传图片到服务器
     submitUpload () {
+      let currRow = this.currUploadScope.row
+
+      console.log(this.tableData)
       let formData = new FormData()
       formData.append('id', this.currUploadScope.row.id)
-      this.$refs.fileUpload.uploadFiles.forEach(file => {
-        if (!file.raw) {
-          return false
-        } else {
+      this.$refs.fileUpload.uploadFiles && this.$refs.fileUpload.uploadFiles.forEach(file => {
+        if (file.raw && !file.id) { // 只上传本次上传的附件，排除之前上传的
           formData.append('files', file.raw)
+        } else {
+          return false
         }
       })
-
-      // 上传图片到服务器
+      // 请求接口
       this.$api.trainingExperience.saveEnclosure(formData).then(res => {
         let result = res.data
         if (result.status === '1') {
+          currRow.fileList = result.data // 根据后台更新fileList
+          console.log(currRow.fileList)
           this.$message({
             type: 'success',
-            message: '上传成功'
+            message: '上传附件成功'
           })
         } else {
           this.$message({
             type: 'error',
-            message: '上传失败'
+            message: '上传附件失败'
           })
         }
       })
-      console.log(formData.get('id'))
+    },
+    handleRemove (file, fileList) {
+      console.log(file)
+      console.log(fileList)
+      if (file.id) {
+        this.$api.trainingExperience.delEnclosureSingle({id: file.id}).then(res => {
+          let result = res.data
+          if (result.status === '1') {
+            this.$message({
+              type: 'success',
+              message: '删除图片成功!'
+            })
+          } else {
+            this.$message({
+              type: 'error',
+              message: '删除图片失败!'
+            })
+          }
+          this.loading = false
+        })
+      }
     },
     // 保存
     saveClick (index, row) {
@@ -226,15 +325,13 @@ export default {
       }
       this.loading = true
       let formData = new FormData()
-      // var currUpload = 'upload' + index
-      // row.fileList = []
-      // Object.entries(this.$refs[currUpload].uploadFiles).forEach(file => {
-      //   formData.append('files', file[1].raw)
-      //   formData.append('fileUid', file[1].uid)
-      //   row.fileList.push({
-      //     name: file[1].name
-      //   })
-      // })
+      this.$refs.fileUpload.uploadFiles.forEach(file => {
+        if (file.raw && !file.id) { // 只上传本次上传的附件，排除之前上传的
+          formData.append('files', file.raw)
+        } else {
+          return false
+        }
+      })
       Object.keys(this.list).forEach(function (key) {
         formData.append(key, row[key])
       })

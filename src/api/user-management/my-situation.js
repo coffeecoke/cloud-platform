@@ -1,10 +1,10 @@
 import axios from '@/utils/http' // 导入http中创建的axios实例
 const mySituation = {
   // 基本信息百分比
-  essentialInformationPercentage (params) {
+  essentialInformation (params) {
     return axios({
       method: 'post',
-      url: '/user/essentialInformationPercentage',
+      url: '/user/essentialInformation',
       data: params
     })
   },
@@ -47,20 +47,6 @@ const mySituation = {
       url: '/project/resoftProjectPercentage',
       data: params
     })
-  },
-
-  // 拼接上面的6个请求
-  situationAll () {
-    return axios.all(
-      [
-        this.essentialInformationPercentage(),
-        this.resumePercentage(),
-        this.selfRatingViewPercentage(),
-        this.taskUndertakingPercentage(),
-        this.externalProjectPercentage(),
-        this.resoftProjectPercentage()
-      ]
-    )
   }
 }
 export default mySituation

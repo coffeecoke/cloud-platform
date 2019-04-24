@@ -36,10 +36,9 @@
       </el-table-column>
       <el-table-column prop="industry" label="所属行业">
         <template slot-scope="scope">
-
           <template v-if="scope.row.edit">
             <el-select v-model="scope.row.industry">
-              <el-option v-for="item in industryOptions" :key="item.value" :label="item.label" :value="item.value"
+              <el-option v-for="item in industry" :key="item.dictCode" :label="item.dictName" :value="item.dictCode"
                 :disabled="item.disabled">
               </el-option>
             </el-select>
@@ -62,20 +61,28 @@
           </template>
         </template>
       </el-table-column>
-      <el-table-column prop="projectSize" label="项目规模">
+      <el-table-column prop="projectScale" label="项目规模">
         <template slot-scope="scope">
           <template v-if="scope.row.edit">
-            <el-input class="ipt" size="small" v-model="scope.row.projectSize"></el-input>
+            <el-select v-model="scope.row.projectScale">
+              <el-option v-for="item in projectScale" :key="item.dictCode" :label="item.dictName" :value="item.dictCode"
+                :disabled="item.disabled">
+              </el-option>
+            </el-select>
           </template>
-          <span v-else>{{ scope.row.projectSize }}</span>
+          <span v-else>{{ formatProjectScale(scope.row.projectScale) }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="role" label="担任角色">
+      <el-table-column prop="projectRole" label="担任角色">
         <template slot-scope="scope">
           <template v-if="scope.row.edit">
-            <el-input class="ipt" size="small" v-model="scope.row.role"></el-input>
+            <el-select v-model="scope.row.projectRole">
+              <el-option v-for="item in projectRole" :key="item.dictCode" :label="item.dictName" :value="item.dictCode"
+                :disabled="item.disabled">
+              </el-option>
+            </el-select>
           </template>
-          <span v-else>{{scope.row.role}}</span>
+          <span v-else>{{ formatProjectRole(scope.row.projectRole) }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="duties" label="个人职责">
@@ -86,20 +93,28 @@
           <span v-else>{{scope.row.duties}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="business" label="涉及业务">
+      <el-table-column prop="involvingBusiness" label="涉及业务">
         <template slot-scope="scope">
           <template v-if="scope.row.edit">
-            <el-input class="ipt" size="small" v-model="scope.row.business"></el-input>
+            <el-select v-model="scope.row.involvingBusiness">
+              <el-option v-for="item in involvingBusiness" :key="item.dictCode" :label="item.dictName" :value="item.dictCode"
+                :disabled="item.disabled">
+              </el-option>
+            </el-select>
           </template>
-          <span v-else>{{scope.row.business}}</span>
+          <span v-else>{{ formatInvolvingBusiness(scope.row.involvingBusiness) }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="technology" label="涉及技术">
+      <el-table-column prop="skill" label="涉及技术">
         <template slot-scope="scope">
           <template v-if="scope.row.edit">
-            <el-input class="ipt" size="small" v-model="scope.row.technology"></el-input>
+            <el-select v-model="scope.row.skill">
+              <el-option v-for="item in skill" :key="item.dictCode" :label="item.dictName" :value="item.dictCode"
+                :disabled="item.disabled">
+              </el-option>
+            </el-select>
           </template>
-          <span v-else>{{scope.row.technology}}</span>
+          <span v-else>{{ formatSkill(scope.row.skill) }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作">
@@ -124,16 +139,61 @@ export default {
   },
   data () {
     return {
-      industryOptions: [
+      industry: [
         {
-          value: 1,
-          label: '金融业'
+          dictCode: '1',
+          dictName: '金融'
         },
         {
-          value: 2,
-          label: '计算机行业'
+          dictCode: '2',
+          dictName: '建筑'
         }
       ],
+      projectScale: [
+        {
+          dictCode: '1',
+          dictName: '超大型'
+        },
+        {
+          dictCode: '2',
+          dictName: '大型'
+        },
+        {
+          dictCode: '3',
+          dictName: '小型'
+        }
+      ],
+      projectRole: [
+        {
+          dictCode: '1',
+          dictName: '项目经理'
+        },
+        {
+          dictCode: '2',
+          dictName: '架构师'
+        }
+      ],
+      involvingBusiness: [
+        {
+          dictCode: '1',
+          dictName: '监管'
+        },
+        {
+          dictCode: '2',
+          dictName: '发文'
+        }
+      ],
+      skill: [
+        {
+          dictCode: '1',
+          dictName: '微服务'
+        },
+        {
+          dictCode: '2',
+          dictName: '框架异构'
+        }
+      ],
+
       isAddRow: true, // 保存上一条数据之后，才允许新增
       loading: false, // 数据加载的loading效果
       list: {
@@ -141,11 +201,11 @@ export default {
         date: null,
         industry: null,
         projectName: '',
-        projectSize: '',
-        role: '',
+        projectScale: '',
+        projectRole: '',
         duties: '',
-        business: '',
-        technology: '',
+        involvingBusiness: '',
+        sill: '',
         edit: true
       },
       tableData: [
@@ -153,12 +213,12 @@ export default {
           id: '1', // id为后台传入，后台的增删都是根据id进行的
           date: '',
           industry: 1,
-          projectName: '培训机构',
-          projectSize: '培训机构',
-          role: '培训机构方式',
-          duties: 'java开发',
-          business: 'java',
-          technology: 'jdc',
+          projectName: '',
+          projectScale: '',
+          projectRole: '',
+          duties: '',
+          involvingBusiness: '',
+          skill: '',
           content: '报送银监会报送银监会报送银监会报送银监会报送银监会报送银监会报送银监会',
           edit: false
         },
@@ -166,19 +226,35 @@ export default {
           id: '2',
           date: '',
           industry: 2,
-          projectName: '培训机构',
-          projectSize: '培训机构',
-          role: '培训机构方式',
-          duties: 'java开发',
-          business: 'java',
-          technology: 'jdc',
-          content: '报送银监会报送银监会报送银监会报送银监会报送银监会报送银监会报送银监会',
+          projectName: '',
+          projectSize: '1',
+          projectRole: '2',
+          duties: '',
+          business: '1',
+          skill: '1',
+          content: '',
           edit: false
         }
       ]
     }
   },
   created () {
+    let dictionaryObj = {
+      dict_code: [ 'industry', 'projectScale', 'projectRole', 'involvingBusiness', 'skill' ]
+    }
+    this.$api.dictionary.getDictionaries(dictionaryObj).then(res => {
+      let result = res.data
+      let dictionary = {}
+      result.data.forEach(item => {
+        Object.assign(dictionary, item)
+      })
+      this.industry = dictionary.industry
+      this.projectScale = dictionary.projectScale
+      this.projectRole = dictionary.projectRole
+      this.involvingBusiness = dictionary.involvingBusiness
+      this.skill = dictionary.skill
+    })
+
     this.$api.resoftProject.queryResoftProject().then(res => {
       let result = res.data
       if (result.stauts === '1') {
@@ -190,15 +266,36 @@ export default {
   },
   methods: {
     formatIndustry (value) {
-      let currObj = this.industryOptions.filter(obj => {
-        return obj.value === value
+      let currObj = this.industry.filter(obj => {
+        return obj.dictCode === value
       })
-      if (currObj.length > 0) {
-        return currObj[0].label
-      } else {
-        return ''
-      }
+      return currObj.length > 0 ? currObj[0].dictName : ''
     },
+    formatProjectScale (value) {
+      let currObj = this.projectScale.filter(obj => {
+        return obj.dictCode === value
+      })
+      return currObj.length > 0 ? currObj[0].dictName : ''
+    },
+    formatProjectRole (value) {
+      let currObj = this.projectRole.filter(obj => {
+        return obj.dictCode === value
+      })
+      return currObj.length > 0 ? currObj[0].dictName : ''
+    },
+    formatInvolvingBusiness (value) {
+      let currObj = this.involvingBusiness.filter(obj => {
+        return obj.dictCode === value
+      })
+      return currObj.length > 0 ? currObj[0].dictName : ''
+    },
+    formatSkill (value) {
+      let currObj = this.skill.filter(obj => {
+        return obj.dictCode === value
+      })
+      return currObj.length > 0 ? currObj[0].dictName : ''
+    },
+
     // 解析日期对象
     getDateStr1 (row) {
       if (!row.date) {

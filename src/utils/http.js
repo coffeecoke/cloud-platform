@@ -29,12 +29,17 @@ const toLogin = () => {
     }
   })
 }
+const toWxLogin = () => {
+  router.replace({
+    path: '/wxCodePage'
+  })
+}
 
 /**
  * 请求失败后的错误统一处理
  * @param {Number} status 请求失败的状态码
  */
-const errorHandle = (status, other) => {
+const errorHandle = (status, msg) => {
   console.log(status)
   // 状态码判断
   switch (status) {
@@ -55,18 +60,43 @@ const errorHandle = (status, other) => {
         toLogin()
       }, 1000)
       break
+      // 参数code读取错误
+    case 1201:
+      tip(msg)
+      break
+      // 通过微信API获取【TOKEN】失败
+    case 1202:
+      tip(msg)
+      break
+      // 通过微信API获取微信用户信息失败！
+    case 1203:
+      tip(msg)
+      break
+      // 通过微信API获取微信用户信息（UnionID）失败！
+    case 1204:
+      tip(msg)
+      break
+      // 微信认证未通过
+    case 1207:
+      tip(msg)
+      setTimeout(() => {
+        toWxLogin()
+      })
+      break
+      // 注册信息提交失败
+    case 1212:
+      tip(msg)
+      setTimeout(() => {
+        toWxLogin()
+      })
+      break
+
       // 404请求不存在
     case 404:
       tip('请求的资源不存在')
       break
-    case 500:
-      tip('服务器错误')
-      break
-    case 502:
-      tip('服务器错误')
-      break
     default:
-      console.log(other)
+      tip(msg)
   }
 }
 

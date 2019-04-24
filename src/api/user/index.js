@@ -6,10 +6,36 @@ const userInfo = {
     return axios({
       method: 'post',
       url: '/user/dologin',
-      data: Qs.stringify(params),
-      headers: {
-        // 'Content-Type': 'application/x-www-form-urlencoded'
-      }
+      data: Qs.stringify(params)
+    })
+  },
+
+  // 获取script
+  getScript (params) {
+    return axios({
+      method: 'get',
+      url: 'https://res.wx.qq.com/connect/zh_CN/htmledition/js/wxLogin.js'
+    })
+  },
+  loadQRCode () {
+    return axios({
+      method: 'post',
+      url: '/resoft/wxopen/QRCodeLoad'
+    })
+  },
+  submitWxCode (params) {
+    return axios({
+      method: 'post',
+      url: '/user/callback',
+      data: Qs.stringify(params)
+    })
+  },
+  // 注册提交
+  saveWechatInfo (params) {
+    return axios({
+      method: 'post',
+      url: '/user/saveWechatInfoExt',
+      data: Qs.stringify(params)
     })
   }
 }

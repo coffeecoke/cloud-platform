@@ -197,10 +197,10 @@ export default {
   },
   mounted () {
     // 获取字典
-    var obj = {
+    var dictionaryObj = {
       dict_code: [ 'major', 'education', 'degree', 'fullTime', 'D_SEX' ]
     }
-    this.$api.dictionary.getDictionaries(obj).then(res => {
+    this.$api.dictionary.getDictionaries(dictionaryObj).then(res => {
       let result = res.data
       let dictionary = {}
       result.data.forEach(item => {
@@ -226,7 +226,6 @@ export default {
       Object.keys(this.form).forEach(key => {
         formData.append(key, this.form[key])
       })
-      formData.append('haha', 'huan')
       this.$api.baseInfo.registerUser(formData).then(res => {
         let result = res.data
         if (result.status === '1') {

@@ -32,6 +32,13 @@ const trainingExperience = {
       url: '/enclosure/saveEnclosure',
       data: params
     })
+  },
+  delEnclosureSingle (params) {
+    return axios({
+      method: 'post',
+      url: '/enclosure/delEnclosureSingle',
+      data: params
+    })
   }
 }
 export default trainingExperience
