@@ -241,7 +241,6 @@ export default {
         let formData = new FormData()
         this.form.taskGroupId = data.id
         Object.keys(this.form).forEach(key => {
-          // console.log(key)
           formData.append(key, this.form[key])
         })
         this.$api.TaskGroup.getTaskList(formData).then(res => {
@@ -249,7 +248,6 @@ export default {
           console.log(result.data)
           this.tableData3 = result.data
         })
-        // console.log(data.id)
       }
     },
     confirm1 () {
@@ -268,7 +266,6 @@ export default {
         console.log(result.data)
         this.tableData3 = result.data
       })
-      // console.log(data.id)
     },
     /* 渲染函数 */
     renderContent (h, {
