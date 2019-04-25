@@ -52,7 +52,6 @@ const questionnaire = {
   },
   // 保存问卷选择问题
   saveQuestDataList: (params) => {
-    console.log(Qs.parse(params))
     return axios({
       method: 'post',
       url: '/question/saveQuestDataList',
@@ -64,6 +63,54 @@ const questionnaire = {
     return axios({
       method: 'post',
       url: '/question/showQuestionnaire',
+      data: Qs.stringify(params)
+    })
+  },
+  // 问卷填报
+  answerQuestionnaire: (params) => {
+    return axios({
+      method: 'post',
+      url: '/question/answerQuestionnaire',
+      data: Qs.stringify(params)
+    })
+  },
+  // 保存问卷
+  saveAnswerQuest: (params) => {
+    return axios({
+      method: 'post',
+      url: '/question/saveAnswerQuest',
+      data: Qs.stringify(params)
+    })
+  },
+  // 针对项目生成调查问卷
+  handleGenerate: (params) => {
+    return axios({
+      method: 'post',
+      url: '/question/handleGenerate',
+      data: params
+    })
+  },
+  // 查看已填报问卷
+  answerUserQuest: (params) => {
+    return axios({
+      method: 'post',
+      url: '/question/answerUserQuest',
+      data: Qs.stringify(params)
+    })
+  },
+  // 获取问卷已选问题列表
+  getQuestBankList: (params) => {
+    return axios({
+      method: 'post',
+      url: '/question/getQuestBankList',
+      data: Qs.stringify(params)
+    })
+  },
+  // 保存顺序号
+  saveQuestOptionsRel: (params) => {
+    return axios({
+      method: 'post',
+      url: '/question/saveQuestOptionsRel',
       data: Qs.stringify(params)
     })
   }

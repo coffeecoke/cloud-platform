@@ -16,25 +16,25 @@
   </el-form-item>
 </el-form>
 <el-row>
-  <el-col :span="2"><div class="grid-content bg-purple"><el-button type="primary" @click="questAdd = true" icon="el-icon-edit">新增</el-button></div></el-col>
+  <el-col :span="2"><div class="grid-content bg-purple"><el-button type="primary" @click="questAdd = true" icon="el-icon-plus">新增</el-button></div></el-col>
   <el-col :span="2"><div class="grid-content bg-purple"><el-button type="primary" @click="editQuestion" icon="el-icon-edit">修改</el-button></div></el-col>
   <el-col :span="3"><div class="grid-content bg-purple"><el-button type="primary" @click="showOptionPanl" icon="el-icon-document" >添加选项信息</el-button></div></el-col>
   <el-col :span="1"><div class="grid-content bg-purple"><el-button type="primary" @click="delData" icon="el-icon-delete" >删除</el-button></div></el-col>
 </el-row>
 <el-row>
    <el-table :data="tableData" border @selection-change="handleSelectionChange_question" style="width: 100%">
-    <el-table-column  type="selection"  width="55"  align="center"></el-table-column>
-    <el-table-column prop="quTitle" label="标题" width="180"></el-table-column>
-    <el-table-column prop="quDirType" label="题目类型" width="180" >
+    <el-table-column  type="selection"    align="center"></el-table-column>
+    <el-table-column prop="quTitle" label="标题" ></el-table-column>
+    <el-table-column prop="quDirType" label="题目类型"  >
       <template slot-scope="scope">{{scope.row.quDirType | formatquDirType }}</template>
     </el-table-column>
-    <el-table-column prop="quAnswerType" label="答案类型" width="180">
+    <el-table-column prop="quAnswerType" label="答案类型" >
       <template slot-scope="scope">{{scope.row.quAnswerType | formatanswerType }}</template>
     </el-table-column>
-    <el-table-column prop="quOpDescFlag" label="是否有详描述" width="180" :formatter="descFlagFormatter"></el-table-column>
-    <el-table-column prop="createUser" label="创建人" width="160"></el-table-column>
-    <el-table-column prop="createDate" label="创建时间" width="170"></el-table-column>
-    <el-table-column  label="操作" width="180"></el-table-column>
+    <el-table-column prop="quOpDescFlag" label="是否有详描述" :formatter="descFlagFormatter"></el-table-column>
+    <el-table-column prop="createUser" label="创建人" ></el-table-column>
+    <el-table-column prop="createDate" label="创建时间" ></el-table-column>
+    <!-- <el-table-column  label="操作" width="180"></el-table-column> -->
   </el-table>
 </el-row>
 
@@ -74,7 +74,7 @@
 </el-form>
 </el-dialog>
 
-<el-dialog title="选项信息" :visible.sync="questOptionsAdd"  ccustom-class="dialog-width" fullscreen center>
+<el-dialog title="选项信息" :visible.sync="questOptionsAdd"   width="1000px">
   <el-form :inline="true" :model="optionForm" class="demo-form-inline">
     <el-form-item label="选项名称">
       <el-input v-model="optionForm.quTitle" placeholder="选项名称"></el-input>
@@ -92,21 +92,21 @@
     </el-form-item>
   </el-form>
   <el-row>
-    <el-col :span="2"><div class="grid-content bg-purple"><el-button type="primary" @click="optionAdd = true" icon="el-icon-edit">新增</el-button></div></el-col>
+    <el-col :span="2"><div class="grid-content bg-purple"><el-button type="primary" @click="optionAdd = true" icon="el-icon-plus">新增</el-button></div></el-col>
     <el-col :span="2"><div class="grid-content bg-purple"><el-button type="primary" @click="editOption" icon="el-icon-edit">修改</el-button></div></el-col>
     <el-col :span="1"><div class="grid-content bg-purple"><el-button type="primary" @click="optionDel" icon="el-icon-delete" >删除</el-button></div></el-col>
   </el-row>
   <el-row>
    <el-table :data="tableDataOpt" border @selection-change="handleSelectionChange_option" style="width: 100%" :model="questOptions">
-    <el-table-column  type="selection"  width="55"  align="center"></el-table-column>
-    <el-table-column prop="quTitle" label="标题" width="280"></el-table-column>
+    <el-table-column  type="selection"   align="center"></el-table-column>
+    <el-table-column prop="quTitle" label="标题" ></el-table-column>
     <!-- <el-table-column prop="quOpType" label="选项类型" width="230"></el-table-column> -->
-    <el-table-column prop="quValue" label="选项值" width="240"></el-table-column>
-    <el-table-column prop="quOpSign" label="选项符号" width="240"></el-table-column>
-    <el-table-column prop="quOpScore" label="选项分值" width="240"></el-table-column>
-    <el-table-column prop="quOpOrder" label="顺序号" width="200"></el-table-column>
-    <el-table-column prop="quOpDescFlag" label="是否有详细描述" width="130" :formatter="descFlagFormatter"></el-table-column>
-    <el-table-column prop="quOpDesc" label="详细描述" width="240"></el-table-column>
+    <!-- <el-table-column prop="quValue" label="选项值" ></el-table-column> -->
+    <el-table-column prop="quOpSign" label="选项符号" ></el-table-column>
+    <el-table-column prop="quOpScore" label="选项分值" ></el-table-column>
+    <el-table-column prop="quOpOrder" label="顺序号" ></el-table-column>
+    <el-table-column prop="quOpDescFlag" label="是否有详细描述"  :formatter="descFlagFormatter"></el-table-column>
+    <el-table-column prop="quOpDesc" label="详细描述" ></el-table-column>
   </el-table>
 </el-row>
 <el-dialog title="选项" :visible.sync="optionAdd"  append-to-body center>
@@ -114,9 +114,9 @@
     <el-form-item label="标题" prop="quTitle">
       <el-input v-model="questOptions.quTitle"  placeholder="请输入内容"></el-input>
     </el-form-item>
-    <el-form-item label="选项值">
+   <!--  <el-form-item label="选项值">
       <el-input v-model="questOptions.quValue"  placeholder="选项值"></el-input>
-    </el-form-item>
+    </el-form-item> -->
     <el-form-item label="选项符号">
       <el-input v-model="questOptions.quOpSign"  placeholder="选项符号"></el-input>
     </el-form-item>
@@ -238,7 +238,6 @@ export default {
     // 初始化表格数据
     initDataTable () {
       this.$api.questionBanks.getQuestionBankList(this.formatForm(this.questForm)).then(res => {
-        console.log(res)
         let result = res.data
         this.tableData = result.data
       })
@@ -262,12 +261,10 @@ export default {
       }
     },
     saveQuestion (valForm) {
-      console.log(this.questInfo)
       this.$refs[valForm].validate((valid) => {
         if (valid) {
           this.$api.questionBanks.saveQuestionBank(this.formatForm(this.questInfo)).then(res => {
             let result = res.data
-            console.log(result)
             if (result.status === '1') {
               this.$message({
                 type: 'success',
@@ -298,7 +295,6 @@ export default {
           let param = {qid: values.join(',')}
           this.$api.questionBanks.deleteQuestionBank(param).then(res => {
             let result = res.data
-            console.log(result)
             if (result.status === '1') {
               this.$message({
                 type: 'success',
@@ -335,7 +331,6 @@ export default {
       }
     },
     switchToggleOpt (val) {
-      console.log(val)
       let quOpDescRule = [
         {required: val, message: '请填写详细描述', trigger: 'blur'},
         { min: 1, max: 10, message: '长度在 1 到 200 个字符', trigger: 'blur' }
@@ -380,7 +375,6 @@ export default {
         if (valid) {
           this.$api.questionBanks.saveQuestionOption(this.formatForm(this.questOptions)).then(res => {
             let result = res.data
-            console.log(result)
             if (result.status === '1') {
               this.$message({
                 type: 'success',
@@ -422,10 +416,8 @@ export default {
             values.push(val.id)
           })
           let param = {qid: values.join(',')}
-          console.log(param)
           this.$api.questionBanks.deleteQuestionOption(param).then(res => {
             let result = res.data
-            console.log(result)
             if (result.status === '1') {
               this.$message({
                 type: 'success',
@@ -475,10 +467,5 @@ min-width: 600rem !important;
 .el-pagination{
   margin-top:20px;
   text-align: right;
-}
-.el-input{
-  border-top:1px solid #DCDFE6;
-  border-left:1px solid #DCDFE6;
-  border-right:1px solid #DCDFE6;
 }
 </style>

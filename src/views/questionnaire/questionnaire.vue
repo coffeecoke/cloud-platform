@@ -19,26 +19,34 @@
 </el-form>
 
 <el-row>
-  <el-col :span="2"><div class="grid-content bg-purple"><el-button type="primary" @click="questAdd = true" icon="el-icon-edit">新增</el-button></div></el-col>
+  <el-col :span="2"><div class="grid-content bg-purple"><el-button type="primary" @click="questAdd = true" icon="el-icon-plus">新增</el-button></div></el-col>
   <el-col :span="2"><div class="grid-content bg-purple"><el-button type="primary" @click="editQuestion" icon="el-icon-edit">修改</el-button></div></el-col>
-  <el-col :span="3"><div class="grid-content bg-purple"><el-button type="primary" @click="addQuestion" icon="el-icon-document" >添加问题</el-button></div></el-col>
+  <el-col :span="3"><div class="grid-content bg-purple"><el-button type="primary" @click="questOptions" icon="el-icon-document" >管理问题</el-button></div></el-col>
   <el-col :span="1"><div class="grid-content bg-purple"><el-button type="primary" @click="delData" icon="el-icon-delete" >删除</el-button></div></el-col>
 </el-row>
 <el-row>
    <el-table :data="tableData" @selection-change="handleSelectionChange"  border style="width: 100%">
-    <el-table-column  type="selection"  width="55"  align="center"></el-table-column>
-    <el-table-column prop="quTitle" label="问卷名称" width="200"></el-table-column>
-    <el-table-column prop="quType" label="问卷类型" width="200">
+    <el-table-column  type="selection"    align="center"></el-table-column>
+    <el-table-column prop="quTitle" label="问卷名称" ></el-table-column>
+    <el-table-column prop="quType" label="问卷类型" >
       <template slot-scope="scope">{{scope.row.quType | formatquType }}</template>
     </el-table-column>
-    <el-table-column prop="quDescFlag" label="是否有简介" width="200">
+    <el-table-column prop="quDescFlag" label="是否有简介" >
       <template slot-scope="scope">{{scope.row.quDescFlag | formatquDescFlag }}</template>
     </el-table-column>
-    <el-table-column prop="quDesc"  label="简介" width="200"></el-table-column>
-    <el-table-column prop="createUser" label="创建人" width="200"></el-table-column>
-    <el-table-column prop="createDate" label="创建时间" width="120"></el-table-column>
-    <el-table-column label="操作" width="100">
-    <el-button slot-scope="scope" type="primary"  icon="el-icon-document"  @click="handleShow(scope.$index, scope.row)" round>预览</el-button>
+    <el-table-column   label="简介"  show-overflow-tooltip>
+      <template slot-scope="scope">
+          <span>{{ scope.row.quDesc }}</span>
+      </template>
+    </el-table-column>
+    <el-table-column prop="createUser" label="创建人" ></el-table-column>
+    <el-table-column prop="createDate" label="创建时间" ></el-table-column>
+    <el-table-column label="操作" width="200">
+      <template slot-scope="scope">
+        <el-button  type="primary"  icon="el-icon-document"  @click="handleShow(scope.$index, scope.row)" round>预览</el-button>
+        <el-button  type="primary"  icon="el-icon-document"  @click="answerQuest(scope.$index, scope.row)" round>答题</el-button>
+        <el-button  type="primary"  icon="el-icon-document"  @click="handleShow(scope.$index, scope.row)" round>已填报</el-button>
+      </template>
     </el-table-column>
   </el-table>
 </el-row>
@@ -74,6 +82,33 @@
 </el-form>
 </el-dialog>
 <!--新增弹出框 end-->
+
+<!--问题管理-->
+<el-dialog title="问题管理" :visible.sync="questOptionsAdd"   width="1000px">
+  <el-row>
+    <el-col :span="3"><div class="grid-content bg-purple"><el-button type="primary" @click="saveSort" icon="el-icon-edit">保存顺序号</el-button></div></el-col>
+    <el-col :span="1"><div class="grid-content bg-purple"><el-button type="primary" @click="addQuestion" icon="el-icon-plus">添加问题</el-button></div></el-col>
+  </el-row>
+  <el-row>
+    <el-table :data="optionTableData" border style="width: 100%">
+      <el-table-column prop="quTitle" label="标题" ></el-table-column>
+      <el-table-column prop="quDirType" label="题目类型"  >
+        <template slot-scope="scope">{{scope.row.quDirType | formatquDirType }}</template>
+      </el-table-column>
+      <el-table-column prop="quAnswerType" label="答案类型" >
+        <template slot-scope="scope">{{scope.row.quAnswerType | formatanswerType }}</template>
+      </el-table-column>
+      <el-table-column prop="quSort" label="顺序号">
+        <template slot-scope="scope">
+          <el-input v-model="scope.row.quSort" placeholder=""></el-input>
+        </template>
+      </el-table-column>
+      <el-table-column prop="createUser" label="创建人" ></el-table-column>
+      <el-table-column prop="createDate" label="创建时间" ></el-table-column>
+    </el-table>
+  </el-row>
+</el-dialog>
+<!--问题管理-->
 
 <!--问题选择  start-->
 <el-dialog title="新增调查问卷" :visible.sync="questSel"  center>
@@ -121,8 +156,10 @@ export default {
       rightCheck: [],
       questAdd: false,
       questSel: false,
+      questOptionsAdd: false,
       value4: [],
-      tableData: []
+      tableData: [],
+      optionTableData: []
     }
   },
   filters: {
@@ -145,6 +182,22 @@ export default {
       } else {
         return '否'
       }
+    },
+    formatanswerType (val) {
+      let result = ''
+      if (val === '1') {
+        result = '多选题'
+      } else if (val === '2') {
+        result = '单选题'
+      } else if (val === '3') {
+        result = '填空题'
+      } else if (val === '4') {
+        result = '判断题'
+      }
+      return result
+    },
+    formatquDirType (val) {
+      return val === '1' ? '题目' : '目录'
     }
   },
   mounted () {
@@ -158,12 +211,11 @@ export default {
       })
     },
     saveQuestionnaire (valForm) {
-      console.log(this.questionnaire)
       this.$refs[valForm].validate((valid) => {
         if (valid) {
           this.$api.questionnaire.saveQuestionnaire(this.formatForm(this.questionnaire)).then(res => {
             let result = res.data
-            console.log(result)
+
             if (result.status === '1') {
               this.$message({
                 type: 'success',
@@ -247,10 +299,7 @@ export default {
         let param = {quId: this.questionnaire.id}
         this.$api.questionnaire.loadQuestDataList(param).then(res => {
           let result = res.data
-          // console.log(result)
           this.dataOpts = result.data.allData
-          console.log(result.data.checkData)
-          // this.leftCheck = result.leftCheck
           this.value4 = result.data.checkData
           this.rightCheck = result.data.checkData
         })
@@ -268,16 +317,15 @@ export default {
       param.quId = this.questionnaire.id
       param.operation = direction === 'left' ? 'delete' : 'insert'
       param.movedKeys = movedKeys.join(',')
-      console.log(param)
       this.$api.questionnaire.saveQuestDataList(param).then(res => {
         let result = res.data
-        console.log(result)
         if (result.status === '1') {
           this.$message({
             type: 'success',
             message: '保存数据成功!'
           })
           this.questSel = false
+          this.questOptions()
         } else {
           this.$message.error('保存数据失败！')
         }
@@ -291,8 +339,49 @@ export default {
       return formData
     },
     handleShow (index, row) {
-      console.log(row.id)
       this.$router.push({path: '/qu-4', query: {id: row.id}})
+    },
+    answerQuest (index, row) {
+      this.$router.push({path: '/qu-5', query: {id: row.id}})
+    },
+    questOptions () {
+      if (this.multipleSelection.length === 1) {
+        this.questionnaire = Object.assign({}, this.multipleSelection[0])
+        let param = {quId: this.questionnaire.id}
+        this.$api.questionnaire.getQuestBankList(param).then(res => {
+          let result = res.data
+          this.optionTableData = result.data
+        })
+        this.questOptionsAdd = true
+      } else {
+        this.$message({
+          type: 'warning',
+          message: '请选择一条数据编辑！'
+        })
+      }
+    },
+    saveSort () {
+      this.questionnaire = Object.assign({}, this.multipleSelection[0])
+      let option = []
+      this.optionTableData.forEach((item, index) => {
+        let temp = {qbId: item.id, quSort: item.quSort}
+        option.push(temp)
+      })
+      let param = {quId: this.questionnaire.id, option: JSON.stringify(option)}
+
+      this.$api.questionnaire.saveQuestOptionsRel(param).then(res => {
+        let result = res.data
+        if (result.status === '1') {
+          this.$message({
+            type: 'success',
+            message: '保存数据成功!'
+          })
+          this.questSel = false
+          this.questOptions()
+        } else {
+          this.$message.error('保存数据失败！')
+        }
+      })
     }
   }
 }
@@ -304,5 +393,10 @@ export default {
 }
 .el-transfer{
   height: 300px;
+}
+</style>
+<style>
+.el-tooltip__popper {
+  max-width: 400px;
 }
 </style>

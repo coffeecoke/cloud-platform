@@ -33,11 +33,13 @@
           </div>
           <div v-if="item.quAnswerType === '2'">
             <!--多选-->
-              <el-checkbox v-model="item.selectContent" :label="itemChild.quTitle" v-for="itemChild in item.qoList" :key="itemChild.id"></el-checkbox>
+              <el-checkbox-group v-model="item.selectMultipleContent">
+                <el-checkbox  :label="itemChild.id" v-for="itemChild in item.qoList" :key="itemChild.id">{{itemChild.quTitle}}</el-checkbox>
+              </el-checkbox-group>
           </div>
           <div v-if="item.quAnswerType === '3'">
             <!--备注输入框-->
-            <el-input v-model="item.selectContent" :id="item.id" placeholder="请输入"></el-input>
+            <el-input v-model="item.remark" :id="item.id" placeholder="请输入"></el-input>
           </div>
         </div>
         <div v-if="item.quDirType === '2'">

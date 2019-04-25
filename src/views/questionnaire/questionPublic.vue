@@ -94,20 +94,16 @@ export default {
   },
   methods: {
     initDataTable () {
-      console.log(this.questDeploy)
       this.$api.questionPublic.getQuestionDeployList(this.formatForm(this.deployForm)).then(res => {
-        console.log(res)
         let result = res.data
         this.tableData = result.data
       })
     },
     saveQuestion (valForm) {
-      console.log(this.questDeploy)
       this.$refs[valForm].validate((valid) => {
         if (valid) {
           this.$api.questPublic.saveQuestionDeploy(this.questDeploy).then(res => {
             let result = res.data
-            console.log(result)
             if (result.status === '1') {
               this.$message({
                 type: 'success',
@@ -144,7 +140,6 @@ export default {
         }).then(() => {
           this.$api.questPublic.deleteQuestionDeploy(this.questDeploy).then(res => {
             let result = res.data
-            console.log(result)
             if (result.state === '1') {
               this.$message({
                 type: 'success',
@@ -205,10 +200,8 @@ export default {
       }
     },
     quTitleHandleSelect (item) {
-      console.log(item)
     },
     projectHandleSelect (item) {
-      console.log(item)
     }
 
   }

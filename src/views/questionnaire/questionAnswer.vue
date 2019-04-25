@@ -26,7 +26,7 @@ export default {
   },
   methods: {
     loadData (val) {
-      this.$api.questionnaire.answerUserQuest({quId: this.$route.query.id}).then(res => {
+      this.$api.questionnaire.answerQuestionnaire({quId: this.$route.query.id}).then(res => {
         let result = res.data
         this.questInfo = result.data.questInfo
         this.option = result.data.questBank
@@ -41,6 +41,7 @@ export default {
             const curQues = {
               n_id: nId,
               q_id: item.id,
+              a_id: '1',
               o_id: item.selectContent,
               o_addition: item.remark
             }
@@ -49,6 +50,7 @@ export default {
             const curQues = {
               n_id: nId,
               q_id: item.id,
+              a_id: '2',
               o_id: item.selectMultipleContent,
               o_addition: item.remark
             }
@@ -57,11 +59,24 @@ export default {
             const curQues = {
               n_id: nId,
               q_id: item.id,
+              a_id: '3',
               o_id: item.id,
               o_addition: item.remark
             }
             result.push(curQues)
           }
+        }
+      })
+      this.$api.questionnaire.saveAnswerQuest({result: JSON.stringify(result)}).then(res => {
+        let result = res.data
+        if (result.status === '1') {
+          this.$message({
+            type: 'success',
+            message: '提交问卷成功!'
+          })
+          this.initDataTable()
+        } else {
+          this.$message.error('提交问卷失败！')
         }
       })
     }
