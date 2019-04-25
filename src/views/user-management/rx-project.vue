@@ -17,118 +17,115 @@
         </div>
       </el-col>
     </el-row>
+    <el-form>
+      <el-table :data="tableData" :border="true" style="width: 100%">
+        <el-table-column prop="date" label="开始结束日期">
+          <template slot-scope="scope">
+            <template v-if="scope.row.edit">
+              <el-date-picker v-model="scope.row.date" type="daterange" range-separator="至" start-placeholder="开始日期"
+                end-placeholder="结束日期" value-format="yyyy-MM-dd">
+              </el-date-picker>
+            </template>
+            <span v-else>{{getDateStr1(scope.row)}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="industry" label="所属行业">
+          <template slot-scope="scope">
+            <template v-if="scope.row.edit">
+              <el-select v-model="scope.row.industry">
+                <el-option v-for="item in industry" :key="item.dictCode" :label="item.dictName" :value="item.dictCode"
+                  :disabled="item.disabled">
+                </el-option>
+              </el-select>
+            </template>
+            <span v-else>{{ formatIndustry(scope.row.industry) }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="projectName" label="项目名称">
+          <template slot-scope="scope">
+            <template v-if="scope.row.edit">
+              <el-input class="ipt" size="small" v-model="scope.row.trainingmode"></el-input>
+            </template>
+            <template v-else>
+              <span>{{ scope.row.projectName }}</span>
+              <el-popover trigger="hover" placement="top">
+                <p>{{ scope.row.projectName }}</p>
+                <p>{{ scope.row.content }}</p>
+                <i slot="reference" class="project-notice-icon"></i>
+              </el-popover>
+            </template>
+          </template>
+        </el-table-column>
+        <el-table-column prop="projectScale" label="项目规模">
+          <template slot-scope="scope">
+            <template v-if="scope.row.edit">
+              <el-select v-model="scope.row.projectScale">
+                <el-option v-for="item in projectScale" :key="item.dictCode" :label="item.dictName"
+                  :value="item.dictCode" :disabled="item.disabled">
+                </el-option>
+              </el-select>
+            </template>
+            <span v-else>{{ formatProjectScale(scope.row.projectScale) }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="projectRole" label="担任角色">
+          <template slot-scope="scope">
+            <template v-if="scope.row.edit">
+              <el-select v-model="scope.row.projectRole">
+                <el-option v-for="item in projectRole" :key="item.dictCode" :label="item.dictName"
+                  :value="item.dictCode" :disabled="item.disabled">
+                </el-option>
+              </el-select>
+            </template>
+            <span v-else>{{ formatProjectRole(scope.row.projectRole) }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="duties" label="个人职责">
+          <template slot-scope="scope">
+            <template v-if="scope.row.edit">
+              <el-input class="ipt" size="small" v-model="scope.row.duties"></el-input>
+            </template>
+            <span v-else>{{scope.row.duties}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="involvingBusiness" label="涉及业务">
+          <template slot-scope="scope">
+            <template v-if="scope.row.edit">
+              <el-select v-model="scope.row.involvingBusiness">
+                <el-option v-for="item in involvingBusiness" :key="item.dictCode" :label="item.dictName"
+                  :value="item.dictCode" :disabled="item.disabled">
+                </el-option>
+              </el-select>
+            </template>
+            <span v-else>{{ formatInvolvingBusiness(scope.row.involvingBusiness) }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="skill" label="涉及技术">
+          <template slot-scope="scope">
+            <template v-if="scope.row.edit">
+              <el-select v-model="scope.row.skill">
+                <el-option v-for="item in skill" :key="item.dictCode" :label="item.dictName" :value="item.dictCode"
+                  :disabled="item.disabled">
+                </el-option>
+              </el-select>
+            </template>
+            <span v-else>{{ formatSkill(scope.row.skill) }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作">
+          <template slot-scope="scope">
+            <div class="btn-icons-group">
+              <i class="edit el-icon-edit" @click="scope.row.edit=true;isAddRow=false"></i>
+              <i class="delect el-icon-delete" @click="deleteRow(scope.$index, tableData)">
+              </i>
+              <i class="save el-icon-upload2" @click="saveClick(scope.$index,scope.row)">
+              </i>
+            </div>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-form>
 
-    <el-table :data="tableData" :border="true" style="width: 100%">
-      <el-table-column prop="date" label="开始结束日期">
-        <template slot-scope="scope">
-          <template v-if="scope.row.edit">
-            <el-date-picker
-              v-model="scope.row.date"
-              type="daterange"
-              range-separator="至"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-              value-format="yyyy-MM-dd">
-            </el-date-picker>
-          </template>
-          <span v-else>{{getDateStr1(scope.row)}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column prop="industry" label="所属行业">
-        <template slot-scope="scope">
-          <template v-if="scope.row.edit">
-            <el-select v-model="scope.row.industry">
-              <el-option v-for="item in industry" :key="item.dictCode" :label="item.dictName" :value="item.dictCode"
-                :disabled="item.disabled">
-              </el-option>
-            </el-select>
-          </template>
-          <span v-else>{{ formatIndustry(scope.row.industry) }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column prop="projectName" label="项目名称">
-        <template slot-scope="scope">
-          <template v-if="scope.row.edit">
-            <el-input class="ipt" size="small" v-model="scope.row.trainingmode"></el-input>
-          </template>
-          <template v-else>
-            <span>{{ scope.row.projectName }}</span>
-            <el-popover trigger="hover" placement="top">
-              <p>{{ scope.row.projectName }}</p>
-              <p>{{ scope.row.content }}</p>
-              <i slot="reference" class="project-notice-icon"></i>
-            </el-popover>
-          </template>
-        </template>
-      </el-table-column>
-      <el-table-column prop="projectScale" label="项目规模">
-        <template slot-scope="scope">
-          <template v-if="scope.row.edit">
-            <el-select v-model="scope.row.projectScale">
-              <el-option v-for="item in projectScale" :key="item.dictCode" :label="item.dictName" :value="item.dictCode"
-                :disabled="item.disabled">
-              </el-option>
-            </el-select>
-          </template>
-          <span v-else>{{ formatProjectScale(scope.row.projectScale) }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column prop="projectRole" label="担任角色">
-        <template slot-scope="scope">
-          <template v-if="scope.row.edit">
-            <el-select v-model="scope.row.projectRole">
-              <el-option v-for="item in projectRole" :key="item.dictCode" :label="item.dictName" :value="item.dictCode"
-                :disabled="item.disabled">
-              </el-option>
-            </el-select>
-          </template>
-          <span v-else>{{ formatProjectRole(scope.row.projectRole) }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column prop="duties" label="个人职责">
-        <template slot-scope="scope">
-          <template v-if="scope.row.edit">
-            <el-input class="ipt" size="small" v-model="scope.row.duties"></el-input>
-          </template>
-          <span v-else>{{scope.row.duties}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column prop="involvingBusiness" label="涉及业务">
-        <template slot-scope="scope">
-          <template v-if="scope.row.edit">
-            <el-select v-model="scope.row.involvingBusiness">
-              <el-option v-for="item in involvingBusiness" :key="item.dictCode" :label="item.dictName" :value="item.dictCode"
-                :disabled="item.disabled">
-              </el-option>
-            </el-select>
-          </template>
-          <span v-else>{{ formatInvolvingBusiness(scope.row.involvingBusiness) }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column prop="skill" label="涉及技术">
-        <template slot-scope="scope">
-          <template v-if="scope.row.edit">
-            <el-select v-model="scope.row.skill">
-              <el-option v-for="item in skill" :key="item.dictCode" :label="item.dictName" :value="item.dictCode"
-                :disabled="item.disabled">
-              </el-option>
-            </el-select>
-          </template>
-          <span v-else>{{ formatSkill(scope.row.skill) }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="操作">
-        <template slot-scope="scope">
-          <div class="btn-icons-group">
-            <i class="edit el-icon-edit" @click="scope.row.edit=true;isAddRow=false"></i>
-            <i class="delect el-icon-delete" @click="deleteRow(scope.$index, tableData)">
-            </i>
-            <i class="save el-icon-upload2" @click="saveClick(scope.$index,scope.row)">
-            </i>
-          </div>
-        </template>
-      </el-table-column>
-    </el-table>
   </div>
 </template>
 <script>
@@ -139,59 +136,54 @@ export default {
   },
   data () {
     return {
-      industry: [
-        {
-          dictCode: '1',
-          dictName: '金融'
-        },
-        {
-          dictCode: '2',
-          dictName: '建筑'
-        }
+      industry: [{
+        dictCode: '1',
+        dictName: '金融'
+      },
+      {
+        dictCode: '2',
+        dictName: '建筑'
+      }
       ],
-      projectScale: [
-        {
-          dictCode: '1',
-          dictName: '超大型'
-        },
-        {
-          dictCode: '2',
-          dictName: '大型'
-        },
-        {
-          dictCode: '3',
-          dictName: '小型'
-        }
+      projectScale: [{
+        dictCode: '1',
+        dictName: '超大型'
+      },
+      {
+        dictCode: '2',
+        dictName: '大型'
+      },
+      {
+        dictCode: '3',
+        dictName: '小型'
+      }
       ],
-      projectRole: [
-        {
-          dictCode: '1',
-          dictName: '项目经理'
-        },
-        {
-          dictCode: '2',
-          dictName: '架构师'
-        }
+      projectRole: [{
+        dictCode: '1',
+        dictName: '项目经理'
+      },
+      {
+        dictCode: '2',
+        dictName: '架构师'
+      }
       ],
-      involvingBusiness: [
-        {
-          dictCode: '1',
-          dictName: '监管'
-        },
-        {
-          dictCode: '2',
-          dictName: '发文'
-        }
+      involvingBusiness: [{
+        dictCode: '1',
+        dictName: '监管'
+      },
+      {
+        dictCode: '2',
+        dictName: '发文'
+      }
       ],
-      skill: [
-        {
-          dictCode: '1',
-          dictName: '微服务'
-        },
-        {
-          dictCode: '2',
-          dictName: '框架异构'
-        }
+      skill: [{
+        dictCode: '1',
+        dictName: '微服务'
+      },
+      {
+        dictCode: '2',
+        dictName: '框架异构'
+      }
       ],
       isAddRow: true, // 保存上一条数据之后，才允许新增
       loading: false, // 数据加载的loading效果
@@ -207,39 +199,38 @@ export default {
         sill: '',
         edit: true
       },
-      tableData: [
-        {
-          id: '1', // id为后台传入，后台的增删都是根据id进行的
-          date: ['2019-04-05', '2019-09-08'],
-          industry: 1,
-          projectName: '',
-          projectScale: '',
-          projectRole: '',
-          duties: '',
-          involvingBusiness: '',
-          skill: '',
-          content: '报送银监会报送银监会报送银监会报送银监会报送银监会报送银监会报送银监会',
-          edit: false
-        },
-        {
-          id: '2',
-          date: '',
-          industry: 2,
-          projectName: '',
-          projectSize: '1',
-          projectRole: '2',
-          duties: '',
-          business: '1',
-          skill: '1',
-          content: '',
-          edit: false
-        }
+      tableData: [{
+        id: '1', // id为后台传入，后台的增删都是根据id进行的
+        date: ['2019-04-05', '2019-09-08'],
+        industry: 1,
+        projectName: '',
+        projectScale: '',
+        projectRole: '',
+        duties: '',
+        involvingBusiness: '',
+        skill: '',
+        content: '报送银监会报送银监会报送银监会报送银监会报送银监会报送银监会报送银监会',
+        edit: false
+      },
+      {
+        id: '2',
+        date: '',
+        industry: 2,
+        projectName: '',
+        projectSize: '1',
+        projectRole: '2',
+        duties: '',
+        business: '1',
+        skill: '1',
+        content: '',
+        edit: false
+      }
       ]
     }
   },
   created () {
     let dictionaryObj = {
-      dict_code: [ 'industry', 'projectScale', 'projectRole', 'involvingBusiness', 'skill' ]
+      dict_code: ['industry', 'projectScale', 'projectRole', 'involvingBusiness', 'skill']
     }
     this.$api.dictionary.getDictionaries(dictionaryObj).then(res => {
       let result = res.data
@@ -399,15 +390,17 @@ export default {
 
 </script>
 <style lang="scss" scoped>
-.top-btns {
-  float:right;
-}
-.project-notice-icon {
-  width:5px;
-  height:16px;
-  display:inline-block;
-  vertical-align: middle;
-  margin-left:10px;
-  background:url('~@assets/imgs/project-notice-icon.png') center no-repeat;
-}
+  .top-btns {
+    float: right;
+  }
+
+  .project-notice-icon {
+    width: 5px;
+    height: 16px;
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 10px;
+    background: url('~@assets/imgs/project-notice-icon.png') center no-repeat;
+  }
+
 </style>

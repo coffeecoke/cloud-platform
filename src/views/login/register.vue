@@ -77,7 +77,8 @@ export default {
       let result = res.data
       console.log('提交code~')
       console.log(result)
-      let {status, code, unionID} = result
+      let { status, code } = result
+      let { unionID } = result.data
       localStorage.setItem('unionID', unionID)
       // 转到认证
       if (status === '1' && code === '1205') {
@@ -96,6 +97,7 @@ export default {
         let { token, loginName } = result
         localStorage.setItem('token', token)
         localStorage.setItem('loginName', loginName)
+        this.$router.push({ path: '/' })
       }
     })
   },
@@ -103,7 +105,8 @@ export default {
     handleSubmit2 () {
       this.$refs.ruleForm2.validate((valid) => {
         let unionID = localStorage.getItem('unionID')
-        if (valid && unionID) {
+        console.log(valid, unionID)
+        if (valid) {
           this.logining = true
           var userInfo = {
             unionID: localStorage.getItem('unionID'),
@@ -117,11 +120,14 @@ export default {
             console.log('提交注册信息~')
             console.log(result)
             this.logining = false
-            let { status } = result.data
+            let { status } = result
             if (status === '1') {
               this.$message({
-                message: '提交成功',
+                message: '提交成功,请等待审核~',
                 type: 'success'
+              })
+              this.$router.push({
+                path: '/wxCodePage'
               })
             }
           })
