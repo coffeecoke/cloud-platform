@@ -53,11 +53,11 @@
       <el-table-column width="100px" prop="accepter"  label="验收人" align="center"></el-table-column>
       <el-table-column width="150px" prop="allocateTime"  label="分配时间" align="center"></el-table-column>
       <el-table-column width="150px" prop="plan_start_time"  label="计划开始时间" align="center"></el-table-column>
-      <el-table-column  prop="task_group_id"  label="计划工期" align="center"></el-table-column>
-      <el-table-column  prop="task_status"  label="实际开始时间" align="center"></el-table-column>
-      <el-table-column  prop="subordinate_person"  label="实际结束时间" align="center"></el-table-column>
-      <el-table-column  prop="task_group_id"  label="延迟" align="center"></el-table-column>
-      <el-table-column  prop="task_status"  label="优先级" align="center"></el-table-column>
+      <el-table-column prop="task_group_id"  label="计划工期" align="center"></el-table-column>
+      <el-table-column prop="task_status"  label="实际开始时间" align="center"></el-table-column>
+      <el-table-column prop="subordinate_person"  label="实际结束时间" align="center"></el-table-column>
+      <el-table-column prop="task_group_id"  label="延迟" align="center"></el-table-column>
+      <el-table-column prop="task_status"  label="优先级" align="center"></el-table-column>
 </el-table>
     <!--  设置按钮 -->
     <el-dialog title="设置所属人" :visible.sync="dialogPersonVisible" center>
@@ -99,11 +99,11 @@
       <el-table-column  prop="task_name"  label="匹配度"  align="center"></el-table-column>
       <el-table-column  fixed="right"  label="操作" align="center">
       <el-button @click="update()" type="text" >分配</el-button>
-    </el-table-column>
-    </el-table></el-tab-pane>
+      </el-table-column>
+      </el-table>
+    </el-tab-pane>
   </el-tabs>
     </el-dialog>
-
     <el-dialog  title="设置属组" :visible.sync="dialogGroupVisible"   width="27%"  right>
     请选择属组：
      <el-cascader
@@ -146,7 +146,7 @@ export default {
       input5: '',
       tableData: [],
       // 标签页下表格
-      tableData1: [{}],
+      tableData1: [],
       activeName: 'second'
     }
   },
