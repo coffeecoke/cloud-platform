@@ -63,7 +63,7 @@
       </el-table-column>
       <el-table-column fixed="right" label="操作" width="150px" align="center">
         <template slot-scope="scope">
-          <el-button @click="taskissue(scope.row.date)" type="text" size="medium"><i class="el-icon-upload"
+          <el-button @click="taskissue(scope.row.projectId)" type="text" size="medium"><i class="el-icon-upload"
               title="跳转到任务发布"></i></el-button>
           <el-button type="text" size="medium">
             <router-link to="/#/1-2"><i class="el-icon-share" title="跳转到任务脉络"></i></router-link>
