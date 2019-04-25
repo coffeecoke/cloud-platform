@@ -3,7 +3,7 @@
     <el-row :gutter="24">
       <el-col :span="6">
         <div class="slot-tree">
-          <el-button class="comp-tr-top" type="primary" @click="handleAddTop">添加顶级节点</el-button>
+          <el-button class="comp-tr-top" type="primary" @click="handleAddTop()">添加顶级节点</el-button>
           <el-tree ref="eventCategoryTree" :data="eventCategoryTree" :props="defaultProps" node-key="id"
             :render-content="renderContent" @node-click="confirm">
           </el-tree>
@@ -24,8 +24,27 @@
               <el-button @click="addEventdialogVisible=false">取 消</el-button>
               <el-button type="primary" @click="addEventFormSubmitBtn('addEventForm')">确 定</el-button>
             </span>
-            <!-- 编辑弹出框  -->
           </el-dialog>
+          <!-- 新增根节点 -->
+          <el-dialog title="新增根节点" width="25%" class="add-event-dialog" :visible.sync="addRootdialogVisible"
+            size="tiny">
+            <el-form ref="addRootForm" :model="addRootForm">
+              <el-form-item label="父节点" prop="taskGroupParentId">
+                <el-input v-model="addRootForm.taskGroupParentId" ></el-input>
+              </el-form-item>
+              <el-form-item label="任务组编号" prop="taskGroupId">
+                <el-input v-model="addRootForm.taskGroupId"></el-input>
+              </el-form-item>
+              <el-form-item label="任务组名称" prop="taskGroupName">
+                <el-input v-model="addRootForm.taskGroupName"></el-input>
+              </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+              <el-button @click="addRootdialogVisible=false">取 消</el-button>
+              <el-button type="primary" @click="addRootFormSubmitBtn('addRootForm')">确 定</el-button>
+            </span>
+          </el-dialog>
+           <!-- 编辑弹出框  -->
           <el-dialog title="任务组修改" width="25%" class="edit-event-dialog" :visible.sync="editEventdialogVisible"
             size="tiny">
             <el-form>
@@ -137,7 +156,13 @@ export default {
       editEventdialogVisible: false,
       taskGroupId: '',
       taskGroupName: '',
-
+      // 新增根节点
+      addRootdialogVisible: false,
+      addRootForm: {
+        taskGroupParentId: 'root',
+        taskGroupId: '',
+        taskGroupName: ''
+      },
       tableData3: [{
         suggestOrder: '111',
         taskName: '1111',
@@ -146,14 +171,6 @@ export default {
         postTask: '111'
       }],
       form: {
-        projectId: '2018725-020B',
-        taskId: '',
-        taskName: '',
-        taskTarget: '',
-        predecessorTask: '',
-        taskGroupId: ''
-      },
-      form1: {
         projectId: '2018725-020B',
         taskId: '',
         taskName: '',
@@ -174,6 +191,10 @@ export default {
     handchange (value) {
       let taskGroupId = value[value.length - 1]
       this.moveObj = Object.assign({}, {taskGroupId: taskGroupId}, {moveRowData: this.moveRowData})
+    },
+    // 新增根节点点击事件
+    handleAddTop () {
+      this.addRootdialogVisible = true
     },
     // 结构调整事件
     moveBtn (index, row) {
@@ -213,7 +234,7 @@ export default {
       })
     },
     confirm (data, node) {
-      console.log(data)
+      // console.log(data)
       // this.addEventForm.taskGroupParentName = data.label
       // console.log(this.addEventForm.taskGroupParentName)
       if (!(data.children && data.children.length !== 0)) {
@@ -231,16 +252,16 @@ export default {
         // console.log(data.id)
       }
     },
-    confirm1 (value) {
+    confirm1 () {
       // this.addEventForm.taskGroupParentName = data.label
       // console.log(this.addEventForm.taskGroupParentName)
       let formData = new FormData()
-      Object.keys(this.form1).forEach(key => {
+      Object.keys(this.form).forEach(key => {
         console.log(key)
-        formData.append(key, this.form1[key])
+        formData.append(key, this.form[key])
       })
-      console.log(formData.get('taskGroupId'))
-      formData.append('taskGroupId', this.form.taskGroupId)
+      // console.log(formData.get('taskGroupId'))
+      // formData.append('taskGroupId', this.form.taskGroupId)
 
       this.$api.TaskGroup.getTaskList(formData).then(res => {
         var result = res.data
@@ -280,6 +301,7 @@ export default {
       this.addEventdialogVisible = true
       this.triggerCurrenNodeData = d
       this.triggerCurrenNode = n
+      console.log(this.triggerCurrenNodeData)
     },
     editEvent (s, d, n) {
       // console.log(d)
@@ -370,6 +392,7 @@ export default {
     },
     /* 节点新增，新增树形菜单事件分类弹窗，提交按钮 */
     addEventFormSubmitBtn (formname) {
+      console.log(this.triggerCurrenNodeData.children)
       // this.$refs[formname].validate((valid) => {
       // if (valid) {
       if (this.addEventForm.taskGroupName.trim() && this.addEventForm.taskGroupId.trim()) {
@@ -392,7 +415,7 @@ export default {
             console.log('请求成功')
             // if (res.status === '1') {
             let result = res.data
-            console.log(this.triggerCurrenNodeData.children)
+            // console.log(this.triggerCurrenNodeData.children)
             // /* 点击弹窗的确定按钮可以得到输入的数据，作为新的节点名称插入*/
             // /* 如果没有子节点，就创建一个子节点插入*/
             if (!this.triggerCurrenNodeData.children) {
@@ -428,16 +451,55 @@ export default {
           message: '任务组编码和名称不能为空'
         })
       }
+    },
+    addRootFormSubmitBtn (formname) {
+    // this.addRootdialogVisible = true
+      if (this.addRootForm.taskGroupName.trim() && this.addRootForm.taskGroupId.trim()) {
+        this.$api.TaskGroup.saveTaskGroupInfo({
+          projectId: this.form.projectId,
+          taskGroupParentId: this.addRootForm.taskGroupParentId,
+          taskGroupName: this.addRootForm.taskGroupName.trim(),
+          taskGroupId: this.addRootForm.taskGroupId.trim(),
+          // taskGroupParentId: this.triggerCurrenNodeData.id,
+          addOrEdit: 'add'
+        }).then((res) => {
+          let result3 = res.data
+          if (result3.status === '1') {
+            this.addRootdialogVisible = false
+            this.$refs[formname].resetFields()
+
+            // /* 刷新树形菜单*/
+            this.$api.TaskGroup.initTaskGroupTree({
+              projectId: this.form.projectId
+            }).then(res => {
+              var result = res.data
+              console.log(result.data)
+              this.eventCategoryTree = result.data
+            })
+          } else {
+            this.$message({
+              message: '新增根节点失败',
+              type: 'warning'
+            })
+          }
+        })
+          .catch((e) => {
+            console.log('请求失败', e)
+          })
+      // } else {
+      //   console.log('验证未通过')
+      //   return false
+      // }
+      // })
+      } else {
+        this.$message({
+          type: 'warning',
+          message: '任务组编码和名称不能为空'
+        })
+      }
     }
   },
-  handleAddTop () { // 添加顶级节点
-    this.setTree.push({
-      id: ++this.maxexpandId,
-      name: '新增顶级节点',
-      pid: '',
-      children: []
-    })
-  },
+
   mounted () {
     // var projectId = this.form.projectId
     this.$api.TaskGroup.initTaskGroupTree({
