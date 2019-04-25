@@ -23,6 +23,7 @@
 <el-row>
   <el-col :span="3"><div class="grid-content bg-purple"><el-button type="primary" icon="el-icon-setting" @click="dialogPersonVisible = true">设置所属人</el-button></div></el-col>
   <el-col :span="3"><div class="grid-content bg-purple"><el-button type="primary" icon="el-icon-printer" @click="setTaskGroup()">设置属组</el-button></div></el-col>
+  <el-col :span="3"><div class="grid-content bg-purple"><el-button type="primary" icon="el-icon-edit-outline">任务组管理</el-button></div></el-col>
   <el-col :span="3"><div class="grid-content bg-purple"><el-button type="primary" icon="el-icon-edit-outline">设置任务计划</el-button></div></el-col>
   <el-col :span="3"><div class="grid-content bg-purple"><el-button type="primary" icon="el-icon-share">任务脉络</el-button></div></el-col>
 </el-row>
@@ -61,9 +62,23 @@
 </el-table>
     <!--  设置按钮 -->
     <el-dialog title="设置所属人" :visible.sync="dialogPersonVisible" center>
-    <el-tabs v-model="activeName" @tab-click="handleClick">
-    <el-tab-pane label="本部门" name="first" ><el-table
-      :data="tableData"
+    <el-tabs v-model="activeName" @tab-click="handleClick" type="border-card">
+    <el-tab-pane label="本部门" name="tdepartment" v-model="tdepartment" @click="Tdepartment()"><el-table
+      :data="TtableData"
+      :header-cell-style="{background:'#1a74ee',color:'#f9fafc'}"
+      style="width: 100%" >
+
+      <el-table-column  prop="taskId"  label="姓名" align="center"></el-table-column>
+      <el-table-column  prop="taskName"  label="匹配度"  align="center"></el-table-column>
+      <el-table-column  fixed="right"  label="操作" align="center" class="aaa">
+      <template slot-scope="scope">
+      <el-button @click="handleClick(scope.row)" type="text" >分配</el-button>
+      </template>
+    </el-table-column>
+    </el-table></el-tab-pane>
+
+    <el-tab-pane label="上级部门" name="hdepartment" v-model="hdepartment" @click="Hdepartment()"><el-table
+      :data="HtableData"
       :header-cell-style="{background:'#1a74ee',color:'#f9fafc'}"
       style="width: 100%" >
 
@@ -76,22 +91,8 @@
     </el-table-column>
     </el-table></el-tab-pane>
 
-    <el-tab-pane label="上级部门" name="second"><el-table
-      :data="tableData"
-      :header-cell-style="{background:'#1a74ee',color:'#f9fafc'}"
-      style="width: 100%" >
-
-      <el-table-column  prop="task_id"  label="姓名" align="center"></el-table-column>
-      <el-table-column  prop="task_name"  label="匹配度"  align="center"></el-table-column>
-      <el-table-column  fixed="right"  label="操作" align="center" class="aaa">
-      <template slot-scope="scope">
-      <el-button @click="handleClick(scope.row)" type="text" >分配</el-button>
-      </template>
-    </el-table-column>
-    </el-table></el-tab-pane>
-
-    <el-tab-pane label="公司" name="third"><el-table
-      :data="tableData"
+    <el-tab-pane label="公司" name="cdepartment" v-model="cdepartment" @click="Cdepartment()"><el-table
+      :data="CtableData"
       :header-cell-style="{background:'#1a74ee',color:'#f9fafc'}"
       style="width: 100%" >
 
@@ -124,7 +125,15 @@
 export default {
   data () {
     return {
+      // 设置所属人
+      TtableData: [],
+      HtableData: [],
+      CtableData: [],
+      tdepartment: 'T',
+      hdepartment: 'H',
+      cdepartment: 'C',
       multipleSelection: [],
+      // 任务查询form表单
       form: {
         projectId: '2018725-020B',
         taskId: '',
@@ -132,6 +141,7 @@ export default {
         taskTarget: '',
         taskGroupId: ''
       },
+      // 设置所属组
       options: [],
       // 设置按钮
       dialogPersonVisible: false,
@@ -152,6 +162,27 @@ export default {
   },
 
   methods: {
+    Tdepartment () {
+      this.$api.TaskList.getTaskList(this.tdepartment).then(res => {
+        var result = res.data
+        console.log(result.data)
+        this.TtableData = result.data
+      })
+    },
+    Hdepartment () {
+      this.$api.TaskList.getTaskList(this.hdepartment).then(res => {
+        var result = res.data
+        console.log(result.data)
+        this.HtableData = result.data
+      })
+    },
+    Cdepartment () {
+      this.$api.TaskList.getTaskList(this.cdepartment).then(res => {
+        var result = res.data
+        console.log(result.data)
+        this.CtableData = result.data
+      })
+    },
     // 标签页下事件
     handleClick (tab, event) {
       console.log(event.target.getAttribute('id')) // 获取到当前元素的id
