@@ -21,7 +21,7 @@
 </el-row></el-form>
 
 <el-row>
-  <el-col :span="3"><div class="grid-content bg-purple"><el-button type="primary" icon="el-icon-setting" @click="dialogPersonVisible = true">设置所属人</el-button></div></el-col>
+  <el-col :span="3"><div class="grid-content bg-purple"><el-button type="primary" icon="el-icon-setting"   @click="setTaskPerson()">设置所属人</el-button></div></el-col>
   <el-col :span="3"><div class="grid-content bg-purple"><el-button type="primary" icon="el-icon-printer" @click="setTaskGroup()">设置属组</el-button></div></el-col>
   <el-col :span="3"><div class="grid-content bg-purple"><el-button type="primary" icon="el-icon-edit-outline">任务组管理</el-button></div></el-col>
   <el-col :span="3"><div class="grid-content bg-purple"><el-button type="primary" icon="el-icon-edit-outline">设置任务计划</el-button></div></el-col>
@@ -33,6 +33,7 @@
       :data="tableData"
       style="height: 100%"
       @selection-change="handleSelectionChange"
+      :header-cell-style="{background:'#1a74ee',color:'#f9fafc'}"
       >
       <el-table-column  type="selection"  width="55"  align="center"></el-table-column>
       <el-table-column prop="project" label="项目信息" width="200px"  align="center">
@@ -54,55 +55,60 @@
       <el-table-column width="100px" prop="accepter"  label="验收人" align="center"></el-table-column>
       <el-table-column width="150px" prop="allocateTime"  label="分配时间" align="center"></el-table-column>
       <el-table-column width="150px" prop="plan_start_time"  label="计划开始时间" align="center"></el-table-column>
-      <el-table-column prop="task_group_id"  label="计划工期" align="center"></el-table-column>
-      <el-table-column prop="task_status"  label="实际开始时间" align="center"></el-table-column>
-      <el-table-column prop="subordinate_person"  label="实际结束时间" align="center"></el-table-column>
-      <el-table-column prop="task_group_id"  label="延迟" align="center"></el-table-column>
-      <el-table-column prop="task_status"  label="优先级" align="center"></el-table-column>
+      <el-table-column width="150px" prop="task_group_id"  label="计划工期" align="center"></el-table-column>
+      <el-table-column width="150px" prop="task_status"  label="实际开始时间" align="center"></el-table-column>
+      <el-table-column width="150px" prop="subordinate_person"  label="实际结束时间" align="center"></el-table-column>
+      <el-table-column width="150px" prop="task_group_id"  label="延迟" align="center"></el-table-column>
+      <el-table-column width="150px" prop="task_status"  label="优先级" align="center"></el-table-column>
+       <el-table-column fixed="right" label="操作" align="center" width="200px">
+           <template slot-scope="scope">
+              <el-button @click.prevent="acceptance(scope.$index,scope.row)" type="text" icon="el-icon-setting">验收</el-button>
+              <el-button @click.prevent="audit(scope.$index,scope.row)" type="text" icon="el-icon-setting">审核</el-button>
+            </template>
+          </el-table-column>
 </el-table>
     <!--  设置按钮 -->
     <el-dialog title="设置所属人" :visible.sync="dialogPersonVisible" center>
-    <el-tabs v-model="activeName" @tab-click="handleClick" type="border-card">
-    <el-tab-pane label="本部门" name="tdepartment" v-model="tdepartment" @click="Tdepartment()"><el-table
-      :data="TtableData"
+    <el-tabs v-model="activeName" @tab-click="setDepartment" type="border-card">
+    <el-tab-pane label="本部门" name="T" v-model="department" ><el-table
+      :data="tableData3"
       :header-cell-style="{background:'#1a74ee',color:'#f9fafc'}"
       style="width: 100%" >
 
-      <el-table-column  prop="taskId"  label="姓名" align="center"></el-table-column>
-      <el-table-column  prop="taskName"  label="匹配度"  align="center"></el-table-column>
+      <el-table-column  prop="userName"  label="姓名" align="center"></el-table-column>
+      <el-table-column  prop="matchingDegree"  label="匹配度"  align="center"></el-table-column>
       <el-table-column  fixed="right"  label="操作" align="center" class="aaa">
       <template slot-scope="scope">
-      <el-button @click="handleClick(scope.row)" type="text" >分配</el-button>
+      <el-button @click="allocation(scope.row)" type="text" >分配</el-button>
       </template>
     </el-table-column>
     </el-table></el-tab-pane>
 
-    <el-tab-pane label="上级部门" name="hdepartment" v-model="hdepartment" @click="Hdepartment()"><el-table
-      :data="HtableData"
+    <el-tab-pane label="上级部门" name="H" v-model="department" ><el-table
+      :data="tableData3"
       :header-cell-style="{background:'#1a74ee',color:'#f9fafc'}"
       style="width: 100%" >
 
-      <el-table-column  prop="task_id"  label="姓名" align="center"></el-table-column>
-      <el-table-column  prop="task_name"  label="匹配度"  align="center"></el-table-column>
+      <el-table-column  prop="userName"  label="姓名" align="center"></el-table-column>
+      <el-table-column  prop="matchingDegree"  label="匹配度"  align="center"></el-table-column>
       <el-table-column  fixed="right"  label="操作" align="center" class="aaa">
       <template slot-scope="scope">
-      <el-button @click="handleClick(scope.row)" type="text" >分配</el-button>
+      <el-button @click="allocation(scope.row)" type="text" >分配</el-button>
       </template>
     </el-table-column>
     </el-table></el-tab-pane>
 
-    <el-tab-pane label="公司" name="cdepartment" v-model="cdepartment" @click="Cdepartment()"><el-table
-      :data="CtableData"
+    <el-tab-pane label="公司" name="C" v-model="department" ><el-table
+      :data="tableData3"
       :header-cell-style="{background:'#1a74ee',color:'#f9fafc'}"
       style="width: 100%" >
 
-      <el-table-column  prop="task_id"  label="姓名" align="center"></el-table-column>
-      <el-table-column  prop="task_name"  label="匹配度"  align="center"></el-table-column>
+      <el-table-column  prop="userName"  label="姓名" align="center"></el-table-column>
+      <el-table-column  prop="matchingDegree"  label="匹配度"  align="center"></el-table-column>
       <el-table-column  fixed="right"  label="操作" align="center">
-      <el-button @click="update()" type="text" >分配</el-button>
-      </el-table-column>
-      </el-table>
-    </el-tab-pane>
+      <el-button @click="allocation(scope.row)" type="text" >分配</el-button>
+    </el-table-column>
+    </el-table></el-tab-pane>
   </el-tabs>
     </el-dialog>
     <el-dialog  title="设置属组" :visible.sync="dialogGroupVisible"   width="27%"  right>
@@ -126,12 +132,8 @@ export default {
   data () {
     return {
       // 设置所属人
-      TtableData: [],
-      HtableData: [],
-      CtableData: [],
-      tdepartment: 'T',
-      hdepartment: 'H',
-      cdepartment: 'C',
+      tableData3: [],
+      department: '',
       multipleSelection: [],
       // 任务查询form表单
       form: {
@@ -149,44 +151,98 @@ export default {
       // 项目编号输入框
       restaurants: [],
       state2: '',
-      // 普通文本输入框
-      input2: '',
-      input3: '',
-      input4: '',
-      input5: '',
+      // 任务列表
       tableData: [],
-      // 标签页下表格
-      tableData1: [],
-      activeName: 'second'
+      activeName: 'T',
+      moveObj: null,
+      setPerson: null
     }
   },
 
   methods: {
-    Tdepartment () {
-      this.$api.TaskList.getTaskList(this.tdepartment).then(res => {
-        var result = res.data
-        console.log(result.data)
-        this.TtableData = result.data
+    acceptance (index, row) {
+      this.$confirm('是否进行验收?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$api.TaskList.acceptTask({projectId: row.projectId, taskId: row.taskId}).then(res => {
+          var result = res.data
+          if (result.status === '1') {
+            let formData = new FormData()
+            // this.form.taskGroupId = data.id
+            Object.keys(this.form).forEach(key => {
+              console.log(key)
+              formData.append(key, this.form[key])
+            })
+            this.$api.TaskList.getTaskList(formData).then(res => {
+              var result1 = res.data
+              console.log(result1.data)
+              this.tableData = result1.data
+            })
+            this.$message({
+              type: 'success',
+              message: '验收完成!'
+            })
+          } else {
+            this.$message('验收失败！')
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '取消领取'
+        })
       })
     },
-    Hdepartment () {
-      this.$api.TaskList.getTaskList(this.hdepartment).then(res => {
-        var result = res.data
-        console.log(result.data)
-        this.HtableData = result.data
+    audit (index, row) {
+      this.$confirm('是否审核通过?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$api.TaskList.auditTask({projectId: row.projectId, taskId: row.taskId}).then(res => {
+          var result = res.data
+          if (result.status === '1') {
+            let formData = new FormData()
+            // this.form.taskGroupId = data.id
+            Object.keys(this.form).forEach(key => {
+              console.log(key)
+              formData.append(key, this.form[key])
+            })
+            this.$api.TaskList.getTaskList(formData).then(res => {
+              var result1 = res.data
+              console.log(result1.data)
+              this.tableData = result1.data
+            })
+            this.$message({
+              type: 'success',
+              message: '审核通过!'
+            })
+          } else {
+            this.$message('审核失败！')
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '取消审核'
+        })
       })
     },
-    Cdepartment () {
-      this.$api.TaskList.getTaskList(this.cdepartment).then(res => {
+    setDepartment (tab, event) {
+      console.log(tab.name)
+      this.dialogPersonVisible = true
+      this.$api.TaskList.getTaskPersonList({department: tab.name}).then(res => {
         var result = res.data
         console.log(result.data)
-        this.CtableData = result.data
+        this.tableData3 = result.data
       })
     },
     // 标签页下事件
-    handleClick (tab, event) {
-      console.log(event.target.getAttribute('id')) // 获取到当前元素的id
-    },
+    // setDepartment (tab, event) {
+    //   console.log(tab.name) // 获取到当前元素的id
+    // },
     // 确定按钮
     confirm () {
       let formData = new FormData()
@@ -204,38 +260,93 @@ export default {
       let taskGroupId = value[value.length - 1]
       this.moveObj = Object.assign({}, {taskGroupId: taskGroupId}, {multipleSelection: this.multipleSelection})
     },
+    setTaskPerson () {
+      if (this.multipleSelection && this.multipleSelection.length !== 0) {
+        this.dialogPersonVisible = true
+        this.$api.TaskList.getTaskPersonList({department: 'T'}).then(res => {
+          var result = res.data
+          console.log(result.data)
+          this.tableData3 = result.data
+        })
+      } else {
+        this.$message({
+          message: '请先选择数据',
+          type: 'warning'
+        })
+      }
+    },
     setTaskGroup () {
-      this.dialogGroupVisible = true
-      this.$api.TaskList.getTaskGroupTree({projectId: this.form.projectId}).then(res => {
-        var result = res.data
-        // console.log(result.data)
-        this.options = result.data
-      })
+      if (this.multipleSelection && this.multipleSelection.length !== 0) {
+        console.log(this.multipleSelection.length)
+        this.dialogGroupVisible = true
+        this.$api.TaskList.getTaskGroupTree({projectId: this.form.projectId}).then(res => {
+          var result = res.data
+          // console.log(result.data)
+          this.options = result.data
+        })
+      } else {
+        this.$message({
+          message: '请先选择数据',
+          type: 'warning'
+        })
+      }
     },
-    handleSelectionChange (val) {
-      console.log(val)
-      this.multipleSelection = val
-    },
-    dialogSetGroupVisible () {
-      this.$api.TaskGroup.saveTaskGroup({moveObj: this.moveObj}).then(res => {
+    // 设置所属人中的分配事件
+    allocation (row) {
+      // this.multipleSelection.subordinatePerson.push(row.subordinatePerson)
+      // console.log(this.multipleSelection.subordinatePerson)
+      this.setPerson = Object.assign({}, {subordinatePerson: row.subordinatePerson}, {multipleSelection: this.multipleSelection})
+      // console.log(this.setPerson)
+      this.$api.TaskList.saveSubordinatePerson({setPerson: this.setPerson}).then(res => {
         var result = res.data
         if (result.status === '1') {
-          this.dialogTimeandCondition = false
+          this.dialogPersonVisible = false
           let formData = new FormData()
           // this.form.taskGroupId = data.id
           Object.keys(this.form).forEach(key => {
             console.log(key)
             formData.append(key, this.form[key])
           })
-          this.$api.TaskGroup.getTaskList(formData).then(res => {
+          this.$api.TaskList.getTaskList(formData).then(res => {
             var result = res.data
             console.log(result.data)
-            this.tableData3 = result.data
+            this.tableData = result.data
           })
           // console.log(data.id)
           // this.confirm()
           this.$message({
-            message: '任务组调整成功',
+            message: '分配成功',
+            type: 'success'
+          })
+        }
+      })
+    },
+    // checkbox复选框点击事件
+    handleSelectionChange (val) {
+      console.log(val)
+      this.multipleSelection = val
+    },
+    // 设置属组
+    dialogSetGroupVisible () {
+      this.$api.TaskList.saveMultTaskGroup({moveObj: this.moveObj}).then(res => {
+        var result = res.data
+        if (result.status === '1') {
+          this.dialogGroupVisible = false
+          let formData = new FormData()
+          // this.form.taskGroupId = data.id
+          Object.keys(this.form).forEach(key => {
+            console.log(key)
+            formData.append(key, this.form[key])
+          })
+          this.$api.TaskList.getTaskList(formData).then(res => {
+            var result = res.data
+            console.log(result.data)
+            this.tableData = result.data
+          })
+          // console.log(data.id)
+          // this.confirm()
+          this.$message({
+            message: '设置属组成功',
             type: 'success'
           })
         }
