@@ -1,7 +1,7 @@
 
 import axios from '@/utils/http' // 导入http中创建的axios实例
 // import Qs from 'qs'
-const taskList = {
+const TaskList = {
   // 级联查询
   getTaskGroupTree (params) {
     return axios({
@@ -11,13 +11,13 @@ const taskList = {
     })
   },
   // 任务发布查询
-  getPublishTaskList (params) {
+  getTaskList (params) {
     return axios({
       method: 'post',
-      url: '/taskPublish/getPublishTaskList',
+      url: '/taskSet/getTaskList',
       data: params
     })
   }
 
 }
-export default taskList
+export default TaskList

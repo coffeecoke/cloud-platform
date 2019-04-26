@@ -227,7 +227,6 @@ export default {
               type: 'success',
               message: '删除业务能力条目成功!'
             })
-            console.log(rows.splice(index, 1))
             rows.splice(index, 1)
           } else {
             this.$message({

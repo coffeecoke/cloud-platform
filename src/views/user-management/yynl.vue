@@ -113,7 +113,7 @@ export default {
       result.data.forEach(item => {
         Object.assign(dictionary, item)
       })
-      this.languages = dictionary.businessCategory
+      this.languages = dictionary.languages
       this.masteryLevel = dictionary.masteryLevel
     })
 

@@ -9,6 +9,8 @@ import TaskIssued from '@/views/task-system/task-issue'
 import TaskCollection from '@/views/task-system/task-collection'
 // 任务组
 import TaskGroup from '@/views/task-system/task-group'
+// 我的待办
+import Mytodo from '@/views/task-system/my-todo'
 
 export default [{
   path: 'taskSystem',
@@ -18,7 +20,7 @@ export default [{
   children: [
     {
       path: '/2-1',
-      name: '任务体系',
+      name: '任务统计',
       component: TaskCreate
     },
     {
@@ -40,6 +42,11 @@ export default [{
       path: '/2-5',
       name: '任务组',
       component: TaskGroup
+    },
+    {
+      path: '/2-6',
+      name: '我的待办',
+      component: Mytodo
     }
   ]
 }]

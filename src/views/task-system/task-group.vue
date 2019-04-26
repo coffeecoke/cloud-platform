@@ -3,17 +3,16 @@
     <el-row :gutter="24">
       <el-col :span="6">
         <div class="slot-tree">
+          <el-button class="comp-tr-top" type="primary" @click="handleAddTop()">添加顶级节点</el-button>
           <el-tree ref="eventCategoryTree" :data="eventCategoryTree" :props="defaultProps" node-key="id"
-             :render-content="renderContent" :expand-on-click-node="false" @node-click="confirm">
+            :render-content="renderContent" @node-click="confirm">
           </el-tree>
-          <el-dialog title="新增事件分类" width="25%" class="add-event-dialog" :visible.sync="addEventdialogVisible"
+          <el-dialog title="新增任务组" width="25%" class="add-event-dialog" :visible.sync="addEventdialogVisible"
             size="tiny">
-            <el-form ref="addEventForm" :model="addEventForm" :rules="addEventNodeRules">
-              <template  slot-scope="scope">
+            <el-form ref="addEventForm" :model="addEventForm">
               <el-form-item label="父节点" prop="taskGroupParentName">
-                <el-input v-model="addEventForm.taskGroupParentName"></el-input>
+                <el-input v-model="addEventForm.taskGroupParentName" disabled='true'></el-input>
               </el-form-item>
-              </template>
               <el-form-item label="任务组编号" prop="taskGroupId">
                 <el-input v-model="addEventForm.taskGroupId"></el-input>
               </el-form-item>
@@ -22,9 +21,53 @@
               </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-              <el-button @click="addEventFormCancleBtn = true">取 消</el-button>
+              <el-button @click="addEventdialogVisible=false">取 消</el-button>
               <el-button type="primary" @click="addEventFormSubmitBtn('addEventForm')">确 定</el-button>
             </span>
+          </el-dialog>
+          <!-- 新增根节点 -->
+          <el-dialog title="新增根节点" width="25%" class="add-event-dialog" :visible.sync="addRootdialogVisible"
+            size="tiny">
+            <el-form ref="addRootForm" :model="addRootForm">
+              <el-form-item label="父节点" prop="taskGroupParentId">
+                <el-input v-model="addRootForm.taskGroupParentId" ></el-input>
+              </el-form-item>
+              <el-form-item label="任务组编号" prop="taskGroupId">
+                <el-input v-model="addRootForm.taskGroupId"></el-input>
+              </el-form-item>
+              <el-form-item label="任务组名称" prop="taskGroupName">
+                <el-input v-model="addRootForm.taskGroupName"></el-input>
+              </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+              <el-button @click="addRootdialogVisible=false">取 消</el-button>
+              <el-button type="primary" @click="addRootFormSubmitBtn('addRootForm')">确 定</el-button>
+            </span>
+          </el-dialog>
+           <!-- 编辑弹出框  -->
+          <el-dialog title="任务组修改" width="25%" class="edit-event-dialog" :visible.sync="editEventdialogVisible"
+            size="tiny">
+            <el-form>
+              <el-form-item label="任务组编号" prop="taskGroupId">
+                <el-input v-model="taskGroupId" disabled='true'></el-input>
+              </el-form-item>
+              <el-form-item label="任务组名称" prop="taskGroupName">
+                <el-input v-model="taskGroupName"></el-input>
+              </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+              <el-button @click="editEventdialogVisible=false">取 消</el-button>
+              <el-button type="primary" @click="editEventFormSubmitBtn('editEventForm')">确 定</el-button>
+            </span>
+          </el-dialog>
+          <!-- 结构调整弹出框 -->
+          <el-dialog title="结构调整" :visible.sync="dialogTimeandCondition" width="27%" right>
+            <!-- <el-form :model="form111"> -->
+            请选择目标任务组：
+            <el-cascader :options="options" :show-all-levels="false" class="aaaaa" expand-trigger="hover" @change="handchange"></el-cascader>
+            <el-button @click="dialogTimeandCondition = false">取 消</el-button>
+            <el-button type="primary" round @click.native.prevent="dialogconfirm()">确 定</el-button>
+            <!-- </el-form> -->
           </el-dialog>
         </div>
       </el-col>
@@ -33,8 +76,8 @@
           <el-row>
             <el-col :span="4">
               <div class="group">
-                <el-autocomplete class="input1" v-model="form.projectId"
-                  placeholder="项目编号" :trigger-on-focus="false" @select="handleSelect"></el-autocomplete>
+                <el-autocomplete class="input1" v-model="form.projectId" placeholder="项目编号" :trigger-on-focus="false"
+                  @select="handleSelect"></el-autocomplete>
               </div>
             </el-col>
             <el-col :span="4">
@@ -59,7 +102,7 @@
             </el-col>
             <el-col :span="4">
               <div class="button">
-                <el-button type="primary" style="float:right" round @click.native.prevent="confirm">确定</el-button>
+                <el-button type="primary" style="float:right"  @click="confirm1">查 询</el-button>
               </div>
             </el-col>
           </el-row>
@@ -72,8 +115,8 @@
           <el-table-column prop="taskTarget" label="任务标的" align="center"></el-table-column>
           <el-table-column prop="postTask" label="后置任务" align="center"></el-table-column>
           <el-table-column fixed="right" label="操作" align="center" width="200px">
-            <template>
-              <el-button @click="dialogTimeandCondition = true" type="text" icon="el-icon-setting">结构调整</el-button>
+           <template slot-scope="scope">
+              <el-button @click.prevent="moveBtn(scope.$index,scope.row)" type="text" icon="el-icon-setting">结构调整</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -89,13 +132,16 @@ export default {
   name: 'slot-tree',
   data () {
     return {
-      addEventFormCancleBtn: false,
+      maxexpandId: api.maxexpandId, // 新增节点开始id
+      dialogTimeandCondition: false,
+      // 结构调整级联选择器
+      options: [],
+      taskGroupParentName: '',
       eventCategoryTree: [],
       defaultProps: {
         children: 'children',
         label: 'label'
       },
-
       // /* 触发的当前的节点，放到全局，方便调用*/
       triggerCurrenNodeData: {},
       // /* 触发的当前节点*/
@@ -103,6 +149,17 @@ export default {
       // /* 新增事件弹窗的输入框数据*/
       addEventdialogVisible: false,
       addEventForm: {
+        taskGroupId: '',
+        taskGroupName: ''
+      },
+      // /* 编辑事件弹窗的输入框数据*/
+      editEventdialogVisible: false,
+      taskGroupId: '',
+      taskGroupName: '',
+      // 新增根节点
+      addRootdialogVisible: false,
+      addRootForm: {
+        taskGroupParentId: 'root',
         taskGroupId: '',
         taskGroupName: ''
       },
@@ -121,31 +178,94 @@ export default {
         predecessorTask: '',
         taskGroupId: ''
       },
-      maxexpandId: api.maxexpandId, // 新增节点开始id
-      non_maxexpandId: api.maxexpandId, // 新增节点开始id(不更改)
-      isLoadingTree: true, // 是否加载节点树
-      setTree: api.treelist, // 节点树数据
-      iconSize: 'mini'
-      // defaultProps: {
-      //   children: 'children',
-      //   label: 'name'
-      // }
+      // 需要调整的当前行
+      moveRowData: null,
+      moveObj: null,
+      taskGroupId1: null
     }
   },
   methods: {
+    handleSelect (item) {
+      console.log(item)
+    },
+    handchange (value) {
+      let taskGroupId = value[value.length - 1]
+      this.moveObj = Object.assign({}, {taskGroupId: taskGroupId}, {moveRowData: this.moveRowData})
+    },
+    // 新增根节点点击事件
+    handleAddTop () {
+      this.addRootdialogVisible = true
+    },
+    // 结构调整事件
+    moveBtn (index, row) {
+      this.moveRowData = row
+      this.dialogTimeandCondition = true
+      this.$api.TaskGroup.getTaskGroupTree({projectId: this.form.projectId}).then(res => {
+        var result = res.data
+        // console.log(result.data)
+        this.options = result.data
+      })
+    },
+    dialogconfirm () {
+      // console.log(row)
+      // console.log(this.moveObj)
+      this.$api.TaskGroup.saveTaskGroup({moveObj: this.moveObj}).then(res => {
+        var result = res.data
+        if (result.status === '1') {
+          this.dialogTimeandCondition = false
+          let formData = new FormData()
+          // this.form.taskGroupId = data.id
+          Object.keys(this.form).forEach(key => {
+            console.log(key)
+            formData.append(key, this.form[key])
+          })
+          this.$api.TaskGroup.getTaskList(formData).then(res => {
+            var result = res.data
+            console.log(result.data)
+            this.tableData3 = result.data
+          })
+          // console.log(data.id)
+          // this.confirm()
+          this.$message({
+            message: '任务组调整成功',
+            type: 'success'
+          })
+        }
+      })
+    },
     confirm (data, node) {
+      // console.log(data)
+      // this.addEventForm.taskGroupParentName = data.label
+      // console.log(this.addEventForm.taskGroupParentName)
+      if (!(data.children && data.children.length !== 0)) {
+        let formData = new FormData()
+        this.form.taskGroupId = data.id
+        Object.keys(this.form).forEach(key => {
+          formData.append(key, this.form[key])
+        })
+        this.$api.TaskGroup.getTaskList(formData).then(res => {
+          var result = res.data
+          console.log(result.data)
+          this.tableData3 = result.data
+        })
+      }
+    },
+    confirm1 () {
+      // this.addEventForm.taskGroupParentName = data.label
+      // console.log(this.addEventForm.taskGroupParentName)
       let formData = new FormData()
-      this.form.taskGroupId = data.id
       Object.keys(this.form).forEach(key => {
         console.log(key)
         formData.append(key, this.form[key])
       })
+      // console.log(formData.get('taskGroupId'))
+      // formData.append('taskGroupId', this.form.taskGroupId)
+
       this.$api.TaskGroup.getTaskList(formData).then(res => {
         var result = res.data
         console.log(result.data)
         this.tableData3 = result.data
       })
-      console.log(data.id)
     },
     /* 渲染函数 */
     renderContent (h, {
@@ -164,18 +284,29 @@ export default {
           // 新增
           Append: (s, d, n) => that.appendEvent(s, d, n),
           // 编辑
-          Edit: (s, d, n) => that.appendEvent(s, d, n),
+          Edit: (s, d, n) => that.editEvent(s, d, n),
           // 删除节点
-          Delete: (s, d, n) => that.removeEvent(s, d, n),
+          Delete: (s, d, n) => that.removeEvent(s, d, n)
           // 查看
-          WatchInfo: (s, d, n) => that.changeMainRegion(s, d, n)
+          // WatchInfo: (s, d, n) => that.moveBtn(s, d, n)
         }
       })
     },
     /* 树形控件添加节点，添加弹窗出现 */
     appendEvent (s, d, n) {
+      this.addEventForm.taskGroupParentName = d.label
       this.addEventdialogVisible = true
       this.triggerCurrenNodeData = d
+      this.triggerCurrenNode = n
+      console.log(this.triggerCurrenNodeData)
+    },
+    editEvent (s, d, n) {
+      // console.log(d)
+      this.taskGroupId = d.id
+      this.taskGroupName = d.label
+      this.editEventdialogVisible = true
+      this.triggerCurrenNodeData = d
+      // console.log(this.triggerCurrenNodeData)
       this.triggerCurrenNode = n
     },
     /* 树形控件删除节点 */
@@ -220,62 +351,152 @@ export default {
         })
       })
     },
-    /* 节点新增，新增树形菜单事件分类弹窗，提交按钮 */
-    addEventFormSubmitBtn (formname) {
-      // this.$refs[formname].validate((valid) => {
-      // if (valid) {
-      console.log('验证成功')
-      /* 获取当前input上输入的文字 */
-      // let dataPost = {
-      //   taskGroupName: this.addEventForm.taskGroupName.trim(),
-      //   taskGroupId: this.addEventForm.taskGroupId.trim(),
-      //   taskGroupParentId: this.triggerCurrenNodeData.id // 当前节点id
-      //   // depth: this.triggerCurrenNode.level // 当前节点层级
-      // }
+    editEventFormSubmitBtn (formname) {
       this.$api.TaskGroup.saveTaskGroupInfo({
         projectId: this.form.projectId,
-        taskGroupName: this.addEventForm.taskGroupName.trim(),
-        taskGroupId: this.addEventForm.taskGroupId.trim(),
-        taskGroupParentId: this.triggerCurrenNodeData.id,
-        addOrEdit: 'add'
+        taskGroupName: this.taskGroupName.trim(),
+        taskGroupId: this.taskGroupId.trim(),
+        // taskGroupParentId: this.triggerCurrenNodeData.id,
+        addOrEdit: 'edit'
       })
       //  queryParams: dataPost
         .then((res) => {
-          console.log('请求成功')
+          // console.log('请求成功')
           // if (res.status === '1') {
           let result = res.data
-          console.log(this.triggerCurrenNodeData.children)
-          // /* 点击弹窗的确定按钮可以得到输入的数据，作为新的节点名称插入*/
-          // /* 如果没有子节点，就创建一个子节点插入*/
-          if (!this.triggerCurrenNodeData.children) {
-            this.$set(this.triggerCurrenNodeData, 'children', [])
-          };
-          // 如果已有子节点，就把返回的数据push进去，插入到树形数据中
-          this.triggerCurrenNodeData.children.push(result)
-          // /*关闭弹窗，重置输入框 */
-          this.addEventdialogVisible = false
-          this.$refs[formname].resetFields()
+          console.log(result.status)
+          if (result.status === '1') {
+            this.$api.TaskGroup.initTaskGroupTree({
+              projectId: this.form.projectId
+            }).then(res => {
+              var result = res.data
+              console.log(result.data)
+              this.eventCategoryTree = result.data
+            })
 
-          // /* 刷新树形菜单*/
-          this.$api.TaskGroup.initTaskGroupTree({
-            projectId: this.form.projectId
-          }).then(res => {
-            var result = res.data
-            console.log(result.data)
-            this.eventCategoryTree = result.data
-          })
-          // }
+            // /*关闭弹窗，重置输入框 */
+            this.editEventdialogVisible = false
+            this.$refs[formname].resetFields()
+            // }
+          }
         })
         .catch((e) => {
-          console.log('请求失败', e)
+          this.$message({
+            type: 'warning',
+            message: '编辑失败'
+          })
         })
-        // } else {
-        //   console.log('验证未通过')
-        //   return false
+    },
+    /* 节点新增，新增树形菜单事件分类弹窗，提交按钮 */
+    addEventFormSubmitBtn (formname) {
+      console.log(this.triggerCurrenNodeData.children)
+      // this.$refs[formname].validate((valid) => {
+      // if (valid) {
+      if (this.addEventForm.taskGroupName.trim() && this.addEventForm.taskGroupId.trim()) {
+        /* 获取当前input上输入的文字 */
+        // let dataPost = {
+        //   taskGroupName: this.addEventForm.taskGroupName.trim(),
+        //   taskGroupId: this.addEventForm.taskGroupId.trim(),
+        //   taskGroupParentId: this.triggerCurrenNodeData.id // 当前节点id
+        //   // depth: this.triggerCurrenNode.level // 当前节点层级
         // }
+        this.$api.TaskGroup.saveTaskGroupInfo({
+          projectId: this.form.projectId,
+          taskGroupName: this.addEventForm.taskGroupName.trim(),
+          taskGroupId: this.addEventForm.taskGroupId.trim(),
+          taskGroupParentId: this.triggerCurrenNodeData.id,
+          addOrEdit: 'add'
+        })
+        //  queryParams: dataPost
+          .then((res) => {
+            console.log('请求成功')
+            // if (res.status === '1') {
+            let result = res.data
+            // console.log(this.triggerCurrenNodeData.children)
+            // /* 点击弹窗的确定按钮可以得到输入的数据，作为新的节点名称插入*/
+            // /* 如果没有子节点，就创建一个子节点插入*/
+            if (!this.triggerCurrenNodeData.children) {
+              this.$set(this.triggerCurrenNodeData, 'children', [])
+            };
+            // 如果已有子节点，就把返回的数据push进去，插入到树形数据中
+            this.triggerCurrenNodeData.children.push(result)
+            // /*关闭弹窗，重置输入框 */
+            this.addEventdialogVisible = false
+            this.$refs[formname].resetFields()
+
+            // /* 刷新树形菜单*/
+            this.$api.TaskGroup.initTaskGroupTree({
+              projectId: this.form.projectId
+            }).then(res => {
+              var result = res.data
+              console.log(result.data)
+              this.eventCategoryTree = result.data
+            })
+            // }
+          })
+          .catch((e) => {
+            console.log('请求失败', e)
+          })
+          // } else {
+          //   console.log('验证未通过')
+          //   return false
+          // }
+          // })
+      } else {
+        this.$message({
+          type: 'warning',
+          message: '任务组编码和名称不能为空'
+        })
+      }
+    },
+    addRootFormSubmitBtn (formname) {
+    // this.addRootdialogVisible = true
+      if (this.addRootForm.taskGroupName.trim() && this.addRootForm.taskGroupId.trim()) {
+        this.$api.TaskGroup.saveTaskGroupInfo({
+          projectId: this.form.projectId,
+          taskGroupParentId: this.addRootForm.taskGroupParentId,
+          taskGroupName: this.addRootForm.taskGroupName.trim(),
+          taskGroupId: this.addRootForm.taskGroupId.trim(),
+          // taskGroupParentId: this.triggerCurrenNodeData.id,
+          addOrEdit: 'add'
+        }).then((res) => {
+          let result3 = res.data
+          if (result3.status === '1') {
+            this.addRootdialogVisible = false
+            this.$refs[formname].resetFields()
+
+            // /* 刷新树形菜单*/
+            this.$api.TaskGroup.initTaskGroupTree({
+              projectId: this.form.projectId
+            }).then(res => {
+              var result = res.data
+              console.log(result.data)
+              this.eventCategoryTree = result.data
+            })
+          } else {
+            this.$message({
+              message: '新增根节点失败',
+              type: 'warning'
+            })
+          }
+        })
+          .catch((e) => {
+            console.log('请求失败', e)
+          })
+      // } else {
+      //   console.log('验证未通过')
+      //   return false
+      // }
       // })
+      } else {
+        this.$message({
+          type: 'warning',
+          message: '任务组编码和名称不能为空'
+        })
+      }
     }
   },
+
   mounted () {
     // var projectId = this.form.projectId
     this.$api.TaskGroup.initTaskGroupTree({
@@ -331,7 +552,7 @@ export default {
   }
 
   .slot-tree .el-tree-node__content:hover .slot-t-icons {
-     display: inline-block;
+    display: inline-block;
   }
 
   .group /deep/ .el-input__inner {

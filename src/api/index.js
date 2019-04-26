@@ -7,5 +7,13 @@ import userInfo from './user'
 import question from './questionnaire'
 // 字典表
 import dictionary from './dictionary'
+// 合伙人管理
+import partner from './personal-management'
 // 对外暴露所有模块的接口
-export default Object.assign({}, userManagementApi, userInfo, question, dictionary)
+export default Object.assign({},
+  userManagementApi,
+  userInfo,
+  question,
+  dictionary,
+  partner
+)

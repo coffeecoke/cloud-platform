@@ -72,7 +72,7 @@ export default {
         }
       },
       externalProject: {
-        linkName: '继续完善',
+        linkName: '补充',
         link: '/1-1',
         data: {
           name: '外部项目',
@@ -80,7 +80,7 @@ export default {
         }
       },
       resoftProject: {
-        linkName: '继续完善',
+        linkName: '补充',
         link: '/1-1',
         data: {
           name: '融鑫项目',

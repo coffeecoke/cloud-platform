@@ -67,6 +67,9 @@ const errorHandle = (status, msg) => {
       // 通过微信API获取【TOKEN】失败
     case 1202:
       tip(msg)
+      setTimeout(() => {
+        toWxLogin()
+      })
       break
       // 通过微信API获取微信用户信息失败！
     case 1203:
@@ -101,7 +104,7 @@ const errorHandle = (status, msg) => {
 }
 
 // 创建axios实例
-var instance = axios.create({timeout: 1000 * 12})
+var instance = axios.create({timeout: 1000 * 60})
 // 设置post请求头
 instance.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8'
 // instance.defaults.headers.token = '6S2Ng1VO3ifU6fqGUmKNmRpJPEUSzIjI' // 临时设置cookie测试用

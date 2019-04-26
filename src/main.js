@@ -2,7 +2,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import axios from 'axios'
-import '@/permission'
+// import '@/permission'
 import api from './api' // 导入api接口
 import 'normalize.css/normalize.css' // css样式重置
 import ElementUI from 'element-ui'
@@ -16,6 +16,7 @@ Vue.use(ElementUI, { size: 'small' })
 Vue.config.productionTip = false
 Vue.prototype.$http = axios
 Vue.prototype.$api = api // 将api挂载到vue的原型上
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

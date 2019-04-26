@@ -55,7 +55,5 @@ export default [{
     name: '融鑫项目',
     component: RxProject
   }
-
   ]
-
 }]

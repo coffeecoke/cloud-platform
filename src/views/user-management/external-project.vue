@@ -198,8 +198,8 @@ export default {
       loading: false, // 数据加载的loading效果
       list: {
         id: null, // id为空表示新增
-        date: null,
-        industry: null,
+        date: '',
+        industry: '',
         projectName: '',
         projectScale: '',
         projectRole: '',
@@ -255,9 +255,9 @@ export default {
       this.skill = dictionary.skill
     })
 
-    this.$api.resoftProject.queryResoftProject().then(res => {
+    this.$api.externalProject.queryExternalProjects().then(res => {
       let result = res.data
-      if (result.stauts === '1') {
+      if (result.status === '1') {
         this.tableData = result.data || []
       } else {
         this.$message('获取外部项目列表失败')
@@ -336,10 +336,10 @@ export default {
     // 保存提交
     saveSubmit (index, formData) {
       let row = this.tableData[index]
-      this.$api.resoftProject.saveResoftProject(formData).then(res => {
+      this.$api.externalProject.saveExternalProjects(formData).then(res => {
         this.loading = false
         let result = res.data
-        if (result.status === 1) {
+        if (result.status === '1') {
           row.edit = false
           this.isAddRow = true
           row = result.data // 保存此行数据后，后台返回这行数据，更新页面，目的是添加id，保证保存过得数据，数据都有ID
@@ -372,7 +372,7 @@ export default {
       }).then(() => {
         this.loading = true
         var currData = rows[index]
-        this.$api.resoftProject.delresume(currData).then(res => {
+        this.$api.externalProject.delExternalProjects(currData).then(res => {
           this.loading = false
           var result = res.data
           if (result.status === '1') {
