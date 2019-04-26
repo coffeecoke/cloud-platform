@@ -10,7 +10,7 @@
           <el-row type="flex" justify="space-between">
             <el-col :span="10">
               <el-form-item label="姓名">
-                <el-input v-model="form.name" placeholder="请输入姓名"></el-input>
+                <el-input v-model="form.name" placeholder="请输入姓名" :disabled="true"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="10">
@@ -20,6 +20,13 @@
                     {{item.dictName}}
                   </el-radio>
                 </el-radio-group>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row type="flex" justify="space-between">
+            <el-col :span="10">
+              <el-form-item label="客户全称">
+                <el-input v-model="form.customerFullName" placeholder="客户全称"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -180,6 +187,7 @@ export default {
       form: {
         name: '',
         D_SEX: '',
+        customerFullName: '融鑫人',
         email: '',
         contact: '',
         contactInfo: '',

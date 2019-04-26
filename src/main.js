@@ -16,6 +16,7 @@ Vue.use(ElementUI, { size: 'small' })
 Vue.config.productionTip = false
 Vue.prototype.$http = axios
 Vue.prototype.$api = api // 将api挂载到vue的原型上
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
