@@ -182,6 +182,7 @@ export default {
     addRow () {
       if (this.isAddRow) {
         this.tableData.push(Object.assign({}, this.list))
+        console.log(this.list)
         this.isAddRow = false
       } else {
         this.$notify({

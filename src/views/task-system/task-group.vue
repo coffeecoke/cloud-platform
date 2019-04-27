@@ -180,8 +180,8 @@ export default {
       },
       // 需要调整的当前行
       moveRowData: null,
-      moveObj: null,
-      taskGroupId1: null
+      moveObj: null
+      // taskGroupId1: null
     }
   },
   methods: {

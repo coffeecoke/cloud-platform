@@ -23,8 +23,8 @@
 <el-row>
   <el-col :span="3"><div class="grid-content bg-purple"><el-button type="primary" icon="el-icon-setting"   @click="setTaskPerson()">设置所属人</el-button></div></el-col>
   <el-col :span="3"><div class="grid-content bg-purple"><el-button type="primary" icon="el-icon-printer" @click="setTaskGroup()">设置属组</el-button></div></el-col>
-  <el-col :span="3"><div class="grid-content bg-purple"><el-button type="primary" icon="el-icon-edit-outline">任务组管理</el-button></div></el-col>
-  <el-col :span="3"><div class="grid-content bg-purple"><el-button type="primary" icon="el-icon-edit-outline">设置任务计划</el-button></div></el-col>
+  <el-col :span="3"><div class="grid-content bg-purple"><el-button type="primary" icon="el-icon-setting">任务组管理</el-button></div></el-col>
+  <el-col :span="3"><div class="grid-content bg-purple"><el-button type="primary" icon="el-icon-edit-outline" @click="setTaskPlan()">设置任务计划</el-button></div></el-col>
   <el-col :span="3"><div class="grid-content bg-purple"><el-button type="primary" icon="el-icon-share">任务脉络</el-button></div></el-col>
 </el-row>
 
@@ -54,16 +54,16 @@
       <el-table-column width="100px" prop="subordinatePerson"  label="所属人" align="center"></el-table-column>
       <el-table-column width="100px" prop="accepter"  label="验收人" align="center"></el-table-column>
       <el-table-column width="150px" prop="allocateTime"  label="分配时间" align="center"></el-table-column>
-      <el-table-column width="150px" prop="plan_start_time"  label="计划开始时间" align="center"></el-table-column>
-      <el-table-column width="150px" prop="task_group_id"  label="计划工期" align="center"></el-table-column>
-      <el-table-column width="150px" prop="task_status"  label="实际开始时间" align="center"></el-table-column>
-      <el-table-column width="150px" prop="subordinate_person"  label="实际结束时间" align="center"></el-table-column>
-      <el-table-column width="150px" prop="task_group_id"  label="延迟" align="center"></el-table-column>
+      <el-table-column width="150px" prop="planStartTime"  label="计划开始时间" align="center"></el-table-column>
+      <el-table-column width="150px" prop="planedProjectDuration"  label="计划工期" align="center"></el-table-column>
+      <el-table-column width="150px" prop="actualStartTime"  label="实际开始时间" align="center"></el-table-column>
+      <el-table-column width="150px" prop="actualEndTime"  label="实际结束时间" align="center"></el-table-column>
+      <el-table-column width="150px" prop="delay"  label="延迟" align="center"></el-table-column>
       <el-table-column width="150px" prop="task_status"  label="优先级" align="center"></el-table-column>
        <el-table-column fixed="right" label="操作" align="center" width="200px">
-           <template slot-scope="scope">
-              <el-button @click.prevent="acceptance(scope.$index,scope.row)" type="text" icon="el-icon-setting">验收</el-button>
-              <el-button @click.prevent="audit(scope.$index,scope.row)" type="text" icon="el-icon-setting">审核</el-button>
+           <template slot-scope="scope" >
+              <el-button @click.prevent="acceptance(scope.$index,scope.row)"  v-if="(scope.row.userName==scope.row.accepter)&&scope.row.taskStatus=='已完成'" type="text" icon="el-icon-setting">验收</el-button>
+              <el-button @click.prevent="audit(scope.$index,scope.row)" v-if="(scope.row.userName==scope.row.proManager)&&scope.row.taskStatus=='已验收'" type="text" icon="el-icon-tickets">审核</el-button>
             </template>
           </el-table-column>
 </el-table>
@@ -124,6 +124,25 @@
      <el-button @click="dialogGroupVisible = false"  >取 消</el-button>
      <el-button type="primary" @click="dialogSetGroupVisible()" >确 定</el-button>
     </el-dialog>
+    <!-- 设置任务计划 -->
+    <el-dialog title="设置任务计划" :visible.sync="dialogSetTaskPlanVisible">
+   <div class="block">
+        <el-form :inline="true" :model="formp" class="demo-form-inline">
+          <el-form-item label="请设置认领时限：">
+            <el-date-picker v-model="formp.planStartTime" type="date" placeholder="选择日期" format="yyyy 年 MM 月 dd 日"
+              value-format="yyyy-MM-dd">
+            </el-date-picker>
+          </el-form-item>
+          <el-form-item label="请设置计划工期：">
+            <el-input placeholder="请输入工期" v-model="formp.planedProjectDuration" clearable></el-input>
+          </el-form-item>
+        </el-form>
+      </div>
+  <div slot="footer" class="dialog-footer">
+    <el-button @click="dialogSetTaskPlanVisible = false">取 消</el-button>
+    <el-button type="primary" @click="confirmPlan()">确 定</el-button>
+  </div>
+</el-dialog>
 </div>
 
 </template>
@@ -132,6 +151,10 @@
 export default {
   data () {
     return {
+      formp: {
+        planStartTime: '',
+        planedProjectDuration: ''
+      },
       // 设置所属人
       tableData3: [],
       department: '',
@@ -147,6 +170,7 @@ export default {
       // 设置所属组
       options: [],
       // 设置按钮
+      dialogSetTaskPlanVisible: false,
       dialogPersonVisible: false,
       dialogGroupVisible: false,
       // 项目编号输入框
@@ -156,11 +180,51 @@ export default {
       tableData: [],
       activeName: 'T',
       moveObj: null,
-      setPerson: null
+      setPerson: null,
+      setPlan: null
     }
   },
 
   methods: {
+    // 设置任务计划
+    setTaskPlan () {
+      if (this.multipleSelection && this.multipleSelection.length !== 0) {
+        this.dialogSetTaskPlanVisible = true
+      } else {
+        this.$message({
+          message: '请先选择数据',
+          type: 'warning'
+        })
+      }
+    },
+    // 任务计划确定按钮
+    confirmPlan () {
+      this.setPlan = Object.assign({planedProjectDuration: this.formp.planedProjectDuration}, {planStartTime: this.formp.planStartTime}, {multipleSelection: this.multipleSelection})
+      this.$api.TaskList.saveTaskPlan({setPlan: this.setPlan}).then(res => {
+        var result = res.data
+        if (result.status === '1') {
+          this.dialogSetTaskPlanVisible = false
+          let formData = new FormData()
+          // this.form.taskGroupId = data.id
+          Object.keys(this.form).forEach(key => {
+            console.log(key)
+            formData.append(key, this.form[key])
+          })
+          this.$api.TaskList.getTaskList(formData).then(res => {
+            var result1 = res.data
+            console.log(result1.data)
+            this.tableData = result1.data
+          })
+          this.$message({
+            type: 'success',
+            message: '设置任务计划完成!'
+          })
+        } else {
+          this.$message('设置任务计划失败！')
+        }
+      })
+    },
+    // 验收事件
     acceptance (index, row) {
       this.$confirm('是否进行验收?', '提示', {
         confirmButtonText: '确定',
@@ -196,6 +260,7 @@ export default {
         })
       })
     },
+    // 审核事件
     audit (index, row) {
       this.$confirm('是否审核通过?', '提示', {
         confirmButtonText: '确定',

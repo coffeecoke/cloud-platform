@@ -43,6 +43,7 @@
       <el-table-column width="90px" prop="proManager" label="项目经理" align="center"></el-table-column>
       <el-table-column width="150px" prop="proDirector" label="项目总监" align="center"></el-table-column>
       <el-table-column width="150px" prop="proQualityManager" label="质量管理" align="center"></el-table-column>
+      <el-table-column width="150px" prop="proQualityManager" label="承接类型" align="center"></el-table-column>
       <el-table-column width="100px" prop="taskTotalCount" label="任务总数" align="center"></el-table-column>
       <el-table-column width="200px" prop="taskPer" label="任务" align="right">
         <template slot-scope="scope">
@@ -68,50 +69,15 @@
           <el-button type="text" size="medium">
             <router-link to="/#/1-2"><i class="el-icon-share" title="跳转到任务脉络"></i></router-link>
           </el-button>
-          <el-button @click="skipUndertake(scope.row)" type="text" size="medium"><i class="el-icon-upload"></i></el-button>
         </template>
       </el-table-column>
     </el-table>
-     <div class="cretable">
-     <el-dialog title="任务承接" :visible.sync="dialogPersonalAndEnterprise" center>
-    <el-tabs v-model="activeName" @tab-click="PersonalAndEnterprise" type="border-card">
-    <el-tab-pane label="个人" name="T" v-model="department" ><el-table
-      :data="tableData3"
-      :header-cell-style="{background:'#1a74ee',color:'#f9fafc'}"
-      style="width: 100%" >
-
-      <el-table-column  prop="userName"  label="姓名" align="center"></el-table-column>
-      <el-table-column  prop="matchingDegree"  label="匹配度"  align="center"></el-table-column>
-      <el-table-column  fixed="right"  label="操作" align="center" class="aaa">
-      <template slot-scope="scope">
-      <el-button @click="allocation(scope.row)" type="text" >分配</el-button>
-      </template>
-    </el-table-column>
-    </el-table></el-tab-pane>
-
-    <el-tab-pane label="企业" name="H" v-model="department" ><el-table
-      :data="tableData3"
-      :header-cell-style="{background:'#1a74ee',color:'#f9fafc'}"
-      style="width: 100%" >
-
-      <el-table-column  prop="userName"  label="姓名" align="center"></el-table-column>
-      <el-table-column  prop="matchingDegree"  label="匹配度"  align="center"></el-table-column>
-      <el-table-column  fixed="right"  label="操作" align="center" class="aaa">
-      <template slot-scope="scope">
-      <el-button @click="allocation(scope.row)" type="text" >分配</el-button>
-      </template>
-    </el-table-column>
-    </el-table></el-tab-pane>
-  </el-tabs>
-    </el-dialog>
-    </div>
   </div>
 </template>
 <script>
 export default {
   data () {
     return {
-      dialogPersonalAndEnterprise: false,
       form: {
         projectId: '',
         projectName: '',
@@ -119,20 +85,10 @@ export default {
         proDirector: ''
       },
       projectid: [],
-      tableData: [{
-        projectId: ''
-      }]
+      tableData: []
     }
   },
   methods: {
-    //  个人或企业之间的跳转并同时向后台发请求返回table数据
-    PersonalAndEnterprise () {
-
-    },
-    // 承接跳转
-    skipUndertake () {
-      this.dialogPersonalAndEnterprise = true
-    },
     // 查询
     confirm () {
       let formData = new FormData()

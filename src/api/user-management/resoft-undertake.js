@@ -1,6 +1,6 @@
 import axios from '@/utils/http' // 导入http中创建的axios实例
 // import Qs from 'qs'
-const TaskCreate = {
+const Resoft = {
   // 模糊查询1
   getProject () {
     return axios({
@@ -27,4 +27,4 @@ const TaskCreate = {
   }
 
 }
-export default TaskCreate
+export default Resoft

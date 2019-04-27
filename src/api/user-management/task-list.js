@@ -57,6 +57,14 @@ const TaskList = {
       url: '/taskSet/acceptTask',
       data: params
     })
+  },
+  // 验收操作
+  saveTaskPlan (params) {
+    return axios({
+      method: 'post',
+      url: '/taskSet/saveTaskPlan',
+      data: params
+    })
   }
 
 }

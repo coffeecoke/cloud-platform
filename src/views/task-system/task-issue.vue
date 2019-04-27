@@ -34,7 +34,7 @@
 
         <el-col :span="3">
           <div class="button">
-            <el-button type="primary" style="float:right" round @click.native.prevent="confirm">确定</el-button>
+            <el-button type="primary" style="float:right" round @click.native.prevent="confirm">查询</el-button>
           </div>
         </el-col>
       </el-row>
@@ -47,55 +47,49 @@
       <el-table-column prop="predecessorTask" label="依赖项" align="center"></el-table-column>
       <el-table-column prop="dependencyDegree" label="依赖度" align="center"></el-table-column>
       <el-table-column fixed="right" label="操作" align="center">
-        <template>
-          <el-button @click="dialogTimeandCondition = true" type="text" icon="el-icon-upload">发布任务</el-button>
+        <template slot-scope="scope">
+          <el-button @click.stop="issueTask(scope.$index,scope.row)" type="text" icon="el-icon-upload">发布任务</el-button>
         </template>
       </el-table-column>
     </el-table>
 
     <el-dialog title="任务发布设置" :visible.sync="dialogTimeandCondition" width="40%" center>
       <div class="block">
-        <el-form :inline="true" :model="formInline" class="demo-form-inline">
+        <el-form :inline="true" :model="forma" class="demo-form-inline">
           <el-form-item label="请设置认领时限：">
-            <el-date-picker v-model="tasktime" type="date" placeholder="选择日期" format="yyyy 年 MM 月 dd 日"
+            <el-date-picker v-model="forma.taskClaimPeriod" type="date" placeholder="选择日期" format="yyyy 年 MM 月 dd 日"
               value-format="yyyy-MM-dd">
             </el-date-picker>
           </el-form-item>
           <el-form-item label="请设置基础价格：">
-            <el-input placeholder="请输入价格" v-model="price" clearable></el-input>
+            <el-input placeholder="请输入价格" v-model="forma.taskBasePrice" clearable></el-input>
           </el-form-item>
         </el-form>
       </div>
       <div class="condition">
-        <el-table :data="tableData1" border style="width: 100%">
-          <el-table-column prop="category" label="能力类别">
+        <el-table :data="abilityTable" border style="width: 100%">
+          <el-table-column prop="ability" label="能力类别">
             <template slot-scope="scope">
-              <template v-if="scope.row.edit">
-                <el-cascader :options="options7" :show-all-levels="false" v-model="scope.row.label"></el-cascader>
-              </template>
-              <span v-else>{{ scope.row.label }}</span>
+              <el-cascader :options="options7" :show-all-levels="false" clearable v-model="scope.row.ability">
+              </el-cascader>
+            </template>
+            <!-- <span v-else>{{ scope.row.label }}</span> -->
+          </el-table-column>
+          <el-table-column prop="level" label="能力级别">
+            <template slot-scope="scope">
+              <el-select v-model="scope.row.level" placeholder="请选择专业技能" clearable >
+                <el-option v-for="item in options0" :key="item.value" :label="item.label" :value="item.value">
+                </el-option>
+              </el-select>
             </template>
           </el-table-column>
-          <el-table-column prop="professional" label="能力级别">
-            <template slot-scope="scope">
-              <template v-if="scope.row.edit">
-                <el-select v-model="scope.row.professional.value" placeholder="请选择专业技能">
-                  <el-option v-for="item in scope.row.professional.options" :key="item.label" :label="item.label"
-                    :value="item.label" :disabled="item.disabled">
-                  </el-option>
-                </el-select>
-              </template>
-              <span v-else>{{ scope.row.professional.value }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column label="操作">
+          <el-table-column label="操作"  width="150px">
             <template slot-scope="scope">
               <div class="btn-icons-group">
-                <i class="edit el-icon-edit" @click="scope.row.edit=true;isAddRow=false"></i>
-                <i class="delect el-icon-delete" @click="deleteRow(scope.$index, tableData1)">
+                <i class="delect el-icon-delete" @click="deleteRow(scope.$index, abilityTable)" center>
                 </i>
-                <i class="save el-icon-upload2" @click="saveClick(scope.$index,scope.row.label)">
-                </i>
+                 <!-- <i class="save el-icon-upload2" @click="saveClick(scope.$index,tableData1)">
+                </i> -->
               </div>
             </template>
           </el-table-column>
@@ -104,7 +98,7 @@
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogTimeandCondition = false">取 消</el-button>
-        <el-button type="primary" @click="dialogTimeandCondition = false">确 定</el-button>
+        <el-button type="primary" @click="taskConfirm">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -113,6 +107,11 @@
 export default {
   data () {
     return {
+      forma: {
+        taskClaimPeriod: '',
+        taskBasePrice: ''
+      },
+      options0: [],
       tasktime: '',
       formInline: '',
       price: '',
@@ -179,96 +178,97 @@ export default {
         value2: '选项6',
         label2: '五级（依赖项>12个）'
       }],
-      tableData: [{
-        tid: '',
-        tname: '',
-        postTask: '',
-        effectDegree: '',
-        predecessorTask: '',
-        dependencyDegree: ''
-      }],
-      tableData1: [{
-        id: '1', // id为空表示新增
-        category: {
-          value: '借款',
-          options: [{
-            label: '借款'
-          },
-          {
-            label: '存款'
-          }
-          ]
-        },
-        professional: {
-          value: 'Java',
-          options: [{
-            label: 'Java'
-          },
-          {
-            label: 'Js'
-          }
-          ]
-        },
-        usageTime: '',
-        mastery: {
-          value: '熟悉',
-          options: [{
-            label: '精通'
-          },
-          {
-            label: '熟悉'
-          },
-          {
-            label: '了解'
-          }
-          ]
-        },
-        recentUsage: '2018-09-07',
-        edit: false
-      }],
+      tableData: [],
+      abilityTable: [],
       list: {
-        id: null, // id为空表示新增
-        category: {
-          value: null,
-          options: [{
-            label: 'Java'
-          },
-          {
-            label: 'Js'
-          }
-          ]
-        },
-        professional: {
-          value: null,
-          options: [{
-            label: 'Java'
-          },
-          {
-            label: 'Js'
-          }
-          ]
-        },
-        usageTime: null,
-        mastery: {
-          value: '',
-          options: [{
-            label: '精通'
-          },
-          {
-            label: '熟悉'
-          },
-          {
-            label: '了解'
-          }
-          ]
-        },
-        recentUsage: null,
-        edit: true
+        // id: '',
+        ability: [],
+        level: ''
       },
-      options7: []
+
+      options7: [],
+      allData: null,
+      tid: null
     }
   },
   methods: {
+    // handleChange (value) {
+    //   // console.log(value[value.length - 1])
+    //   // this.allData = Object.assign({taskBasePrice: this.forma.taskBasePrice}, {planStartTime: this.forma.planStartTime}, {Row: this.Row})
+    //   // let ability = value[value.length - 1]
+    //   // console.log(ability)
+    //   // this.moveObj = Object.assign({}, {ability: ability}, {moveRowData: this.moveRowData})
+    // },
+    taskConfirm () {
+      this.allData = Object.assign({tid: this.tid}, {taskClass: this.form.taskClass}, {taskClass: this.form.taskClass}, {projectId: this.form.projectId}, {taskBasePrice: this.forma.taskBasePrice}, {taskClaimPeriod: this.forma.taskClaimPeriod}, {abilityTable: this.abilityTable})
+      this.$api.taskIssue.publishTask({allData: this.allData}).then(res => {
+        var result = res.data
+        console.log(result.data)
+        if (result.status === '1') {
+          this.dialogTimeandCondition = false
+          let formData = new FormData()
+          // this.form.taskGroupId = data.id
+          Object.keys(this.form).forEach(key => {
+            console.log(key)
+            formData.append(key, this.form[key])
+          })
+          this.$api.taskIssue.getPublishTaskList(formData).then(res => {
+            var result = res.data
+            console.log(result.data)
+            this.tableData = result.data
+          })
+          // console.log(data.id)
+          // this.confirm()
+          this.$message({
+            message: '任务发布成功',
+            type: 'success'
+          })
+        }
+        // this.tableData = result.data
+      })
+    },
+    // 查询
+    confirm () {
+      let formData = new FormData()
+      Object.keys(this.form).forEach(key => {
+        console.log(key)
+        formData.append(key, this.form[key])
+      })
+      this.$api.taskIssue.getPublishTaskList(formData).then(res => {
+        var result = res.data
+        console.log(result.data)
+        this.tableData = result.data
+      })
+    },
+    // 获取技能级联
+    issueTask (index, row) {
+      this.forma = {}
+      this.abilityTable = []
+      this.tid = row.tid
+      // console.log(this.taskId)
+      this.dialogTimeandCondition = true
+      this.$api.taskIssue.getTaskSkill().then(res => {
+        var result1 = res.data
+        // console.log(result.data)
+        this.options7 = result1.data
+      })
+      this.$api.taskIssue.getCapAbilityLevels().then(res => {
+        var result = res.data
+        // console.log(result.data)
+        this.options0 = result.data
+        console.log(this.options0)
+      })
+    },
+    // // 获取技能级联
+    // issueTask (index, row) {
+    //   this.moveRowData = row
+    //   this.dialogTimeandCondition = true
+    //   this.$api.taskIssue.getTaskSkill().then(res => {
+    //     var result = res.data
+    //     // console.log(result.data)
+    //     this.options7 = result.data
+    //   })
+    // },
     change (value) {
       console.log(value)
     },
@@ -296,76 +296,83 @@ export default {
     },
     // 添加一行
     addRow () {
-      if (this.isAddRow) {
-        this.tableData1.push(Object.assign({}, this.list))
-        this.isAddRow = false
-      } else {
-        this.$notify({
-          title: '提示',
-          message: '请先保存上一条再添加！',
-          type: 'warning',
-          offset: 100
-        })
-        return false
-      }
+      // if (this.isAddRow) {
+      this.abilityTable.push(Object.assign({}, this.list))
+      console.log(this.abilityTable)
+      // this.isAddRow = false
+      // } else {
+      //   this.$notify({
+      //     title: '提示',
+      //     message: '请先保存上一条再添加！',
+      //     type: 'warning',
+      //     offset: 100
+      //   })
+      //   return false
+      // }
     },
     // 点击保存
     saveClick (index, row) {
-      if (row.edit === false) {
-        // 只有编辑状态才能进行保存操作，避免重复无用的后台请求
-        this.$message('请先编辑')
-        return false
-      }
+      console.log(row)
+      // let rowdata = this.Row
+      // this.aaaa = row
+      // var bbb = this.aaaa.ability
+      // console.log(row)
+      // if (row.edit === false) {
+      //   // 只有编辑状态才能进行保存操作，避免重复无用的后台请求
+      //   this.$message('请先编辑')
+      //   return false
+      // }
       // this.loading = true
-      row.edit = false
-      this.isAddRow = true
-      let formData = new FormData()
-      Object.keys(this.list).forEach(function (key) {
-        formData.append(key, row[key]) // 遍历新增数据，把键值放在formData中传给后台
-      })
-      this.saveSubmit(index, formData)
+      // row.edit = false
+      // this.isAddRow = true
+      // let formData = new FormData()
+      // Object.keys(this.list).forEach(function (key) {
+      //   formData.append(key, row[key]) // 遍历新增数据，把键值放在formData中传给后台
+      //   // console.log(formData)
+      // })
+      // this.taskConfirm(index, rowdata)
     },
     // 删除一行
     deleteRow (index, rows) {
-      if (rows[index].edit === true) { // 删除前，如果此行为不可编辑，把isAddRow置为true,防止在编辑状态删除后，出现不可新增的情况
-        this.isAddRow = true
-      }
-      if (!rows[index].id) {
-        rows.splice(index, 1) // 如果id为空，说明没有进行过保存操作，前台直接删除，不用调用后台
-        return false
-      }
-      this.$confirm('是否要删除此条数据', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        // this.loading = true
-        var currData = rows[index]
-        this.$api.jsnl.delTechnologicalCapability(currData).then(res => {
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          })
-          // this.loading = false
-        }).catch(res => {
-          this.$message({
-            type: 'error',
-            message: '删除失败!'
-          })
-          // this.loading = false
-        })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
-        })
-      })
+      // if (rows[index].edit === true) { // 删除前，如果此行为不可编辑，把isAddRow置为true,防止在编辑状态删除后，出现不可新增的情况
+      //   this.isAddRow = true
+      // }
+      // if (!rows[index].id) {
+      rows.splice(index, 1) // 如果id为空，说明没有进行过保存操作，前台直接删除，不用调用后台
+      // return false
+      // }
+      // this.$confirm('是否要删除此条数据', '提示', {
+      //   confirmButtonText: '确定',
+      //   cancelButtonText: '取消',
+      //   type: 'warning'
+      // }).then(() => {
+      //   // this.loading = true
+      //   var currData = rows[index]
+      //   this.$api.jsnl.delTechnologicalCapability(currData).then(res => {
+      //     this.$message({
+      //       type: 'success',
+      //       message: '删除成功!'
+      //     })
+      //     // this.loading = false
+      //   }).catch(res => {
+      //     this.$message({
+      //       type: 'error',
+      //       message: '删除失败!'
+      //     })
+      //     // this.loading = false
+      //   })
+      // }).catch(() => {
+      //   this.$message({
+      //     type: 'info',
+      //     message: '已取消删除'
+      //   })
+      // })
     }
   },
   mounted () {
     this.projectId = this.$route.query.date
     // 初始化模糊查询
-    this.$api.TaskCollection.getProject().then(res => {
+    this.$api.taskIssue.getProject().then(res => {
       let result = res.data
       console.log(result.data)
       this.projectid = result.data
