@@ -45,7 +45,7 @@ export default {
 
     const wxLoginObj = new WxLogin({
       self_redirect: false,
-      redirect_uri: 'http://cloud.chinaresoft.com/%23/register',
+      redirect_uri: 'http://cloud.chinaresoft.com/emp/%23/register',
       id: 'wechat_container',
       appid: 'wx369cd05ac05c6c1f',
       scope: 'snsapi_login',

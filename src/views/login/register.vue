@@ -1,12 +1,24 @@
 <template>
   <div class="login-wrapper" v-if="isShowRegister">
     <div class="login-content clearfix">
-      <div class="logo"></div>
+      <div class="wx-logo"></div>
       <div class="welcome-img"></div>
       <div class="sys-maggen-box show">
         <div class="in-certification" v-if='isShowInCert'>
-          审核中，请等待审核结束~
+          <div class="in-certification_success">
+            <div class="notice-icon"><i class="el-icon-success"></i></div>
+             <p>审核中，请等待审核结束~</p>
+             <p>联系电话：110</p>
+          </div>
         </div>
+        <div class="in-certification" v-if='isShowError'>
+          <div class="in-certification_fail">
+            <div class="notice-icon"><i class="el-icon-error"></i></div>
+             <p>审核失败</p>
+             <p>联系电话：110</p>
+          </div>
+        </div>
+        <div class="back-wxCodePage"><i class="el-icon-back" @click="toWxcodePage"></i> 返回扫码页 </div>
         <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" v-if="isShowForm" label-position="left" label-width="0px"
           class="demo-ruleForm login-container">
           <div class="identity-proving-text"><img :src="formTitleImg" alt=""></div>
@@ -38,9 +50,10 @@ export default {
   data () {
     return {
       logining: false,
-      isShowRegister: false,
-      isShowForm: false,
-      isShowInCert: false,
+      isShowRegister: true, // 是否显示主页面内容
+      isShowForm: false, // 是否显示表单
+      isShowInCert: false, // 是否显示审核中
+      isShowError: true, // 是否显示审核失败
       formTitleImg: require('@/assets/imgs/identity-proving.png'),
       ruleForm2: {
         userOrgNm: '',
@@ -90,13 +103,14 @@ export default {
         this.isShowRegister = true
         this.isShowForm = false
         this.isShowInCert = true // 显示提示正在审核中
+        this.isShowError = false
 
         // 直接登录成功
       } else if (status === '1' && code === '200') {
         this.isShowRegister = false // 用户已存在，扫码成功后直接跳转到首页，不需要显示注册页div
-        let { token, loginName } = result
+        let { token, userName } = result
         localStorage.setItem('token', token)
-        localStorage.setItem('loginName', loginName)
+        localStorage.setItem('userName', userName)
         this.$router.push({ path: '/' })
       }
     })
@@ -139,6 +153,11 @@ export default {
           return false
         }
       })
+    },
+    toWxcodePage () {
+      this.$router.push({
+        path: '/wxCodePage'
+      })
     }
   }
 }
@@ -178,5 +197,35 @@ export default {
   .in-certification {
     color:#999;
     font-size:20px;
+    padding:20px;
+    .in-certification_success {
+      .notice-icon {
+         color:#67c23a;
+        font-size:120px;;
+        text-align: center
+      }
+      p {
+        text-align: center;
+        color:#666;
+      }
+    }
+    .in-certification_fail {
+      .notice-icon {
+         color:#f56c6c;
+        font-size:120px;;
+        text-align: center
+      }
+      p {
+        text-align: center;
+        color:#666;
+      }
+    }
+  }
+  .back-wxCodePage {
+    color:#409eff;
+    font-size:14px;
+    text-align: right;
+    padding-right:20px;
+    cursor: pointer;
   }
 </style>

@@ -21,6 +21,9 @@ export default {
 
 </script>
 <style lang="scss" scoped>
+  .el-aside {
+    width:220px;
+  }
   .content {
     height: calc(100% - 60px);
   }
