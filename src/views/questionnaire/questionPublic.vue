@@ -40,9 +40,9 @@
   </el-table>
 </el-row>
 <el-row >
-  <div class="block">
+  <!-- <div class="block">
     <el-pagination background layout="total,prev, pager, next,jumper" :total="1000"></el-pagination>
-  </div>
+  </div> -->
 </el-row>
 <!--表单分页 end-->
 <!--发布调查问卷 start-->

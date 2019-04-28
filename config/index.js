@@ -9,7 +9,7 @@ module.exports = {
 
     // Paths
     assetsSubDirectory: 'static',
-    assetsPublicPath: '/',
+    assetsPublicPath: '/emp',
     proxyTable: {
       '/api2': {
         target: 'http://cloud.chinaresoft.com:9005/',
@@ -58,9 +58,10 @@ module.exports = {
     // Paths
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'static',
-    assetsPublicPath: '/',
+    assetsPublicPath: '/emp/',
 
     /**
+     * 
      * Source Maps
      */
 

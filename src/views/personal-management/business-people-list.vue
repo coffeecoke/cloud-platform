@@ -1,6 +1,6 @@
 <template>
   <div class="" id="">
-    <el-table :data="tableData" border  v-loading="loading" header-cell-class-name="tableHeader" height="600">
+    <el-table :data="tableData" border v-loading="loading" header-cell-class-name="tableHeader">
       <el-table-column prop="name" label="姓名">
       </el-table-column>
       <el-table-column prop="D_SEX" label="性别">
@@ -29,15 +29,8 @@
 
     </el-table>
     <div class="pagination-wrap">
-
-      <el-pagination
-      background
-      layout="prev, pager, next"
-      :page-size= "pageSize"
-      :total="total"
-      @current-change = "handleCurrChange"
-      @size-change = "handleSizeChange"
-      >
+      <el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="total"
+        @current-change="handleCurrChange" @size-change="handleSizeChange">
       </el-pagination>
     </div>
 
@@ -279,9 +272,20 @@ export default {
       dialogInformationOverview: false,
       // 标签页
       activeName: 'first',
-      // 假数据
-      tableData: [
-      ],
+      // 企业人员列表数据
+      tableData: [{
+        userId: '',
+        name: '',
+        D_SEX: '',
+        phone: '',
+        email: '',
+        contact: '',
+        contactInfo: '',
+        education: '',
+        major: '',
+        degree: '',
+        fullTime: ''
+      }],
       // 培训经历
       trainingTableData: [{
         id: '',
@@ -331,7 +335,7 @@ export default {
       let params = {
         pageNum: this.pageNum, // 请求的页码
         pageSize: this.pageSize, // 每页显示条数
-        customerNumber: '999999'
+        customerNumber: this.$route.query.customerNumber
       }
       this.$api.partner.getUserAll(params).then(res => {
         let result = res.data

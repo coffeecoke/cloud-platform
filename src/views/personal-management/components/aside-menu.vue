@@ -1,6 +1,6 @@
 <template>
   <el-menu :router="true"
-  :default-active="defaultActive">
+  :default-active="defaultActive" :unique-opened="true">
     <el-submenu index="partner1">
       <template slot="title">融鑫合伙人</template>
       <el-menu-item-group>

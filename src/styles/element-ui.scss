@@ -1,4 +1,7 @@
 // 重写覆盖element-ui的样式
+.el-main {
+  padding-top:0px;
+}
 .el-aside {
   background-color:#edf2f8;
 }
@@ -8,6 +11,10 @@
 
 .el-menu {
   background-color: #edf2f8;
+}
+.el-menu-item, .el-submenu__title {
+  height:44px;
+  line-height: 44px;
 }
 .el-submenu.is-opened .el-submenu__title {
   background-color:#cedef5;
@@ -34,3 +41,13 @@
 .el-range-editor.el-input__inner {
   width:100%;
 }
+
+.el-submenu .el-menu-item {
+  height:40px;
+  line-height:40px;
+}
+
+.el-table__fixed-right-patch {
+  background:transparent;
+}
+

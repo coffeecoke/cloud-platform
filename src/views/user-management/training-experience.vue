@@ -1,8 +1,7 @@
 <template>
   <div class="box-table">
 
-    <img src="src='data:image/png;base64,50Mn/P3thG+CnFW4xu8Y" alt="">
-    <el-table :data="tableData" border style="width: 100%" v-loading="loading">
+    <el-table :data="tableData" border style="width: 100%" v-loading="loading" :fit='true'>
       <el-table-column prop="date" label="开始日期">
         <template slot-scope="scope">
           <template v-if="scope.row.edit">
@@ -25,10 +24,10 @@
         <template slot-scope="scope">
           <template v-if="scope.row.edit">
             <el-select v-model="scope.row.trainingMode" placeholder="请选择培训方式">
-                <el-option v-for="item in trainingMode" :key="item.dictCode" :label="item.dictName" :value="item.dictCode"
-                  :disabled="item.disabled">
-                </el-option>
-              </el-select>
+              <el-option v-for="item in trainingMode" :key="item.dictCode" :label="item.dictName" :value="item.dictCode"
+                :disabled="item.disabled">
+              </el-option>
+            </el-select>
           </template>
           <span v-else>{{ formatTrainingMode(scope.row.trainingMode) }}</span>
 
@@ -50,16 +49,12 @@
           <span v-else>{{scope.row.traincon}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="skill" label="技能">
+      <el-table-column prop="techSkill" label="技能">
         <template slot-scope="scope">
           <template v-if="scope.row.edit">
-            <el-select v-model="scope.row.skill" placeholder="请选择技能">
-                <el-option v-for="item in skill" :key="item.dictCode" :label="item.dictName" :value="item.dictCode"
-                  :disabled="item.disabled">
-                </el-option>
-              </el-select>
+            <el-input class="ipt" size="small" v-model="scope.row.formatTechSkill" @focus="showSkillTree(scope)"></el-input>
           </template>
-          <span v-else>{{ formatSkill(scope.row.skill) }}</span>
+          <span v-else>{{ scope.row.formatTechSkill }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="diploma" label="证书">
@@ -97,20 +92,25 @@
 
     <!-- 上传修改图片的dialog -->
     <el-dialog title="编辑图片附件" :visible.sync="dialogUploadVisible" width="30%">
-      <el-upload class="upload-demo"
-        ref="fileUpload"
-        action="aa"
-        accept="image/jpeg, image/png"
-        :limit="3"
-        :auto-upload="false"
-        list-type="picture"
-        :file-list="currUploadScope && currUploadScope.row.fileList"
-        :on-remove="handleRemove"
-        multiple>
+      <el-upload class="upload-demo" ref="fileUpload" action="aa" accept="image/jpeg, image/png" :limit="3"
+        :auto-upload="false" list-type="picture" :file-list="currUploadScope && currUploadScope.row.fileList"
+        :on-remove="handleRemove" multiple>
         <el-button type="primary" slot="trigger">添加图片</el-button>
-         <!-- <el-button type="primary" @click = "submitUpload">上传至服务器<i class="el-icon-upload el-icon--right"></i></el-button> -->
+        <!-- <el-button type="primary" @click = "submitUpload">上传至服务器<i class="el-icon-upload el-icon--right"></i></el-button> -->
       </el-upload>
     </el-dialog>
+
+    <!-- 技能树 -->
+    <el-dialog title="技能选择" :visible.sync="dialogTechSkillTree" center>
+      <el-tree :data="techSkill" show-checkbox node-key="id" ref="techSkillTree" highlight-current
+        :props="defaultProps" :default-checked-keys="[5]">
+      </el-tree>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogCancle">取 消</el-button>
+        <el-button type="primary" @click="dialogOk">确 定</el-button>
+      </span>
+    </el-dialog>
+
   </div>
 </template>
 <script>
@@ -121,36 +121,28 @@ export default {
       loading: false,
       dialogUploadVisible: false,
       currUploadScope: null,
+      currTechSkillScope: null,
+      dialogTechSkillTree: false,
       files: [],
-      trainingMode: [
-        {
-          dictCode: 1,
-          dictName: '网教育'
-        },
-        {
-          dictCode: 2,
-          dictName: '1对1'
-        },
-        {
-          dictCode: 3,
-          dictName: '课堂'
-        }
+      trainingMode: [{
+        dictCode: 1,
+        dictName: '网教育'
+      },
+      {
+        dictCode: 2,
+        dictName: '1对1'
+      },
+      {
+        dictCode: 3,
+        dictName: '课堂'
+      }
 
       ],
-      skill: [
-        {
-          dictCode: 1,
-          dictName: 'js'
-        },
-        {
-          dictCode: 2,
-          dictName: 'java'
-        },
-        {
-          dictCode: 3,
-          dictName: 'c语言'
-        }
-      ],
+      techSkill: [],
+      defaultProps: {
+        children: 'children',
+        label: 'label'
+      },
       list: {
         id: '',
         date: '',
@@ -158,7 +150,8 @@ export default {
         trainingMode: '',
         trainname: '',
         traincon: '',
-        skill: '',
+        techSkill: [],
+        formatTechSkill: '',
         diploma: '',
         fileList: [],
         edit: true
@@ -170,7 +163,8 @@ export default {
         trainingMode: '培训方式',
         trainname: '培训机构名称',
         traincon: '培训内容',
-        skill: '1',
+        techSkill: [1, 4, 9, 10],
+        formatTechSkill: '11',
         diploma: '证书',
         fileList: [{
           id: '222',
@@ -190,16 +184,16 @@ export default {
         trainingMode: '培训方式',
         trainname: '培训名称',
         traincon: '培训内容',
-        skill: 'java开发',
+        techSkill: [5, 6, 3, 7, 8],
+        formatTechSkill: '22',
         diploma: '',
-        fileList: [
-          {
-            name: '学历1.jpeg',
-            url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
-          }, {
-            name: '学历2.jpeg',
-            url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
-          }],
+        fileList: [{
+          name: '学历1.jpeg',
+          url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
+        }, {
+          name: '学历2.jpeg',
+          url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
+        }],
         edit: false
       }
       ]
@@ -207,7 +201,7 @@ export default {
   },
   created () {
     let dictionaryObj = {
-      dict_code: [ 'trainingMode', 'skill' ]
+      dict_code: ['trainingMode']
     }
     this.$api.dictionary.getDictionaries(dictionaryObj).then(res => {
       let result = res.data
@@ -215,8 +209,17 @@ export default {
       result.data.forEach(item => {
         Object.assign(dictionary, item)
       })
+
       this.trainingMode = dictionary.trainingMode
-      this.skill = dictionary.skill
+    })
+    // 技术能力字典表
+    this.$api.dictionary.getDictionariesTree({
+      dict_code: 'techSkill'
+    }).then(res => {
+      let result = res.data
+      if (result.status === '1') {
+        this.techSkill = result.data
+      }
     })
 
     // 参数需要用户认证，获取token
@@ -236,16 +239,40 @@ export default {
       })
       return currObj.length > 0 ? currObj[0].dictName : ''
     },
-    formatSkill (value) {
-      let currObj = this.skill.filter(obj => {
-        return obj.dictCode === value
-      })
-      return currObj.length > 0 ? currObj[0].dictName : ''
-    },
     dialogUpload (scope) {
       this.dialogUploadVisible = true
       this.currUploadScope = scope
     },
+    // 显示技能树弹出框
+    showSkillTree (scope) {
+      let _this = this
+      this.dialogTechSkillTree = true
+      this.currTechSkillScope = scope
+      this.$nextTick(function () {
+        this.$refs.techSkillTree.setCheckedKeys(_this.currTechSkillScope.row.techSkill)
+      })
+    },
+    // 弹出框取消
+    dialogCancle () {
+      this.dialogTechSkillTree = false
+    },
+    // 弹出框确定
+    dialogOk () {
+      this.dialogTechSkillTree = false
+      let checkedLabels = []
+      this.currTechSkillScope.row.techSkill = this.$refs.techSkillTree.getCheckedKeys()
+      let checkedNodes = this.$refs.techSkillTree.getCheckedNodes()
+      checkedNodes.forEach((item, index) => {
+        if (!item.children) {
+          checkedLabels.push(item.label)
+        }
+      })
+      console.log()
+      console.log(checkedLabels.join(','))
+      this.currTechSkillScope.row.formatTechSkill = checkedLabels.join(',')
+    },
+
+    // 添加一行数据
     addRow (rows) {
       if (this.isAddRow) {
         this.tableData.push(Object.assign({}, this.list))
@@ -297,7 +324,9 @@ export default {
       console.log(file)
       console.log(fileList)
       if (file.id) {
-        this.$api.trainingExperience.delEnclosureSingle({id: file.id}).then(res => {
+        this.$api.trainingExperience.delEnclosureSingle({
+          id: file.id
+        }).then(res => {
           let result = res.data
           if (result.status === '1') {
             this.$message({
@@ -374,7 +403,9 @@ export default {
       }).then(() => {
         this.loading = true
         var currData = rows[index]
-        this.$api.trainingExperience.delresume({id: currData.id}).then(res => {
+        this.$api.trainingExperience.delresume({
+          id: currData.id
+        }).then(res => {
           let result = res.data
           if (result.status === '1') {
             this.$message({
@@ -402,15 +433,18 @@ export default {
 
 </script>
 <style lang="scss" scope>
-   .el-upload-list--picture .el-upload-list__item-thumbnail {
-     width:auto;
-     height:120px;
-   }
-   .el-dialog__body {
-     max-height:400px;
-     overflow: auto;
-   }
-   .el-upload-list--picture .el-upload-list__item {
-     height:auto;
-   }
+  .el-upload-list--picture .el-upload-list__item-thumbnail {
+    width: auto;
+    height: 120px;
+  }
+
+  .el-dialog__body {
+    max-height: 400px;
+    overflow: auto;
+  }
+
+  .el-upload-list--picture .el-upload-list__item {
+    height: auto;
+  }
+
 </style>

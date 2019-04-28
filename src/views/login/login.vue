@@ -9,7 +9,7 @@
     </el-form-item>
     <!-- <el-checkbox v-model="checked" checked class="remember">记住密码</el-checkbox> -->
     <el-form-item style="width:100%;">
-      <el-button type="primary" style="width:100%;" @click.native.prevent="handleSubmit2" :loading="logining">登录</el-button>
+      <el-button type="primary" style="width:100%;" @click.native.prevent="handleSubmit2" @keyup.enter.native = "handleSubmit2" :loading="logining">登录</el-button>
       <!--<el-button @click.native.prevent="handleReset2">重置</el-button>-->
     </el-form-item>
   </el-form>
@@ -37,6 +37,20 @@ export default {
       checked: true
     }
   },
+  created () {
+    var _self = this
+    document.onkeydown = function (e) {
+      let key
+      if (window.event === undefined) {
+        key = e.keyCode
+      } else {
+        key = window.event.keyCode
+      }
+      if (key === 13) {
+        _self.handleSubmit2()
+      }
+    }
+  },
   methods: {
     handleSubmit2 (ev) {
       var _this = this
@@ -45,10 +59,10 @@ export default {
           // _this.$router.replace('/table');
           this.logining = true
           var loginParams = { loginName: this.ruleForm2.loginName, password: this.ruleForm2.password }
-          this.$api.userInfo.getUserInfo(loginParams).then(data => {
+          this.$api.userInfo.getUserInfo(loginParams).then(res => {
             this.logining = false
-            console.log(data)
-            let { msg, status, token } = data.data
+            console.log(res)
+            let { msg, status, token, userName } = res.data
             if (status !== '1') {
               this.$message({
                 message: msg,
@@ -56,6 +70,8 @@ export default {
               })
             } else {
               localStorage.setItem('token', token)
+              localStorage.setItem('userName', userName)
+
               _this.$router.push({ path: '/' })
             }
           })

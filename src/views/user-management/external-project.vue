@@ -1,7 +1,6 @@
 <template>
   <div class="base-info">
     <!-- 基本信息 -->
-
     <el-row>
       <el-col :span="4">
         <box-wrap>
@@ -22,13 +21,8 @@
       <el-table-column prop="date" label="开始结束日期">
         <template slot-scope="scope">
           <template v-if="scope.row.edit">
-            <el-date-picker
-              v-model="scope.row.date"
-              type="daterange"
-              range-separator="至"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-              value-format="yyyy-MM-dd">
+            <el-date-picker v-model="scope.row.date" type="daterange" range-separator="至" start-placeholder="开始日期"
+              end-placeholder="结束日期" value-format="yyyy-MM-dd">
             </el-date-picker>
           </template>
           <span v-else>{{getDateStr1(scope.row)}}</span>
@@ -93,28 +87,25 @@
           <span v-else>{{scope.row.duties}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="involvingBusiness" label="涉及业务">
+      <el-table-column prop="businessSkill" label="涉及业务">
         <template slot-scope="scope">
           <template v-if="scope.row.edit">
-            <el-select v-model="scope.row.involvingBusiness">
-              <el-option v-for="item in involvingBusiness" :key="item.dictCode" :label="item.dictName" :value="item.dictCode"
-                :disabled="item.disabled">
+            <el-select v-model="scope.row.businessSkill">
+              <el-option v-for="item in businessSkill" :key="item.dictCode" :label="item.dictName"
+                :value="item.dictCode" :disabled="item.disabled">
               </el-option>
             </el-select>
           </template>
-          <span v-else>{{ formatInvolvingBusiness(scope.row.involvingBusiness) }}</span>
+          <span v-else>{{ formatInvolvingBusiness(scope.row.businessSkill) }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="skill" label="涉及技术">
+      <el-table-column prop="techSkill" label="技能">
         <template slot-scope="scope">
           <template v-if="scope.row.edit">
-            <el-select v-model="scope.row.skill">
-              <el-option v-for="item in skill" :key="item.dictCode" :label="item.dictName" :value="item.dictCode"
-                :disabled="item.disabled">
-              </el-option>
-            </el-select>
+            <el-input class="ipt" size="small" v-model="scope.row.formatTechSkill" @focus="showSkillTree(scope)">
+            </el-input>
           </template>
-          <span v-else>{{ formatSkill(scope.row.skill) }}</span>
+          <span v-else>{{ scope.row.formatTechSkill }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作">
@@ -129,6 +120,16 @@
         </template>
       </el-table-column>
     </el-table>
+    <!-- 技能树 -->
+    <el-dialog title="技能选择" :visible.sync="dialogTechSkillTree" center>
+      <el-tree :data="techSkill" show-checkbox node-key="id" ref="techSkillTree" highlight-current
+        :props="defaultProps">
+      </el-tree>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogCancle">取 消</el-button>
+        <el-button type="primary" @click="dialogOk">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -139,63 +140,63 @@ export default {
   },
   data () {
     return {
-      industry: [
-        {
-          dictCode: '1',
-          dictName: '金融'
-        },
-        {
-          dictCode: '2',
-          dictName: '建筑'
-        }
-      ],
-      projectScale: [
-        {
-          dictCode: '1',
-          dictName: '超大型'
-        },
-        {
-          dictCode: '2',
-          dictName: '大型'
-        },
-        {
-          dictCode: '3',
-          dictName: '小型'
-        }
-      ],
-      projectRole: [
-        {
-          dictCode: '1',
-          dictName: '项目经理'
-        },
-        {
-          dictCode: '2',
-          dictName: '架构师'
-        }
-      ],
-      involvingBusiness: [
-        {
-          dictCode: '1',
-          dictName: '监管'
-        },
-        {
-          dictCode: '2',
-          dictName: '发文'
-        }
-      ],
-      skill: [
-        {
-          dictCode: '1',
-          dictName: '微服务'
-        },
-        {
-          dictCode: '2',
-          dictName: '框架异构'
-        }
-      ],
-
       isAddRow: true, // 保存上一条数据之后，才允许新增
       loading: false, // 数据加载的loading效果
+      currTechSkillScope: null,
+      dialogTechSkillTree: false,
+      defaultProps: {
+        children: 'children',
+        label: 'label'
+      },
+      industry: [{
+        dictCode: '1',
+        dictName: '金融'
+      },
+      {
+        dictCode: '2',
+        dictName: '建筑'
+      }
+      ],
+      projectScale: [{
+        dictCode: '1',
+        dictName: '超大型'
+      },
+      {
+        dictCode: '2',
+        dictName: '大型'
+      },
+      {
+        dictCode: '3',
+        dictName: '小型'
+      }
+      ],
+      projectRole: [{
+        dictCode: '1',
+        dictName: '项目经理'
+      },
+      {
+        dictCode: '2',
+        dictName: '架构师'
+      }
+      ],
+      businessSkill: [{
+        dictCode: '1',
+        dictName: '监管'
+      },
+      {
+        dictCode: '2',
+        dictName: '发文'
+      }
+      ],
+      techSkill: [{
+        dictCode: '1',
+        dictName: '微服务'
+      },
+      {
+        dictCode: '2',
+        dictName: '框架异构'
+      }
+      ],
       list: {
         id: null, // id为空表示新增
         date: '',
@@ -204,43 +205,42 @@ export default {
         projectScale: '',
         projectRole: '',
         duties: '',
-        involvingBusiness: '',
-        sill: '',
+        businessSkill: '',
+        techSkill: [],
         edit: true
       },
-      tableData: [
-        {
-          id: '1', // id为后台传入，后台的增删都是根据id进行的
-          date: '',
-          industry: 1,
-          projectName: '',
-          projectScale: '',
-          projectRole: '',
-          duties: '',
-          involvingBusiness: '',
-          skill: '',
-          content: '报送银监会报送银监会报送银监会报送银监会报送银监会报送银监会报送银监会',
-          edit: false
-        },
-        {
-          id: '2',
-          date: '',
-          industry: 2,
-          projectName: '',
-          projectSize: '1',
-          projectRole: '2',
-          duties: '',
-          business: '1',
-          skill: '1',
-          content: '',
-          edit: false
-        }
+      tableData: [{
+        id: '1', // id为后台传入，后台的增删都是根据id进行的
+        date: '',
+        industry: 1,
+        projectName: '',
+        projectScale: '',
+        projectRole: '',
+        duties: '',
+        businessSkill: '',
+        techSkill: '',
+        content: '报送银监会报送银监会报送银监会报送银监会报送银监会报送银监会报送银监会',
+        edit: false
+      },
+      {
+        id: '2',
+        date: '',
+        industry: 2,
+        projectName: '',
+        projectSize: '1',
+        projectRole: '2',
+        duties: '',
+        business: '1',
+        techSkill: '1',
+        content: '',
+        edit: false
+      }
       ]
     }
   },
   created () {
     let dictionaryObj = {
-      dict_code: [ 'industry', 'projectScale', 'projectRole', 'involvingBusiness', 'skill' ]
+      dict_code: ['industry', 'projectScale', 'projectRole', 'businessSkill']
     }
     this.$api.dictionary.getDictionaries(dictionaryObj).then(res => {
       let result = res.data
@@ -251,8 +251,17 @@ export default {
       this.industry = dictionary.industry
       this.projectScale = dictionary.projectScale
       this.projectRole = dictionary.projectRole
-      this.involvingBusiness = dictionary.involvingBusiness
-      this.skill = dictionary.skill
+      this.businessSkill = dictionary.businessSkill
+    })
+
+    // 技术能力字典表
+    this.$api.dictionary.getDictionariesTree({
+      dict_code: 'techSkill'
+    }).then(res => {
+      let result = res.data
+      if (result.status === '1') {
+        this.techSkill = result.data
+      }
     })
 
     this.$api.externalProject.queryExternalProjects().then(res => {
@@ -284,13 +293,7 @@ export default {
       return currObj.length > 0 ? currObj[0].dictName : ''
     },
     formatInvolvingBusiness (value) {
-      let currObj = this.involvingBusiness.filter(obj => {
-        return obj.dictCode === value
-      })
-      return currObj.length > 0 ? currObj[0].dictName : ''
-    },
-    formatSkill (value) {
-      let currObj = this.skill.filter(obj => {
+      let currObj = this.businessSkill.filter(obj => {
         return obj.dictCode === value
       })
       return currObj.length > 0 ? currObj[0].dictName : ''
@@ -303,6 +306,32 @@ export default {
       }
       let dateStr = `${row.date[0]} 至  ${row.date[1]}`
       return dateStr
+    },
+    // 显示技能树弹出框
+    showSkillTree (scope) {
+      let _this = this
+      this.dialogTechSkillTree = true
+      this.currTechSkillScope = scope
+      this.$nextTick(function () {
+        this.$refs.techSkillTree.setCheckedKeys(_this.currTechSkillScope.row.techSkill)
+      })
+    },
+    // 弹出框取消
+    dialogCancle () {
+      this.dialogTechSkillTree = false
+    },
+    // 弹出框确定
+    dialogOk () {
+      this.dialogTechSkillTree = false
+      let checkedLabels = []
+      this.currTechSkillScope.row.techSkill = this.$refs.techSkillTree.getCheckedKeys()
+      let checkedNodes = this.$refs.techSkillTree.getCheckedNodes()
+      checkedNodes.forEach((item, index) => {
+        if (!item.children) {
+          checkedLabels.push(item.label)
+        }
+      })
+      this.currTechSkillScope.row.formatTechSkill = checkedLabels.join(',')
     },
     // 添加一行
     addRow () {
@@ -400,15 +429,17 @@ export default {
 
 </script>
 <style lang="scss" scoped>
-.top-btns {
-  float:right;
-}
-.project-notice-icon {
-  width:5px;
-  height:16px;
-  display:inline-block;
-  vertical-align: middle;
-  margin-left:10px;
-  background:url('~@assets/imgs/project-notice-icon.png') center no-repeat;
-}
+  .top-btns {
+    float: right;
+  }
+
+  .project-notice-icon {
+    width: 5px;
+    height: 16px;
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 10px;
+    background: url('~@assets/imgs/project-notice-icon.png') center no-repeat;
+  }
+
 </style>

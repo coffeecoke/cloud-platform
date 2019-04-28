@@ -1,7 +1,6 @@
 <template>
   <div class="base-info">
     <!-- 基本信息 -->
-
     <el-row>
       <el-col :span="4">
         <box-wrap>
@@ -88,28 +87,25 @@
             <span v-else>{{scope.row.duties}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="involvingBusiness" label="涉及业务">
+        <el-table-column prop="businessSkill" label="涉及业务">
           <template slot-scope="scope">
             <template v-if="scope.row.edit">
-              <el-select v-model="scope.row.involvingBusiness">
-                <el-option v-for="item in involvingBusiness" :key="item.dictCode" :label="item.dictName"
+              <el-select v-model="scope.row.businessSkill">
+                <el-option v-for="item in businessSkill" :key="item.dictCode" :label="item.dictName"
                   :value="item.dictCode" :disabled="item.disabled">
                 </el-option>
               </el-select>
             </template>
-            <span v-else>{{ formatInvolvingBusiness(scope.row.involvingBusiness) }}</span>
+            <span v-else>{{ formatInvolvingBusiness(scope.row.businessSkill) }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="skill" label="涉及技术">
+        <el-table-column prop="techSkill" label="技能">
           <template slot-scope="scope">
             <template v-if="scope.row.edit">
-              <el-select v-model="scope.row.skill">
-                <el-option v-for="item in skill" :key="item.dictCode" :label="item.dictName" :value="item.dictCode"
-                  :disabled="item.disabled">
-                </el-option>
-              </el-select>
+              <el-input class="ipt" size="small" v-model="scope.row.formatTechSkill" @focus="showSkillTree(scope)">
+              </el-input>
             </template>
-            <span v-else>{{ formatSkill(scope.row.skill) }}</span>
+            <span v-else>{{ scope.row.formatTechSkill }}</span>
           </template>
         </el-table-column>
         <el-table-column label="操作">
@@ -125,7 +121,16 @@
         </el-table-column>
       </el-table>
     </el-form>
-
+    <!-- 技能树 -->
+    <el-dialog title="技能选择" :visible.sync="dialogTechSkillTree" center>
+      <el-tree :data="techSkill" show-checkbox node-key="id" ref="techSkillTree" highlight-current
+        :props="defaultProps">
+      </el-tree>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogCancle">取 消</el-button>
+        <el-button type="primary" @click="dialogOk">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -136,6 +141,14 @@ export default {
   },
   data () {
     return {
+      isAddRow: true, // 保存上一条数据之后，才允许新增
+      loading: false, // 数据加载的loading效果
+      currTechSkillScope: null,
+      dialogTechSkillTree: false,
+      defaultProps: {
+        children: 'children',
+        label: 'label'
+      },
       industry: [{
         dictCode: '1',
         dictName: '金融'
@@ -167,7 +180,7 @@ export default {
         dictName: '架构师'
       }
       ],
-      involvingBusiness: [{
+      businessSkill: [{
         dictCode: '1',
         dictName: '监管'
       },
@@ -176,17 +189,7 @@ export default {
         dictName: '发文'
       }
       ],
-      skill: [{
-        dictCode: '1',
-        dictName: '微服务'
-      },
-      {
-        dictCode: '2',
-        dictName: '框架异构'
-      }
-      ],
-      isAddRow: true, // 保存上一条数据之后，才允许新增
-      loading: false, // 数据加载的loading效果
+      techSkill: [],
       list: {
         id: null, // id为空表示新增
         date: '',
@@ -195,8 +198,9 @@ export default {
         projectScale: '',
         projectRole: '',
         duties: '',
-        involvingBusiness: '',
-        sill: '',
+        businessSkill: '',
+        techSkill: [],
+        formatTechSkill: '',
         edit: true
       },
       tableData: [{
@@ -207,8 +211,9 @@ export default {
         projectScale: '',
         projectRole: '',
         duties: '',
-        involvingBusiness: '',
-        skill: '',
+        businessSkill: '',
+        techSkill: [],
+        formatTechSkill: '',
         content: '报送银监会报送银监会报送银监会报送银监会报送银监会报送银监会报送银监会',
         edit: false
       },
@@ -221,7 +226,8 @@ export default {
         projectRole: '2',
         duties: '',
         business: '1',
-        skill: '1',
+        techSkill: [],
+        formatTechSkill: '',
         content: '',
         edit: false
       }
@@ -230,7 +236,7 @@ export default {
   },
   created () {
     let dictionaryObj = {
-      dict_code: ['industry', 'projectScale', 'projectRole', 'involvingBusiness', 'skill']
+      dict_code: ['industry', 'projectScale', 'projectRole', 'businessSkill']
     }
     this.$api.dictionary.getDictionaries(dictionaryObj).then(res => {
       let result = res.data
@@ -241,8 +247,17 @@ export default {
       this.industry = dictionary.industry
       this.projectScale = dictionary.projectScale
       this.projectRole = dictionary.projectRole
-      this.involvingBusiness = dictionary.involvingBusiness
-      this.skill = dictionary.skill
+      this.businessSkill = dictionary.businessSkill
+    })
+
+    // 技术能力字典表
+    this.$api.dictionary.getDictionariesTree({
+      dict_code: 'techSkill'
+    }).then(res => {
+      let result = res.data
+      if (result.status === '1') {
+        this.techSkill = result.data
+      }
     })
 
     // 参数为用户认证之后的token，token放在http header中,方便以后做api响应拦截
@@ -275,13 +290,7 @@ export default {
       return currObj.length > 0 ? currObj[0].dictName : ''
     },
     formatInvolvingBusiness (value) {
-      let currObj = this.involvingBusiness.filter(obj => {
-        return obj.dictCode === value
-      })
-      return currObj.length > 0 ? currObj[0].dictName : ''
-    },
-    formatSkill (value) {
-      let currObj = this.skill.filter(obj => {
+      let currObj = this.businessSkill.filter(obj => {
         return obj.dictCode === value
       })
       return currObj.length > 0 ? currObj[0].dictName : ''
@@ -293,6 +302,33 @@ export default {
       }
       let dateStr = `${row.date[0]} 至  ${row.date[1]}`
       return dateStr
+    },
+
+    // 显示技能树弹出框
+    showSkillTree (scope) {
+      let _this = this
+      this.dialogTechSkillTree = true
+      this.currTechSkillScope = scope
+      this.$nextTick(function () {
+        this.$refs.techSkillTree.setCheckedKeys(_this.currTechSkillScope.row.techSkill)
+      })
+    },
+    // 弹出框取消
+    dialogCancle () {
+      this.dialogTechSkillTree = false
+    },
+    // 弹出框确定
+    dialogOk () {
+      this.dialogTechSkillTree = false
+      let checkedLabels = []
+      this.currTechSkillScope.row.techSkill = this.$refs.techSkillTree.getCheckedKeys()
+      let checkedNodes = this.$refs.techSkillTree.getCheckedNodes()
+      checkedNodes.forEach((item, index) => {
+        if (!item.children) {
+          checkedLabels.push(item.label)
+        }
+      })
+      this.currTechSkillScope.row.formatTechSkill = checkedLabels.join(',')
     },
     // 添加一行
     addRow () {

@@ -11,9 +11,19 @@ import TaskCollection from '@/views/task-system/task-collection'
 import TaskGroup from '@/views/task-system/task-group'
 // 我的待办
 import Mytodo from '@/views/task-system/my-todo'
+// 融鑫承接
+import Resoft from '@/views/task-system/resoft-undertake'
+// 融鑫承接
+import Thirdparty from '@/views/task-system/third-party'
+// 融鑫承接
+import PersonUnderTake from '@/views/task-system/person-undertake'
+
+import QuestionPublic from '@/views/questionnaire/questionPublic'
+
+import PostProject from '@/views/questionnaire/postProject'
 
 export default [{
-  path: 'taskSystem',
+  path: 'projectManager',
   component: TaskSystem,
   name: '项目管理',
   redirect: '/2-1',
@@ -47,6 +57,31 @@ export default [{
       path: '/2-6',
       name: '我的待办',
       component: Mytodo
+    },
+    {
+      path: '/2-7',
+      name: '融鑫承接',
+      component: Resoft
+    },
+    {
+      path: '/2-8',
+      name: '第三方企业承接',
+      component: Thirdparty
+    },
+    {
+      path: '/2-9',
+      name: '个人承接',
+      component: PersonUnderTake
+    },
+    {
+      path: '/qu-3',
+      name: '问卷调查',
+      component: QuestionPublic
+    },
+    {
+      path: '/qu-6',
+      name: '验收及转结',
+      component: PostProject
     }
   ]
 }]

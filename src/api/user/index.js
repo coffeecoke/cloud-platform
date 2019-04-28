@@ -37,7 +37,17 @@ const userInfo = {
       url: '/user/saveWechatInfoExt',
       data: Qs.stringify(params)
     })
+  },
+  // 内网虚拟登录
+  servlesslogin (params) {
+    return axios({
+      method: 'post',
+      url: '/rcdp/resoft/wxopen/servlesslogin',
+      params: Qs.stringify(params)
+    })
   }
+
+  //
 }
 export default {
   userInfo: userInfo

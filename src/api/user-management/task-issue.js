@@ -9,19 +9,34 @@ const taskIssue = {
       // data: params
     })
   },
-  // 级联查询
-  getTaskGroupTree (params) {
-    return axios({
-      method: 'post',
-      url: '/taskSet/getTaskGroupTree',
-      data: params
-    })
-  },
   // 任务发布查询
   getPublishTaskList (params) {
     return axios({
       method: 'post',
       url: '/taskPublish/getPublishTaskList',
+      data: params
+    })
+  },
+  // 技能级联查询
+  getTaskSkill (params) {
+    return axios({
+      method: 'post',
+      url: '/taskPublish/getTaskSkill'
+      // data: params
+    })
+  },
+  // 技能级联查询
+  getCapAbilityLevels (params) {
+    return axios({
+      method: 'post',
+      url: '/taskPublish/getCapAbilityLevels'
+      // data: params
+    })
+  },
+  publishTask (params) {
+    return axios({
+      method: 'post',
+      url: '/taskPublish/publishTask',
       data: params
     })
   }

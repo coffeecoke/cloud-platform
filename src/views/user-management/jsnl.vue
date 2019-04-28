@@ -3,28 +3,13 @@
     <template slot="boxHeaderTitle">技术能力</template>
     <template slot="boxBodyInner">
       <el-table :data="tableData" border style="width: 100%" v-loading="loading">
-        <el-table-column prop="skillCategory" label="技能类别">
+        <el-table-column prop="techSkill" label="专业技能">
           <template slot-scope="scope">
             <template v-if="scope.row.edit">
-              <el-select v-model="scope.row.skillCategory" placeholder="请选择技能类别">
-                <el-option v-for="item in skillCategory" :key="item.dictCode" :label="item.dictName" :value="item.dictCode"
-                  :disabled="item.disabled">
-                </el-option>
-              </el-select>
+              <el-input class="ipt" size="small" v-model="scope.row.formatTechSkill" @focus="showSkillTree(scope)">
+              </el-input>
             </template>
-            <span v-else>{{ formatCategory(scope.row.skillCategory) }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="skill" label="专业技能">
-          <template slot-scope="scope">
-            <template v-if="scope.row.edit">
-              <el-select v-model="scope.row.skill" placeholder="请选择专业技能">
-                <el-option v-for="item in skill" :key="item.dictCode" :label="item.dictName" :value="item.dictCode"
-                  :disabled="item.disabled">
-                </el-option>
-              </el-select>
-            </template>
-            <span v-else>{{ formatProfession(scope.row.skill) }}</span>
+            <span v-else>{{ scope.row.formatTechSkill }}</span>
           </template>
         </el-table-column>
         <el-table-column prop="usageTime" label="使用时间">
@@ -39,8 +24,8 @@
           <template slot-scope="scope">
             <template v-if="scope.row.edit">
               <el-select v-model="scope.row.masteryLevel" placeholder="请选择掌握程度">
-                <el-option v-for="item in masteryLevel" :key="item.dictCode" :label="item.dictName" :value="item.dictCode"
-                  :disabled="item.disabled">
+                <el-option v-for="item in masteryLevel" :key="item.dictCode" :label="item.dictName"
+                  :value="item.dictCode" :disabled="item.disabled">
                 </el-option>
               </el-select>
             </template>
@@ -69,6 +54,16 @@
         </el-table-column>
       </el-table>
       <div class="add-row" @click.prevent="addRow()"><span>+ 新增技术能力</span></div>
+      <!-- 弹出框 -->
+      <el-dialog title="技能选择" :visible.sync="dialogTechSkillTree" center>
+        <el-tree :data="techSkill" show-checkbox node-key="id" ref="techSkillTree" highlight-current
+          :props="defaultProps">
+        </el-tree>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="dialogCancle">取 消</el-button>
+          <el-button type="primary" @click="dialogOk">确 定</el-button>
+        </span>
+      </el-dialog>
     </template>
   </box-wrap>
 </template>
@@ -83,47 +78,41 @@ export default {
     return {
       isAddRow: true, // 保存上一条数据之后，才允许新增
       loading: false, // 数据加载的loading效果
-      // 技能类别
-      skillCategory: [
-        {
-          dictCode: '1',
-          dictName: '后端'
-        },
-        {
-          dictCode: '2',
-          dictName: '前端'
-        }
-      ],
+      currTechSkillScope: null,
+      dialogTechSkillTree: false,
+      formatTechSkill: '',
+      defaultProps: {
+        children: 'children',
+        label: 'label'
+      },
       // 专业字典表
-      skill: [
-        {
-          dictCode: '1',
-          dictName: 'Js'
-        },
-        {
-          dictCode: '2',
-          dictName: 'Java'
-        },
-        {
-          dictCode: '3',
-          dictName: 'vue'
-        }
+      techSkill: [{
+        dictCode: '1',
+        dictName: 'Js'
+      },
+      {
+        dictCode: '2',
+        dictName: 'Java'
+      },
+      {
+        dictCode: '3',
+        dictName: 'vue'
+      }
       ],
       // 掌握程度字典表
-      masteryLevel: [
-        {
-          dictCode: '1',
-          dictName: '精通'
-        },
-        {
-          dictCode: '2',
-          dictName: '熟悉'
-        }
+      masteryLevel: [{
+        dictCode: '1',
+        dictName: '精通'
+      },
+      {
+        dictCode: '2',
+        dictName: '熟悉'
+      }
       ],
       list: {
         id: null, // id为空表示新增
-        skillCategory: '',
-        skill: '',
+        techSkill: [],
+        formatTechSkill: '',
         usageTime: '',
         masteryLevel: '',
         recentUsage: '',
@@ -131,8 +120,8 @@ export default {
       },
       tableData: [{
         id: '1', // id为空表示新增
-        skillCategory: '1',
-        skill: '2',
+        techSkill: [],
+        formatTechSkill: '',
         usageTime: '',
         masteryLevel: '1',
         recentUsage: '2018-09-07',
@@ -142,7 +131,7 @@ export default {
   },
   created () {
     let dictionaryObj = {
-      dict_code: [ 'skillCategory', 'skill', 'masteryLevel' ]
+      dict_code: ['masteryLevel']
     }
     this.$api.dictionary.getDictionaries(dictionaryObj).then(res => {
       let result = res.data
@@ -150,11 +139,17 @@ export default {
       result.data.forEach(item => {
         Object.assign(dictionary, item)
       })
-      this.skillCategory = dictionary.skillCategory
-      this.skill = dictionary.skill
       this.masteryLevel = dictionary.masteryLevel
     })
-
+    // 技能字典表
+    this.$api.dictionary.getDictionariesTree({
+      dict_code: 'techSkill'
+    }).then(res => {
+      let result = res.data
+      if (result.status === '1') {
+        this.techSkill = result.data
+      }
+    })
     // 参数为用户认证之后的token，token放在http header中,方便以后做api响应拦截
     this.$api.jsnl.queryTechnologicalCapability().then(res => {
       let result = res.data
@@ -170,28 +165,46 @@ export default {
     })
   },
   methods: {
-    formatCategory (value) {
-      let currObj = this.skillCategory.filter(obj => {
-        return obj.dictCode === value
-      })
-      return currObj.length > 0 ? currObj[0].dictName : ''
-    },
-    formatProfession (value) {
-      let currObj = this.skill.filter(obj => {
-        return obj.dictCode === value
-      })
-      return currObj.length > 0 ? currObj[0].dictName : ''
-    },
     formatMastery (value) {
       let currObj = this.masteryLevel.filter(obj => {
         return obj.dictCode === value
       })
       return currObj.length > 0 ? currObj[0].dictName : ''
     },
+    // 显示技能树弹出框
+    showSkillTree (scope) {
+      let _this = this
+      this.dialogTechSkillTree = true
+      this.currTechSkillScope = scope
+      this.$nextTick(function () {
+        this.$refs.techSkillTree.setCheckedKeys(_this.currTechSkillScope.row.techSkill)
+      })
+    },
+    // 弹出框取消
+    dialogCancle () {
+      this.dialogTechSkillTree = false
+    },
+    // 弹出框确定
+    dialogOk () {
+      this.dialogTechSkillTree = false
+      let checkedLabels = []
+      this.currTechSkillScope.row.techSkill = this.$refs.techSkillTree.getCheckedKeys()
+      let checkedNodes = this.$refs.techSkillTree.getCheckedNodes()
+      checkedNodes.forEach((item, index) => {
+        if (!item.children) {
+          checkedLabels.push(item.label)
+        }
+      })
+      console.log()
+      console.log(checkedLabels.join(','))
+      this.currTechSkillScope.row.formatTechSkill = checkedLabels.join(',')
+    },
+
     // 添加一行
     addRow () {
       if (this.isAddRow) {
         this.tableData.push(Object.assign({}, this.list))
+        console.log(this.list)
         this.isAddRow = false
       } else {
         this.$notify({
@@ -222,7 +235,7 @@ export default {
       let row = this.tableData[index]
       this.$api.jsnl.saveTechnologicalCapability(formData).then(res => {
         this.loading = false
-        let result = res.data// 保存此行数据后，后台返回这行数据，更新页面，目的是添加id，保证保存过得数据，数据都有ID
+        let result = res.data // 保存此行数据后，后台返回这行数据，更新页面，目的是添加id，保证保存过得数据，数据都有ID
         if (result.status === '1') {
           this.$message({
             type: 'success',
