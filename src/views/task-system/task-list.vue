@@ -21,10 +21,10 @@
 </el-row></el-form>
 
 <el-row>
-  <el-col :span="3"><div class="grid-content bg-purple"><el-button type="primary" icon="el-icon-setting" @click="dialogPersonVisible = true">设置所属人</el-button></div></el-col>
+  <el-col :span="3"><div class="grid-content bg-purple"><el-button type="primary" icon="el-icon-setting"   @click="setTaskPerson()">设置所属人</el-button></div></el-col>
   <el-col :span="3"><div class="grid-content bg-purple"><el-button type="primary" icon="el-icon-printer" @click="setTaskGroup()">设置属组</el-button></div></el-col>
-  <el-col :span="3"><div class="grid-content bg-purple"><el-button type="primary" icon="el-icon-edit-outline">任务组管理</el-button></div></el-col>
-  <el-col :span="3"><div class="grid-content bg-purple"><el-button type="primary" icon="el-icon-edit-outline">设置任务计划</el-button></div></el-col>
+  <el-col :span="3"><div class="grid-content bg-purple"><el-button type="primary" icon="el-icon-setting">任务组管理</el-button></div></el-col>
+  <el-col :span="3"><div class="grid-content bg-purple"><el-button type="primary" icon="el-icon-edit-outline" @click="setTaskPlan()">设置任务计划</el-button></div></el-col>
   <el-col :span="3"><div class="grid-content bg-purple"><el-button type="primary" icon="el-icon-share">任务脉络</el-button></div></el-col>
 </el-row>
 
@@ -33,6 +33,8 @@
       :data="tableData"
       style="height: 100%"
       @selection-change="handleSelectionChange"
+      :header-cell-style="{background:'#1a74ee',color:'#f9fafc'}"
+      v-loading="loading"
       >
       <el-table-column  type="selection"  width="55"  align="center"></el-table-column>
       <el-table-column prop="project" label="项目信息" width="200px"  align="center">
@@ -53,56 +55,103 @@
       <el-table-column width="100px" prop="subordinatePerson"  label="所属人" align="center"></el-table-column>
       <el-table-column width="100px" prop="accepter"  label="验收人" align="center"></el-table-column>
       <el-table-column width="150px" prop="allocateTime"  label="分配时间" align="center"></el-table-column>
-      <el-table-column width="150px" prop="plan_start_time"  label="计划开始时间" align="center"></el-table-column>
-      <el-table-column prop="task_group_id"  label="计划工期" align="center"></el-table-column>
-      <el-table-column prop="task_status"  label="实际开始时间" align="center"></el-table-column>
-      <el-table-column prop="subordinate_person"  label="实际结束时间" align="center"></el-table-column>
-      <el-table-column prop="task_group_id"  label="延迟" align="center"></el-table-column>
-      <el-table-column prop="task_status"  label="优先级" align="center"></el-table-column>
+      <el-table-column width="150px" prop="planStartTime"  label="计划开始时间" align="center"></el-table-column>
+      <el-table-column width="150px" prop="planedProjectDuration"  label="计划工期" align="center"></el-table-column>
+      <el-table-column width="150px" prop="actualStartTime"  label="实际开始时间" align="center"></el-table-column>
+      <el-table-column width="150px" prop="actualEndTime"  label="实际结束时间" align="center"></el-table-column>
+      <el-table-column width="150px" prop="delay"  label="延迟" align="center"></el-table-column>
+      <el-table-column width="150px" prop="task_status"  label="优先级" align="center"></el-table-column>
+       <el-table-column fixed="right" label="操作" align="center" width="200px">
+           <template slot-scope="scope" >
+              <el-button @click.prevent="acceptance(scope.$index,scope.row)"  v-if="(scope.row.userName==scope.row.accepter)&&scope.row.taskStatus=='已完成'" type="text" icon="el-icon-setting">验收</el-button>
+              <el-button @click.prevent="audit(scope.$index,scope.row)" v-if="(scope.row.userName==scope.row.proManager)&&scope.row.taskStatus=='已验收'" type="text" icon="el-icon-tickets">审核</el-button>
+            </template>
+          </el-table-column>
 </el-table>
+  <div class="pagination-wrap">
+      <el-pagination
+      background
+      layout="prev, pager, next"
+      :page-size= "pageSize"
+      :total="total"
+      @current-change = "handleCurrChange"
+      @size-change = "handleSizeChange"
+      >
+      </el-pagination>
+    </div>
     <!--  设置按钮 -->
     <el-dialog title="设置所属人" :visible.sync="dialogPersonVisible" center>
-    <el-tabs v-model="activeName" @tab-click="handleClick" type="border-card">
-    <el-tab-pane label="本部门" name="tdepartment" v-model="tdepartment" @click="Tdepartment()"><el-table
-      :data="TtableData"
+    <el-tabs v-model="activeName" @tab-click="setDepartment" type="border-card">
+    <el-tab-pane label="本部门" name="T" v-model="department" ><el-table
+      :data="tableData3"
       :header-cell-style="{background:'#1a74ee',color:'#f9fafc'}"
       style="width: 100%" >
 
-      <el-table-column  prop="taskId"  label="姓名" align="center"></el-table-column>
-      <el-table-column  prop="taskName"  label="匹配度"  align="center"></el-table-column>
+      <el-table-column  prop="userName"  label="姓名" align="center"></el-table-column>
+      <el-table-column  prop="matchingDegree"  label="匹配度"  align="center"></el-table-column>
       <el-table-column  fixed="right"  label="操作" align="center" class="aaa">
       <template slot-scope="scope">
-      <el-button @click="handleClick(scope.row)" type="text" >分配</el-button>
+      <el-button @click="allocation(scope.row)" type="text" >分配</el-button>
       </template>
     </el-table-column>
-    </el-table></el-tab-pane>
+    </el-table>
+     <div class="pagination-wrap">
+      <el-pagination
+      background
+      layout="prev, pager, next"
+      :page-size= "pageSize"
+      :total="total"
+      @current-change = "handleCurrChange1"
+      @size-change = "handleSizeChange1"
+      >
+      </el-pagination>
+    </div></el-tab-pane>
 
-    <el-tab-pane label="上级部门" name="hdepartment" v-model="hdepartment" @click="Hdepartment()"><el-table
-      :data="HtableData"
+    <el-tab-pane label="上级部门" name="H" v-model="department" ><el-table
+      :data="tableData3"
       :header-cell-style="{background:'#1a74ee',color:'#f9fafc'}"
       style="width: 100%" >
 
-      <el-table-column  prop="task_id"  label="姓名" align="center"></el-table-column>
-      <el-table-column  prop="task_name"  label="匹配度"  align="center"></el-table-column>
+      <el-table-column  prop="userName"  label="姓名" align="center"></el-table-column>
+      <el-table-column  prop="matchingDegree"  label="匹配度"  align="center"></el-table-column>
       <el-table-column  fixed="right"  label="操作" align="center" class="aaa">
       <template slot-scope="scope">
-      <el-button @click="handleClick(scope.row)" type="text" >分配</el-button>
+      <el-button @click="allocation(scope.row)" type="text" >分配</el-button>
       </template>
     </el-table-column>
-    </el-table></el-tab-pane>
+    </el-table>  <div class="pagination-wrap">
+      <el-pagination
+      background
+      layout="prev, pager, next"
+      :page-size= "pageSize"
+      :total="total"
+      @current-change = "handleCurrChange2"
+      @size-change = "handleSizeChange2"
+      >
+      </el-pagination>
+    </div></el-tab-pane>
 
-    <el-tab-pane label="公司" name="cdepartment" v-model="cdepartment" @click="Cdepartment()"><el-table
-      :data="CtableData"
+    <el-tab-pane label="公司" name="C" v-model="department" ><el-table
+      :data="tableData3"
       :header-cell-style="{background:'#1a74ee',color:'#f9fafc'}"
       style="width: 100%" >
 
-      <el-table-column  prop="task_id"  label="姓名" align="center"></el-table-column>
-      <el-table-column  prop="task_name"  label="匹配度"  align="center"></el-table-column>
+      <el-table-column  prop="userName"  label="姓名" align="center"></el-table-column>
+      <el-table-column  prop="matchingDegree"  label="匹配度"  align="center"></el-table-column>
       <el-table-column  fixed="right"  label="操作" align="center">
-      <el-button @click="update()" type="text" >分配</el-button>
-      </el-table-column>
-      </el-table>
-    </el-tab-pane>
+      <el-button @click="allocation(scope.row)" type="text" >分配</el-button>
+    </el-table-column>
+    </el-table>  <div class="pagination-wrap">
+      <el-pagination
+      background
+      layout="prev, pager, next"
+      :page-size= "pageSize"
+      :total="total"
+      @current-change = "handleCurrChange3"
+      @size-change = "handleSizeChange3"
+      >
+      </el-pagination>
+    </div></el-tab-pane>
   </el-tabs>
     </el-dialog>
     <el-dialog  title="设置属组" :visible.sync="dialogGroupVisible"   width="27%"  right>
@@ -117,6 +166,25 @@
      <el-button @click="dialogGroupVisible = false"  >取 消</el-button>
      <el-button type="primary" @click="dialogSetGroupVisible()" >确 定</el-button>
     </el-dialog>
+    <!-- 设置任务计划 -->
+    <el-dialog title="设置任务计划" :visible.sync="dialogSetTaskPlanVisible">
+   <div class="block">
+        <el-form :inline="true" :model="formp" class="demo-form-inline">
+          <el-form-item label="请设置认领时限：">
+            <el-date-picker v-model="formp.planStartTime" type="date" placeholder="选择日期" format="yyyy 年 MM 月 dd 日"
+              value-format="yyyy-MM-dd">
+            </el-date-picker>
+          </el-form-item>
+          <el-form-item label="请设置计划工期：">
+            <el-input placeholder="请输入工期" v-model="formp.planedProjectDuration" clearable></el-input>
+          </el-form-item>
+        </el-form>
+      </div>
+  <div slot="footer" class="dialog-footer">
+    <el-button @click="dialogSetTaskPlanVisible = false">取 消</el-button>
+    <el-button type="primary" @click="confirmPlan()">确 定</el-button>
+  </div>
+</el-dialog>
 </div>
 
 </template>
@@ -125,13 +193,18 @@
 export default {
   data () {
     return {
+      loading: false,
+      currPage: 1, // 当前页
+      total: 1, // 总条数
+      pageSize: 10, // 一页显示多少条
+      pageNum: 1, // 需要查询的页码
+      formp: {
+        planStartTime: '',
+        planedProjectDuration: ''
+      },
       // 设置所属人
-      TtableData: [],
-      HtableData: [],
-      CtableData: [],
-      tdepartment: 'T',
-      hdepartment: 'H',
-      cdepartment: 'C',
+      tableData3: [],
+      department: 'T',
       multipleSelection: [],
       // 任务查询form表单
       form: {
@@ -144,98 +217,356 @@ export default {
       // 设置所属组
       options: [],
       // 设置按钮
+      dialogSetTaskPlanVisible: false,
       dialogPersonVisible: false,
       dialogGroupVisible: false,
       // 项目编号输入框
       restaurants: [],
       state2: '',
-      // 普通文本输入框
-      input2: '',
-      input3: '',
-      input4: '',
-      input5: '',
+      // 任务列表
       tableData: [],
-      // 标签页下表格
-      tableData1: [],
-      activeName: 'second'
+      activeName: 'T',
+      moveObj: null,
+      setPerson: null,
+      setPlan: null
     }
   },
 
   methods: {
-    Tdepartment () {
-      this.$api.TaskList.getTaskList(this.tdepartment).then(res => {
+    // 条目改变时
+    handleSizeChange (value) {
+      // console.log(currPage)
+    },
+    // 点击页码改变时
+    handleCurrChange (value) {
+      this.pageNum = value
+      this.loading = true
+      let params = {
+        pageNum: this.pageNum, // 请求的页码
+        pageSize: this.pageSize, // 每页显示条数
+        projectId: this.form.projectId,
+        taskId: this.form.taskId,
+        taskName: this.form.taskName,
+        taskTarget: this.form.taskTarget,
+        taskGroupId: this.form.taskGroupId
+      }
+      this.$api.TaskList.getTaskList(params).then(res => {
         var result = res.data
-        console.log(result.data)
-        this.TtableData = result.data
+        this.loading = false
+        this.tableData = result.data.list || []
+        this.total = result.data.total
+        this.currPage = result.data.pageNum
       })
     },
-    Hdepartment () {
-      this.$api.TaskList.getTaskList(this.hdepartment).then(res => {
+    // 条目改变时
+    handleSizeChange1 (value) {
+      // console.log(currPage)
+    },
+    // 点击页码改变时
+    handleCurrChange1 (value) {
+      this.pageNum = value
+      this.setDepartment()
+    },
+    // 条目改变时
+    handleSizeChange2 (value) {
+      // console.log(currPage)
+    },
+    // 点击页码改变时
+    handleCurrChange2 (value) {
+      this.pageNum = value
+      this.setDepartment()
+    },
+    // 条目改变时
+    handleSizeChange3 (value) {
+      // console.log(currPage)
+    },
+    // 点击页码改变时
+    handleCurrChange3 (value) {
+      this.pageNum = value
+      this.setDepartment()
+    },
+    // 设置任务计划
+    setTaskPlan () {
+      if (this.multipleSelection && this.multipleSelection.length !== 0) {
+        this.dialogSetTaskPlanVisible = true
+      } else {
+        this.$message({
+          message: '请先选择数据',
+          type: 'warning'
+        })
+      }
+    },
+    // 任务计划确定按钮
+    confirmPlan () {
+      this.setPlan = Object.assign({planedProjectDuration: this.formp.planedProjectDuration}, {planStartTime: this.formp.planStartTime}, {multipleSelection: this.multipleSelection})
+      this.$api.TaskList.saveTaskPlan({setPlan: this.setPlan}).then(res => {
         var result = res.data
-        console.log(result.data)
-        this.HtableData = result.data
+        if (result.status === '1') {
+          this.dialogSetTaskPlanVisible = false
+          this.loading = true
+          let params = {
+            pageNum: this.pageNum, // 请求的页码
+            pageSize: this.pageSize, // 每页显示条数
+            projectId: this.form.projectId,
+            taskId: this.form.taskId,
+            taskName: this.form.taskName,
+            taskTarget: this.form.taskTarget,
+            taskGroupId: this.form.taskGroupId
+          }
+          this.$api.TaskList.getTaskList(params).then(res => {
+            var result = res.data
+            this.loading = false
+            this.tableData = result.data.list || []
+            this.total = result.data.total
+            this.currPage = result.data.pageNum
+          })
+          this.$message({
+            type: 'success',
+            message: '设置任务计划完成!'
+          })
+        } else {
+          this.$message('设置任务计划失败！')
+        }
       })
     },
-    Cdepartment () {
-      this.$api.TaskList.getTaskList(this.cdepartment).then(res => {
+    // 验收事件
+    acceptance (index, row) {
+      this.$confirm('是否进行验收?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$api.TaskList.acceptTask({projectId: row.projectId, taskId: row.taskId}).then(res => {
+          var result = res.data
+          if (result.status === '1') {
+            this.loading = true
+            let params = {
+              pageNum: this.pageNum, // 请求的页码
+              pageSize: this.pageSize, // 每页显示条数
+              projectId: this.form.projectId,
+              taskId: this.form.taskId,
+              taskName: this.form.taskName,
+              taskTarget: this.form.taskTarget,
+              taskGroupId: this.form.taskGroupId
+            }
+            this.$api.TaskList.getTaskList(params).then(res => {
+              var result = res.data
+              this.loading = false
+              this.tableData = result.data.list || []
+              this.total = result.data.total
+              this.currPage = result.data.pageNum
+            })
+            this.$message({
+              type: 'success',
+              message: '验收完成!'
+            })
+          } else {
+            this.$message('验收失败！')
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '取消领取'
+        })
+      })
+    },
+    // 审核事件
+    audit (index, row) {
+      this.$confirm('是否审核通过?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$api.TaskList.auditTask({projectId: row.projectId, taskId: row.taskId}).then(res => {
+          var result = res.data
+          if (result.status === '1') {
+            this.loading = true
+            let params = {
+              pageNum: this.pageNum, // 请求的页码
+              pageSize: this.pageSize, // 每页显示条数
+              projectId: this.form.projectId,
+              taskId: this.form.taskId,
+              taskName: this.form.taskName,
+              taskTarget: this.form.taskTarget,
+              taskGroupId: this.form.taskGroupId
+            }
+            this.$api.TaskList.getTaskList(params).then(res => {
+              var result = res.data
+              this.loading = false
+              this.tableData = result.data.list || []
+              this.total = result.data.total
+              this.currPage = result.data.pageNum
+            })
+            this.$message({
+              type: 'success',
+              message: '审核通过!'
+            })
+          } else {
+            this.$message('审核失败！')
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '取消审核'
+        })
+      })
+    },
+    setDepartment (tab, event) {
+      this.loading = true
+      let params = {
+        pageNum: this.pageNum, // 请求的页码
+        pageSize: this.pageSize, // 每页显示条数
+        department: tab.name
+      }
+      console.log(tab.name)
+      this.dialogPersonVisible = true
+      this.$api.TaskList.getTaskPersonList(params).then(res => {
         var result = res.data
-        console.log(result.data)
-        this.CtableData = result.data
+        this.loading = false
+        this.tableData3 = result.data.list || []
+        this.total = result.data.total
+        this.currPage = result.data.pageNum
       })
     },
     // 标签页下事件
-    handleClick (tab, event) {
-      console.log(event.target.getAttribute('id')) // 获取到当前元素的id
-    },
+    // setDepartment (tab, event) {
+    //   console.log(tab.name) // 获取到当前元素的id
+    // },
     // 确定按钮
     confirm () {
-      let formData = new FormData()
-      Object.keys(this.form).forEach(key => {
-        console.log(key)
-        formData.append(key, this.form[key])
-      })
-      this.$api.TaskList.getTaskList(formData).then(res => {
+      this.loading = true
+      let params = {
+        pageNum: '1', // 请求的页码
+        pageSize: this.pageSize, // 每页显示条数
+        projectId: this.form.projectId,
+        taskId: this.form.taskId,
+        taskName: this.form.taskName,
+        taskTarget: this.form.taskTarget,
+        taskGroupId: this.form.taskGroupId
+      }
+      this.$api.TaskList.getTaskList(params).then(res => {
         var result = res.data
-        console.log(result.data)
-        this.tableData = result.data
+        this.loading = false
+        this.tableData = result.data.list || []
+        this.total = result.data.total
+        this.currPage = result.data.pageNum
       })
     },
     handchange (value) {
       let taskGroupId = value[value.length - 1]
       this.moveObj = Object.assign({}, {taskGroupId: taskGroupId}, {multipleSelection: this.multipleSelection})
     },
+    setTaskPerson () {
+      if (this.multipleSelection && this.multipleSelection.length !== 0) {
+        this.loading = true
+        this.dialogPersonVisible = true
+        let params = {
+          pageNum: this.pageNum, // 请求的页码
+          pageSize: this.pageSize, // 每页显示条数
+          department: this.department
+
+        }
+        this.$api.TaskList.getTaskPersonList(params).then(res => {
+          var result = res.data
+          this.loading = false
+          // this.tableData = result.data
+          this.tableData3 = result.data.list || []
+          this.total = result.data.total
+          this.currPage = result.data.pageNum
+        })
+      } else {
+        this.$message({
+          message: '请先选择数据',
+          type: 'warning'
+        })
+      }
+    },
     setTaskGroup () {
-      this.dialogGroupVisible = true
-      this.$api.TaskList.getTaskGroupTree({projectId: this.form.projectId}).then(res => {
-        var result = res.data
-        // console.log(result.data)
-        this.options = result.data
-      })
+      if (this.multipleSelection && this.multipleSelection.length !== 0) {
+        console.log(this.multipleSelection.length)
+        this.dialogGroupVisible = true
+        this.$api.TaskList.getTaskGroupTree({projectId: this.form.projectId}).then(res => {
+          var result = res.data
+          // console.log(result.data)
+          this.options = result.data
+        })
+      } else {
+        this.$message({
+          message: '请先选择数据',
+          type: 'warning'
+        })
+      }
     },
-    handleSelectionChange (val) {
-      console.log(val)
-      this.multipleSelection = val
-    },
-    dialogSetGroupVisible () {
-      this.$api.TaskGroup.saveTaskGroup({moveObj: this.moveObj}).then(res => {
+    // 设置所属人中的分配事件
+    allocation (row) {
+      // this.multipleSelection.subordinatePerson.push(row.subordinatePerson)
+      // console.log(this.multipleSelection.subordinatePerson)
+      this.setPerson = Object.assign({}, {subordinatePerson: row.subordinatePerson}, {multipleSelection: this.multipleSelection})
+      // console.log(this.setPerson)
+      this.$api.TaskList.saveSubordinatePerson({setPerson: this.setPerson}).then(res => {
         var result = res.data
         if (result.status === '1') {
-          this.dialogTimeandCondition = false
-          let formData = new FormData()
-          // this.form.taskGroupId = data.id
-          Object.keys(this.form).forEach(key => {
-            console.log(key)
-            formData.append(key, this.form[key])
-          })
-          this.$api.TaskGroup.getTaskList(formData).then(res => {
+          this.dialogPersonVisible = false
+          this.loading = true
+          let params = {
+            pageNum: this.pageNum, // 请求的页码
+            pageSize: this.pageSize, // 每页显示条数
+            projectId: this.form.projectId,
+            taskId: this.form.taskId,
+            taskName: this.form.taskName,
+            taskTarget: this.form.taskTarget,
+            taskGroupId: this.form.taskGroupId
+          }
+          this.$api.TaskList.getTaskList(params).then(res => {
             var result = res.data
-            console.log(result.data)
-            this.tableData3 = result.data
+            this.loading = false
+            this.tableData = result.data.list || []
+            this.total = result.data.total
+            this.currPage = result.data.pageNum
           })
           // console.log(data.id)
           // this.confirm()
           this.$message({
-            message: '任务组调整成功',
+            message: '分配成功',
+            type: 'success'
+          })
+        }
+      })
+    },
+    // checkbox复选框点击事件
+    handleSelectionChange (val) {
+      console.log(val)
+      this.multipleSelection = val
+    },
+    // 设置属组
+    dialogSetGroupVisible () {
+      this.$api.TaskList.saveMultTaskGroup({moveObj: this.moveObj}).then(res => {
+        var result = res.data
+        if (result.status === '1') {
+          this.dialogGroupVisible = false
+          this.loading = true
+          let params = {
+            pageNum: this.pageNum, // 请求的页码
+            pageSize: this.pageSize, // 每页显示条数
+            projectId: this.form.projectId,
+            taskId: this.form.taskId,
+            taskName: this.form.taskName,
+            taskTarget: this.form.taskTarget,
+            taskGroupId: this.form.taskGroupId
+          }
+          this.$api.TaskList.getTaskList(params).then(res => {
+            var result = res.data
+            this.loading = false
+            this.tableData = result.data.list || []
+            this.total = result.data.total
+            this.currPage = result.data.pageNum
+          })
+          // console.log(data.id)
+          // this.confirm()
+          this.$message({
+            message: '设置属组成功',
             type: 'success'
           })
         }
@@ -311,4 +642,11 @@ export default {
    background: #f0f3f8;
       border-radius: 8px;
 }
+  .pagination-wrap {
+    padding: 20px;
+    .el-pagination {
+      float: right;
+    }
+  }
+
 </style>

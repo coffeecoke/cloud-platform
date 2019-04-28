@@ -29,7 +29,7 @@
       </el-row>
     </el-form>
 
-    <el-table :data="tableData" style="height: 100%" :header-cell-style="{background:'#1a74ee',color:'#f9fafc'}">
+    <el-table :data="tableData" style="height: 100%" v-loading="loading1" :header-cell-style="{background:'#1a74ee',color:'#f9fafc'}">
       <el-table-column width="250px" prop="projectId" label="项目" align="left">
          <template slot-scope="scope2">
           <div>
@@ -68,15 +68,145 @@
           <el-button type="text" size="medium">
             <router-link to="/#/1-2"><i class="el-icon-share" title="跳转到任务脉络"></i></router-link>
           </el-button>
+          <el-button @click="skipUndertake(scope.row)" type="text" size="medium"><i class="el-icon-upload"></i></el-button>
         </template>
       </el-table-column>
     </el-table>
+     <div class="pagination-wrap">
+
+      <el-pagination
+      background
+      layout="prev, pager, next"
+      :page-size= "pageSize"
+      :total="total"
+      @current-change = "handleCurrChange"
+      @size-change = "handleSizeChange"
+      >
+      </el-pagination>
+    </div>
+     <div class="cretable">
+     <el-dialog title="任务承接" :visible.sync="dialogPersonalAndEnterprise" center>
+    <el-tabs v-model="activeName" @tab-click="PersonalAndEnterprise" type="border-card">
+    <el-tab-pane label="企业" name="E" v-model="department" ><div class="" id="">
+       <el-row :gutter="20">
+      <el-col :span="4">
+       <div class="grid-content bg-purple">
+            <el-input placeholder="客户编号" class="input1" v-model="customerNumber" clearable></el-input>
+          </div>
+          </el-col>
+           <el-col :span="4">
+           <div class="grid-content bg-purple">
+            <el-input placeholder="客户名称" class="input1" v-model="customerFullName" clearable></el-input>
+          </div>
+           </el-col>
+            <el-col :span="16">
+          <div class="button">
+            <el-button type="primary" style="float:right" round @click.native.prevent="getTableList">确定</el-button>
+          </div>
+        </el-col>
+        </el-row>
+    <el-table :data="EnterpriseTableData" border  v-loading="loading" header-cell-class-name="tableHeader"  height="600">
+      <el-table-column prop="customerNumber" label="客户编号">
+      </el-table-column>
+      <el-table-column prop="customerFullName" label="客户全称">
+      </el-table-column>
+      <el-table-column prop="customerAbbreviation" label="客户简称">
+      </el-table-column>
+      <el-table-column prop="taxonomy" label="分类类别">
+      </el-table-column>
+      <el-table-column prop="detailedCategories" label="详细分类类别">
+      </el-table-column>
+      <el-table-column fixed="right" label="操作" align="center">
+        <template slot-scope="scope">
+          <el-button @click.native.prevent="viewInfo(scope.$index,scope.row)" type="text">查看</el-button>
+        </template>
+      </el-table-column>
+
+    </el-table>
+    <div class="pagination-wrap">
+
+      <el-pagination
+      background
+      layout="prev, pager, next"
+      :page-size= "pageSize"
+      :total="total"
+      @current-change = "handleCurrChange"
+      @size-change = "handleSizeChange"
+      >
+      </el-pagination>
+    </div>
+  </div></el-tab-pane>
+
+    <el-tab-pane label="个人" name="P" v-model="department" > <div class="" id="">
+       <el-col :span="4">
+       <div class="grid-content bg-purple">
+            <el-input placeholder="姓名" class="input1" v-model="name" clearable></el-input>
+          </div>
+          </el-col>
+           <el-col :span="16">
+          <div class="button">
+            <el-button type="primary" style="float:right" round @click.native.prevent="getTableList1">确定</el-button>
+          </div>
+        </el-col>
+    <el-table :data="PersonalTableData" border  v-loading="loading" header-cell-class-name="tableHeader" height="600">
+      <el-table-column prop="name" label="姓名">
+      </el-table-column>
+      <el-table-column prop="D_SEX" label="性别">
+      </el-table-column>
+      <el-table-column prop="phone" label="电话">
+      </el-table-column>
+      <el-table-column prop="email" label="邮箱">
+      </el-table-column>
+      <el-table-column prop="education" label="学历">
+      </el-table-column>
+      <el-table-column prop="major" label="专业">
+      </el-table-column>
+      <el-table-column fixed="right" label="操作" align="center">
+        <template slot-scope="scope">
+          <el-button @click.native.prevent="viewInfo(scope.$index,scope.row)" type="text">查看</el-button>
+          <el-button @click.native.prevent="underTake(scope.$index,scope.row)" type="text">承接</el-button>
+        </template>
+
+      </el-table-column>
+
+    </el-table>
+    <div class="pagination-wrap">
+
+      <el-pagination
+      background
+      layout="prev, pager, next"
+      :page-size= "pageSize"
+      :total="total"
+      @current-change = "handleCurrChange1"
+      @size-change = "handleSizeChange1"
+      >
+      </el-pagination>
+    </div>
+  </div></el-tab-pane>
+  </el-tabs>
+    </el-dialog>
+    </div>
   </div>
 </template>
 <script>
 export default {
   data () {
     return {
+      loading1: false,
+      name: '',
+      activeName: 'E',
+      PersonalTableData: [],
+      EnterpriseTableData: [],
+      customerNumber: '',
+      customerFullName: '',
+      department: '',
+      loading: false,
+      currPage: 1, // 当前页
+      total: 1, // 总条数
+      pageSize: 10, // 一页显示多少条
+      pageNum: 1, // 需要查询的页码
+
+      dialogPersonalAndEnterprise: false,
       form: {
         projectId: '',
         projectName: '',
@@ -84,21 +214,170 @@ export default {
         proDirector: ''
       },
       projectid: [],
-      tableData: []
+      tableData: [{
+        projectId: ''
+      }]
     }
   },
   methods: {
+    underTake (index, row) {
+
+    },
+    // 条目改变时
+    handleSizeChange (value) {
+      // console.log(currPage)
+    },
+    // 点击页码改变时
+    handleCurrChange (value) {
+      this.pageNum = value
+      this.loading = true
+      let params = {
+        pageNum: this.pageNum, // 请求的页码
+        pageSize: this.pageSize, // 每页显示条数
+        customerNumber: this.customerNumber,
+        customerFullName: this.customerFullName
+        // customerNumber: '999999'
+      }
+      this.$api.partner.getEnterprise(params).then(res => {
+        let result = res.data
+        this.loading = false
+        if (result.status === '1') {
+          // console.log(result.data.list.length)
+          this.EnterpriseTableData = result.data.list || []
+          this.total = result.data.total
+          this.currPage = result.data.pageNum
+        } else {
+          this.$message({
+            type: 'error',
+            message: '请求数据失败'
+          })
+        }
+      })
+    },
+    getTableList () {
+      let params = {
+        pageNum: this.pageNum, // 请求的页码
+        pageSize: this.pageSize
+        // 每页显示条数
+        // customerNumber: '999999'
+      }
+      this.$api.partner.getEnterprise(params).then(res => {
+        let result = res.data
+        this.loading = false
+        if (result.status === '1') {
+          // console.log(result.data.list.length)
+          this.EnterpriseTableData = result.data.list || []
+          this.total = result.data.total
+          this.currPage = result.data.pageNum
+        } else {
+          this.$message({
+            type: 'error',
+            message: '请求数据失败'
+          })
+        }
+      })
+    },
+    // 条目改变时
+    handleSizeChange1 (value) {
+      // console.log(currPage)
+    },
+    // 点击页码改变时
+    handleCurrChange1 (value) {
+      this.pageNum = value
+      this.loading = true
+      let params = {
+        pageNum: this.pageNum, // 请求的页码
+        pageSize: this.pageSize, // 每页显示条数
+        customerNumber: '999999'
+      }
+      this.$api.partner.getUserAll(params).then(res => {
+        let result = res.data
+        this.loading = false
+        if (result.status === '1') {
+          console.log(result.data.list.length)
+          this.PersonalTableData = result.data.list || []
+          this.total = result.data.total
+          this.currPage = result.data.pageNum
+        } else {
+          this.$message({
+            type: 'error',
+            message: '请求数据失败'
+          })
+        }
+      })
+    },
+    //  个人或企业之间的跳转并同时向后台发请求返回table数据
+    PersonalAndEnterprise (tab, event) {
+      if (tab.name === 'E') {
+        // console.log('11111111111111111111111111')
+        this.loading = true
+        let params = {
+          pageNum: this.pageNum, // 请求的页码
+          pageSize: this.pageSize
+          // 每页显示条数
+          // customerNumber: '999999'
+        }
+        this.$api.partner.getEnterprise(params).then(res => {
+          let result = res.data
+          this.loading = false
+          if (result.status === '1') {
+            // console.log(result.data.list.length)
+            this.EnterpriseTableData = result.data.list || []
+            this.total = result.data.total
+            this.currPage = result.data.pageNum
+          } else {
+            this.$message({
+              type: 'error',
+              message: '请求数据失败'
+            })
+          }
+        })
+      } else {
+        this.loading = true
+        let params = {
+          pageNum: this.pageNum, // 请求的页码
+          pageSize: this.pageSize, // 每页显示条数
+          customerNumber: '999999'
+        }
+        this.$api.partner.getUserAll(params).then(res => {
+          let result = res.data
+          this.loading = false
+          if (result.status === '1') {
+            console.log(result.data.list.length)
+            this.PersonalTableData = result.data.list || []
+            this.total = result.data.total
+            this.currPage = result.data.pageNum
+          } else {
+            this.$message({
+              type: 'error',
+              message: '请求数据失败'
+            })
+          }
+        })
+      }
+    },
+    // 承接跳转
+    skipUndertake () {
+      this.dialogPersonalAndEnterprise = true
+    },
     // 查询
     confirm () {
-      let formData = new FormData()
-      Object.keys(this.form).forEach(key => {
-        console.log(key)
-        formData.append(key, this.form[key])
-      })
-      this.$api.TaskCreate.getCountTaskList(formData).then(res => {
+      this.loading1 = true
+      let params = {
+        pageNum: this.pageNum, // 请求的页码
+        pageSize: this.pageSize, // 每页显示条数
+        projectId: this.form.projectId,
+        projectName: this.form.projectName,
+        proManager: this.form.proManager,
+        proDirector: this.form.proDirector
+      }
+      this.$api.TaskCreate.getCountTaskList(params).then(res => {
         var result = res.data
-        console.log(result.data)
-        this.tableData = result.data
+        this.loading1 = false
+        // this.tableData = result.data
+        this.tableData = result.data.list || []
+        this.total = result.data.total
+        this.currPage = result.data.pageNum
       })
     },
     taskissue (param) {
@@ -180,5 +459,14 @@ export default {
       border: 1px solid #DCDFE6;
     }
   }
-
+    .pagination-wrap {
+    padding: 20px;
+    .el-pagination {
+      float: right;
+    }
+  }
+  // .el-table /deep/ .tableHeader {
+  //   background:#1a74ee;
+  //   color:#f9fafc;
+  // }
 </style>
