@@ -8,7 +8,7 @@
         <el-button type="primary" @click="onSubmit">查询</el-button>
       </el-form-item>
     </el-form>
-    <el-table :data="tableData" border v-loading="loading" header-cell-class-name="tableHeader" height="600">
+    <el-table :data="tableData" border v-loading="loading" header-cell-class-name="tableHeader">
       <el-table-column prop="name" label="姓名">
       </el-table-column>
       <el-table-column prop="D_SEX" label="性别">
@@ -286,14 +286,6 @@ export default {
       total: 1000, // 总条数
       pageSize: 10, // 一页显示多少条
       pageNum: 1, // 需要查询的页码
-      // 培训方式字典表
-      trainingMode: [],
-      // 业务能力字典表
-      businessSkill: [],
-      // 掌握程度字典表
-      masteryLevel: [],
-      // 语言能力字典表
-      languages: [],
       // 人员列表数据
       tableData: [{
         userId: '',
@@ -435,20 +427,6 @@ export default {
   },
   created () {
     this.getTableList() // 获取人员列表
-    let dictionaryObj = {
-      dict_code: ['trainingMode', 'businessSkill', 'masteryLevel', 'languages']
-    }
-    this.$api.dictionary.getDictionaries(dictionaryObj).then(res => {
-      let result = res.data
-      let dictionary = {}
-      result.data.forEach(item => {
-        Object.assign(dictionary, item)
-      })
-      this.trainingMode = dictionary.trainingMode
-      this.businessSkill = dictionary.businessSkill
-      this.masteryLevel = dictionary.masteryLevel
-      this.languages = dictionary.languages
-    })
   },
   activated () {}
 }

@@ -206,7 +206,7 @@ export default {
         projectRole: '',
         duties: '',
         businessSkill: '',
-        sill: '',
+        techSkill: [],
         edit: true
       },
       tableData: [{

@@ -8,6 +8,8 @@ import ResoftPeopleList from '@/views/personal-management/resoft-people-list'
 import ResoftCapacityStructure from '@/views/personal-management/resoft-capacity-structure'
 // 企业列表
 import BusinessList from '@/views/personal-management/business-list'
+// 企业人员列表
+import BusinessPeopleList from '@/views/personal-management/business-people-list'
 // 企业能力评价
 import BusinessAbilityEvaluation from '@/views/personal-management/business-ability-evaluation'
 // 个人合伙人人员列表
@@ -39,6 +41,11 @@ export default [{
       path: '/partner-3',
       name: '企业列表',
       component: BusinessList
+    },
+    {
+      path: '/partner-3-1',
+      name: '企业人员列表',
+      component: BusinessPeopleList
     },
     {
       path: '/partner-4',
