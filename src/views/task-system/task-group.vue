@@ -74,10 +74,15 @@
       <el-col :span="18">
         <el-form ref="form" :model="form" label-width="80px" label-position="top">
           <el-row>
-            <el-col :span="4">
+            <!-- <el-col :span="4">
               <div class="group">
                 <el-autocomplete class="input1" v-model="form.projectId" placeholder="项目编号" :trigger-on-focus="false"
-                  @select="handleSelect"></el-autocomplete>
+                  @select="handleSelect" clearable readonly="readonly"></el-autocomplete>
+              </div>
+            </el-col> -->
+             <el-col :span="4">
+              <div class="group">
+                <el-input placeholder="任务组名称" class="input1" v-model="form.taskGroupId" clearable disabled="true"></el-input>
               </div>
             </el-col>
             <el-col :span="4">
@@ -100,11 +105,13 @@
                 <el-input placeholder="前置任务" class="input1" v-model="form.predecessorTask" clearable></el-input>
               </div>
             </el-col>
+
             <el-col :span="4">
               <div class="button">
                 <el-button type="primary" style="float:right"  @click="confirm1">查 询</el-button>
               </div>
             </el-col>
+
           </el-row>
         </el-form>
         <el-table :data="tableData3" v-loading="loading" :header-cell-style="{background:'#1a74ee',color:'#f9fafc'}">
@@ -113,7 +120,7 @@
           <el-table-column prop="taskName" label="任务名称" align="center"></el-table-column>
           <el-table-column prop="taskId" label="任务编码" align="center"></el-table-column>
           <el-table-column prop="taskTarget" label="任务标的" align="center"></el-table-column>
-          <el-table-column prop="postTask" label="后置任务" align="center"></el-table-column>
+          <el-table-column prop="predecessorTask" label="前置任务" align="center"></el-table-column>
           <el-table-column fixed="right" label="操作" align="center" width="200px">
            <template slot-scope="scope">
               <el-button @click.prevent="moveBtn(scope.$index,scope.row)" type="text" icon="el-icon-setting">结构调整</el-button>
@@ -187,7 +194,7 @@ export default {
         postTask: '111'
       }],
       form: {
-        projectId: '2018725-020B',
+        projectId: '',
         taskId: '',
         taskName: '',
         taskTarget: '',
@@ -196,7 +203,8 @@ export default {
       },
       // 需要调整的当前行
       moveRowData: null,
-      moveObj: null
+      moveObj: null,
+      GroupId: null
       // taskGroupId1: null
     }
   },
@@ -238,16 +246,24 @@ export default {
         var result = res.data
         if (result.status === '1') {
           this.dialogTimeandCondition = false
-          let formData = new FormData()
-          // this.form.taskGroupId = data.id
-          Object.keys(this.form).forEach(key => {
-            console.log(key)
-            formData.append(key, this.form[key])
-          })
-          this.$api.TaskGroup.getTaskList(formData).then(res => {
+          let params = {
+            pageNum: this.pageNum, // 请求的页码
+            pageSize: this.pageSize, // 每页显示条数
+            projectId: this.form.projectId,
+            taskId: this.form.taskId,
+            taskName: this.form.taskName,
+            taskTarget: this.form.taskTarget,
+            predecessorTask: this.form.predecessorTask,
+            taskGroupId: this.GroupId
+          }
+          console.log(this.GroupId)
+          this.$api.TaskGroup.getTaskList(params).then(res => {
             var result = res.data
-            console.log(result.data)
-            this.tableData3 = result.data
+            this.loading = false
+            // this.tableData = result.data
+            this.tableData3 = result.data.list || []
+            this.total = result.data.total
+            this.currPage = result.data.pageNum
           })
           // console.log(data.id)
           // this.confirm()
@@ -262,7 +278,19 @@ export default {
       // console.log(data)
       // this.addEventForm.taskGroupParentName = data.label
       // console.log(this.addEventForm.taskGroupParentName)
-      if (!(data.children && data.children.length !== 0)) {
+      if (data.children && data.children.length !== 0) {
+        this.GroupId = ''
+      } else {
+        this.GroupId = data.id
+        var params1 = data.label
+        this.$router.push({
+          name: '任务组',
+          query: {
+            date: params1
+          }
+        })
+        this.form.taskGroupId = this.$route.query.date
+        console.log(data)
         let params = {
           pageNum: this.pageNum, // 请求的页码
           pageSize: this.pageSize, // 每页显示条数
@@ -271,8 +299,9 @@ export default {
           taskName: this.form.taskName,
           taskTarget: this.form.taskTarget,
           predecessorTask: this.form.predecessorTask,
-          taskGroupId: this.form.taskGroupId
+          taskGroupId: this.GroupId
         }
+        console.log(data.id)
         this.$api.TaskGroup.getTaskList(params).then(res => {
           var result = res.data
           this.loading = false
@@ -294,8 +323,9 @@ export default {
         taskName: this.form.taskName,
         taskTarget: this.form.taskTarget,
         predecessorTask: this.form.predecessorTask,
-        taskGroupId: this.form.taskGroupId
+        taskGroupId: this.GroupId
       }
+      console.log(this.GroupId)
       this.$api.TaskGroup.getTaskList(params).then(res => {
         var result = res.data
         this.loading = false
@@ -536,6 +566,7 @@ export default {
   },
 
   mounted () {
+    this.form.projectId = this.$route.query.data
     // var projectId = this.form.projectId
     this.$api.TaskGroup.initTaskGroupTree({
       projectId: this.form.projectId
@@ -549,7 +580,7 @@ export default {
 
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" scope>
   .slot-tree {
     width: 100%;
     height: 100%;

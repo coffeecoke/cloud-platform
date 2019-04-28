@@ -2,6 +2,21 @@
   <box-wrap>
     <template slot="boxHeaderTitle">我的任务</template>
     <template slot="boxBodyInner">
+      <!-- <el-form ref="form" :model="form" label-width="80px" label-position="top">
+<el-row :gutter="18">
+ <el-col :span="4">
+    <el-autocomplete
+      class="input1"
+      v-model="form.projectId"
+      :fetch-suggestions="querySearch"
+      placeholder="项目编号"
+      :trigger-on-focus="false"
+      @select="handleSelect"
+    ></el-autocomplete>
+  </el-col>
+  <el-col :span="4"><div class="grid-content bg-purple"><el-input placeholder="任务编号" class="input1" v-model="form.taskId"  clearable></el-input></div></el-col>
+  <el-col :span="4"><div class="grid-content bg-purple"><el-input placeholder="任务名称" class="input1" v-model="form.taskName"  clearable></el-input></div></el-col>
+  </el-row></el-form> -->
       <el-table :data="tableData" border style="width: 100%" v-loading="loading">
         <el-table-column prop="project" label="项目信息">
           <template slot-scope="scope2">
@@ -62,6 +77,7 @@ export default {
   },
   data () {
     return {
+      loading: false,
       value: 2.5,
       value1: 3.8,
 

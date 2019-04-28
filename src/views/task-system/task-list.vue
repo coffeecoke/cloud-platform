@@ -23,7 +23,7 @@
 <el-row>
   <el-col :span="3"><div class="grid-content bg-purple"><el-button type="primary" icon="el-icon-setting"   @click="setTaskPerson()">设置所属人</el-button></div></el-col>
   <el-col :span="3"><div class="grid-content bg-purple"><el-button type="primary" icon="el-icon-printer" @click="setTaskGroup()">设置属组</el-button></div></el-col>
-  <el-col :span="3"><div class="grid-content bg-purple"><el-button type="primary" icon="el-icon-setting">任务组管理</el-button></div></el-col>
+  <el-col :span="3"><div class="grid-content bg-purple"><el-button type="primary" icon="el-icon-setting" @click="skipTaskGroup()">任务组管理</el-button></div></el-col>
   <el-col :span="3"><div class="grid-content bg-purple"><el-button type="primary" icon="el-icon-edit-outline" @click="setTaskPlan()">设置任务计划</el-button></div></el-col>
   <el-col :span="3"><div class="grid-content bg-purple"><el-button type="primary" icon="el-icon-share">任务脉络</el-button></div></el-col>
 </el-row>
@@ -193,6 +193,8 @@
 export default {
   data () {
     return {
+      projectid: [],
+      name: '',
       loading: false,
       currPage: 1, // 当前页
       total: 1, // 总条数
@@ -233,6 +235,17 @@ export default {
   },
 
   methods: {
+    // 带projectid跳转到任务组页面
+    skipTaskGroup (params) {
+      var params1 = this.form.projectId
+      this.$router.push({
+        name: '任务组',
+        query: {
+          data: params1
+        }
+
+      })
+    },
     // 条目改变时
     handleSizeChange (value) {
       // console.log(currPage)
@@ -265,7 +278,23 @@ export default {
     // 点击页码改变时
     handleCurrChange1 (value) {
       this.pageNum = value
-      this.setDepartment()
+      // this.tableData3 = []
+      console.log(this.pageNum)
+      this.loading = true
+      let params = {
+        pageNum: this.pageNum, // 请求的页码
+        pageSize: this.pageSize, // 每页显示条数
+        department: 'T'
+      }
+      // console.log(tab.name)
+      this.dialogPersonVisible = true
+      this.$api.TaskList.getTaskPersonList(params).then(res => {
+        var result = res.data
+        this.loading = false
+        this.tableData3 = result.data.list || []
+        this.total = result.data.total
+        this.currPage = result.data.pageNum
+      })
     },
     // 条目改变时
     handleSizeChange2 (value) {
@@ -274,7 +303,22 @@ export default {
     // 点击页码改变时
     handleCurrChange2 (value) {
       this.pageNum = value
-      this.setDepartment()
+      // this.tableData3 = []
+      this.loading = true
+      let params = {
+        pageNum: this.pageNum, // 请求的页码
+        pageSize: this.pageSize, // 每页显示条数
+        department: 'H'
+      }
+      // console.log(tab.name)
+      this.dialogPersonVisible = true
+      this.$api.TaskList.getTaskPersonList(params).then(res => {
+        var result = res.data
+        this.loading = false
+        this.tableData3 = result.data.list || []
+        this.total = result.data.total
+        this.currPage = result.data.pageNum
+      })
     },
     // 条目改变时
     handleSizeChange3 (value) {
@@ -283,7 +327,22 @@ export default {
     // 点击页码改变时
     handleCurrChange3 (value) {
       this.pageNum = value
-      this.setDepartment()
+      // this.tableData3 = []
+      this.loading = true
+      let params = {
+        pageNum: this.pageNum, // 请求的页码
+        pageSize: this.pageSize, // 每页显示条数
+        department: 'C'
+      }
+      // console.log(tab.name)
+      this.dialogPersonVisible = true
+      this.$api.TaskList.getTaskPersonList(params).then(res => {
+        var result = res.data
+        this.loading = false
+        this.tableData3 = result.data.list || []
+        this.total = result.data.total
+        this.currPage = result.data.pageNum
+      })
     },
     // 设置任务计划
     setTaskPlan () {
@@ -572,26 +631,28 @@ export default {
         }
       })
     },
-    // 项目编号查询
+    // 项目编号模糊查询
     querySearch (queryString, cb) {
-      var restaurants = this.restaurants
-      var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants
+      var taskBlurry = this.projectid
+      var results = queryString ? taskBlurry.filter(this.createFilter(queryString)) : taskBlurry
       // 调用 callback 返回建议列表的数据
       cb(results)
     },
     createFilter (queryString) {
-      return (restaurant) => {
-        return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) > -1)
+      return (taskBlurry) => {
+        return (taskBlurry.value.toLowerCase().indexOf(queryString.toLowerCase()) > -1)
       }
-    },
-    loadAll () {
-
     },
     handleSelect (item) {
       console.log(item)
     }
   },
   mounted () {
+    this.$api.TaskCreate.getProject().then(res => {
+      let result = res.data
+      console.log(result.data)
+      this.projectid = result.data
+    })
     // var pro = this.projectId
     // // console.log(pro)
     // // console.log(formData.get('tid'))
@@ -600,11 +661,11 @@ export default {
     //   // console.log(result.data)
     //   this.options = result.data
     // })
-    this.restaurants = this.loadAll()
+    // this.restaurants = this.loadAll()
   }
 }
 </script>
-<style lang="scss" scoped>
+<style lang="scss" scope>
  .el-row {
     margin-bottom: 30px;
      margin-top: 10px;
