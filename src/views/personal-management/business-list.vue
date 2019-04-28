@@ -63,8 +63,8 @@ export default {
       this.loading = true
       let params = {
         pageNum: this.pageNum, // 请求的页码
-        pageSize: this.pageSize, // 每页显示条数
-        customerNumber: '333333'
+        pageSize: this.pageSize // 每页显示条数
+        // customerNumber: '333333'
       }
       this.$api.partner.getEnterprise(params).then(res => {
         let result = res.data

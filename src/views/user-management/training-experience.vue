@@ -29,7 +29,7 @@
               </el-option>
             </el-select>
           </template>
-          <!-- <span v-else>{{ formatTrainingMode(scope.row.trainingMode) }}</span> -->
+          <span v-else>{{ formatTrainingMode(scope.row.trainingMode) }}</span>
 
         </template>
       </el-table-column>
