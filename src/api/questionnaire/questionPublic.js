@@ -33,6 +33,27 @@ const questPublic = {
       url: '/question/loadQuestAsync',
       data: Qs.stringify(params)
     })
+  },
+  loadUserAsync: (params) => {
+    return axios({
+      method: 'post',
+      url: '/question/loadUserAsync',
+      data: Qs.stringify(params)
+    })
+  },
+  handleGenerate: (params) => {
+    return axios({
+      method: 'post',
+      url: '/question/handleGenerate',
+      data: params
+    })
+  },
+  loadDataCompareResult: (params) => {
+    return axios({
+      method: 'post',
+      url: '/postPro/loadDataCompareResult',
+      data: params
+    })
   }
 }
 export default questPublic

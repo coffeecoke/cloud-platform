@@ -4,7 +4,7 @@
       <question :questInfo="questInfo" :option="option">
 
       </question>
-      <el-row>
+      <el-row  style="text-align:center">
         <el-button type="success" @click="submitNaire">提交问卷</el-button>
       </el-row>
     </el-row>
@@ -34,6 +34,7 @@ export default {
     },
     submitNaire () {
       const nId = this.questInfo.id
+      const params = {}
       const result = []
       this.option.forEach((item, index) => {
         if (item.quDirType === '1') {
@@ -67,14 +68,16 @@ export default {
           }
         }
       })
-      this.$api.questionnaire.saveAnswerQuest({result: JSON.stringify(result)}).then(res => {
+      params.quId = nId
+      params.params = result
+      this.$api.questionnaire.saveAnswerQuest(params).then(res => {
         let result = res.data
         if (result.status === '1') {
           this.$message({
             type: 'success',
             message: '提交问卷成功!'
           })
-          this.initDataTable()
+          this.$router.push({path: '/qu-3'})
         } else {
           this.$message.error('提交问卷失败！')
         }

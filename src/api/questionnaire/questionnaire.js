@@ -79,7 +79,7 @@ const questionnaire = {
     return axios({
       method: 'post',
       url: '/question/saveAnswerQuest',
-      data: Qs.stringify(params)
+      data: params
     })
   },
   // 针对项目生成调查问卷

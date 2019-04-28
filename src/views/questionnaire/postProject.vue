@@ -70,6 +70,8 @@
           </el-button>
           <el-button @click="showCreateQuestPanl(scope.row.projectId,scope.row.projectName)" type="text" size="medium"><i class="el-icon-document"
               title="生成调查问卷"></i></el-button>
+          <el-button @click="showPostProjectPanl(scope.row.projectId,scope.row.projectName)" type="text" size="medium"><i class="el-icon-sort"
+              title="项目结转"></i></el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -89,6 +91,58 @@
         <el-button type="primary" @click.native.prevent="saveQuestionnaire('questionnaire')"  round>保存</el-button>
       </el-form-item>
       </el-form>
+    </el-dialog>
+    <!--发布用户调查问卷 end-->
+
+    <!--发布用户调查问卷 start-->
+    <el-dialog title="项目结转" :visible.sync="postProjectPanl"    fullscreen>
+  <el-row :span="24">
+    <el-col :span="11">
+      <el-table
+          :data="leftTable"
+          style="width: 100%;margin-bottom: 20px;"
+          border
+          row-key="id">
+          <el-table-column
+            prop="tableId"
+            label="表名"
+            width="180">
+          </el-table-column>
+          <el-table-column
+            prop="projectCode"
+            label="项目编号"
+            width="180">
+          </el-table-column>
+          <el-table-column
+            prop="projectName"
+            label="项目名称">
+          </el-table-column>
+        </el-table>
+    </el-col>
+    <el-col :span="2">&nbsp;</el-col>
+   <el-col :span="11">
+        <el-table
+      :data="rightTable"
+      style="width: 100%;margin-bottom: 20px;"
+      border
+      row-key="id">
+      <el-table-column
+        prop="tableId"
+        label="表名"
+        width="180">
+      </el-table-column>
+      <el-table-column
+        prop="projectCode"
+        label="项目编号"
+        width="180">
+      </el-table-column>
+      <el-table-column
+        prop="projectName"
+        label="项目名称">
+      </el-table-column>
+    </el-table>
+    </el-col>
+</el-row>
     </el-dialog>
     <!--发布用户调查问卷 end-->
 
@@ -114,7 +168,11 @@ export default {
       },
       projectid: [],
       tableData: [],
-      createQuestPanl: false
+      createQuestPanl: false,
+      postProjectPanl: false,
+      leftTable: [],
+      rightTable: []
+
     }
   },
   methods: {
@@ -162,6 +220,15 @@ export default {
       this.questionnaire.projectId = projectId
       this.questionnaire.projectName = projectName
       this.createQuestPanl = true
+    },
+    showPostProjectPanl (projectId, projectName) {
+      this.$api.questionPublic.loadDataCompareResult({projectId: projectId, projectName: projectName}).then(res => {
+        let result = res.data
+        console.log(result.data)
+        this.leftTable = result.data.leftTable
+        this.rightTable = result.data.rightTable
+      })
+      this.postProjectPanl = true
     },
     quTitleSearchAsync (queryString, cb) {
       var restaurants = []
@@ -263,5 +330,16 @@ export default {
       border: 1px solid #DCDFE6;
     }
   }
-
+.demo-table-expand {
+    font-size: 0;
+  }
+  .demo-table-expand label {
+    width: 90px;
+    color: #99a9bf;
+  }
+  .demo-table-expand .el-form-item {
+    margin-right: 0;
+    margin-bottom: 0;
+    width: 50%;
+  }
 </style>

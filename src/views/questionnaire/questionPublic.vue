@@ -22,22 +22,21 @@
   </el-form-item>
 </el-form>
 <!--查询表单 end-->
-<!--按钮 start-->
-<el-row>
-  <el-col :span="3"><div class="grid-content bg-purple"><el-button type="primary" @click="questAdd = true" icon="el-icon-edit">发布调查问卷</el-button></div></el-col>
-  <el-col :span="3"><div class="grid-content bg-purple"><el-button type="primary" @click="editQuestDeploy = true" icon="el-icon-edit-outline">修改调查问卷</el-button></div></el-col>
-  <el-col :span="1"><div class="grid-content bg-purple"><el-button type="primary" @click="delData" icon="el-icon-delete" >删除</el-button></div></el-col>
-</el-row>
-<!--按钮 end-->
+
 <!--表单分页 start-->
 <el-row>
    <el-table :data="tableData" border style="width: 100%">
-    <el-table-column  type="selection"  width="55"  align="center"></el-table-column>
-    <el-table-column prop="quTitle" label="问卷名称" width="250"></el-table-column>
-    <el-table-column prop="quType" label="问卷类型" width="245"></el-table-column>
-    <el-table-column prop="projectName" label="归属项目" width="240"></el-table-column>
-    <el-table-column prop="createUserName" label="创建人" width="240"></el-table-column>
-    <el-table-column prop="createDate" label="创建时间" width="240"></el-table-column>
+    <el-table-column prop="quTitle" label="问卷名称" ></el-table-column>
+    <el-table-column prop="quType" label="问卷类型" ></el-table-column>
+    <el-table-column prop="projectName" label="归属项目" ></el-table-column>
+    <el-table-column prop="answerUserName" label="答题者" ></el-table-column>
+    <el-table-column prop="createDate" label="创建时间" ></el-table-column>
+    <el-table-column label="操作" >
+      <template slot-scope="scope">
+        <el-button size="small"  type="primary" v-if="scope.row.quStatus==='0'" icon="el-icon-edit"  @click="answerQuest(scope.$index, scope.row)" round></el-button>
+        <el-button size="small" type="danger" v-if="scope.row.quStatus==='1'" icon="el-icon-document"  @click="handleShow(scope.$index, scope.row)" round></el-button>
+        </template>
+    </el-table-column>
   </el-table>
 </el-row>
 <el-row >
@@ -202,6 +201,12 @@ export default {
     quTitleHandleSelect (item) {
     },
     projectHandleSelect (item) {
+    },
+    answerQuest (index, row) {
+      this.$router.push({path: '/qu-5', query: {id: row.quId}})
+    },
+    handleShow (index, row) {
+      this.$router.push({path: '/qu-4', query: {id: row.quId}})
     }
 
   }

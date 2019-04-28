@@ -44,8 +44,6 @@
     <el-table-column label="操作" width="200">
       <template slot-scope="scope">
         <el-button  type="primary"  icon="el-icon-document"  @click="handleShow(scope.$index, scope.row)" round>预览</el-button>
-        <el-button  type="primary"  icon="el-icon-document"  @click="answerQuest(scope.$index, scope.row)" round>答题</el-button>
-        <el-button  type="primary"  icon="el-icon-document"  @click="handleShow(scope.$index, scope.row)" round>已填报</el-button>
       </template>
     </el-table-column>
   </el-table>

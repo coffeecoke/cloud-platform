@@ -4,10 +4,8 @@
       <question :questInfo="questInfo" :option="option">
 
       </question>
-      <el-row>
-        <el-button type="success" @click="submitNaire">提交问卷</el-button>
-      </el-row>
-    </el-row>
+
+</el-row>
 
 </div>
 </template>
