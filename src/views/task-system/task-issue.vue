@@ -423,9 +423,9 @@ export default {
     }
   },
   mounted () {
-    this.form.projectId = this.$route.query.date
+    this.form.projectId = this.$route.query.data
     // 初始化模糊查询
-    this.$api.taskIssue.getProject().then(res => {
+    this.$api.TaskCreate.getProject().then(res => {
       let result = res.data
       console.log(result.data)
       this.projectid = result.data
@@ -434,7 +434,7 @@ export default {
 }
 
 </script>
-<style lang="scss" scoped>
+<style lang="scss" scope>
   .el-row {
     margin-bottom: 30px;
     margin-top: 10px;

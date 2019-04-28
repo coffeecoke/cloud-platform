@@ -47,7 +47,8 @@ export default {
   },
   data () {
     return {
-      projectId: '2018725-020B',
+      loading: false,
+      projectId: '',
       taskClass: 'T',
       isLimit: 'Y',
       tableData: []
@@ -56,11 +57,12 @@ export default {
   methods: {
   },
   mounted () {
-    let formData = new FormData()
-    formData.append('projectId', this.projectId)
-    formData.append('taskClass', this.taskClass)
-    formData.append('isLimit', this.isLimit)
-    this.$api.Wdrl.getClaimTaskList(formData).then(res => {
+    let params = {
+      projectId: this.projectId,
+      taskClass: this.taskClass,
+      isLimit: this.isLimit
+    }
+    this.$api.Wdrl.getClaimTaskList(params).then(res => {
       let result = res.data
       console.log(result.data)
       this.tableData = result.data

@@ -37,7 +37,7 @@
         </el-col>
       </el-row>
     </el-form>
-    <el-table :data="tableData" style="height: 100%" v-loading="loading" :header-cell-style="{background:'#1a74ee',color:'#f9fafc'}">
+    <el-table :data="tableData" style="height: 100%" v-loading="loading" border :header-cell-style="{background:'#1a74ee',color:'#f9fafc'}">
       <el-table-column prop="tid" label="任务/组编码" align="center"></el-table-column>
       <el-table-column prop="tname" label="任务/组名称" align="center"></el-table-column>
       <el-table-column prop="postTask" label="影响项" align="center"></el-table-column>
@@ -223,7 +223,7 @@ export default {
     }
   },
   mounted () {
-    this.$api.TaskCollection.getProject().then(res => {
+    this.$api.TaskCreate.getProject().then(res => {
       let result = res.data
       console.log(result.data)
       this.projectid = result.data

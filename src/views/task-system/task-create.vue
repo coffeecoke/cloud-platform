@@ -312,7 +312,7 @@ export default {
         // console.log('11111111111111111111111111')
         this.loading = true
         let params = {
-          pageNum: this.pageNum, // 请求的页码
+          pageNum: '1', // 请求的页码
           pageSize: this.pageSize
           // 每页显示条数
           // customerNumber: '999999'
@@ -335,7 +335,7 @@ export default {
       } else {
         this.loading = true
         let params = {
-          pageNum: this.pageNum, // 请求的页码
+          pageNum: '1', // 请求的页码
           pageSize: this.pageSize, // 每页显示条数
           customerNumber: '999999'
         }
@@ -364,7 +364,7 @@ export default {
     confirm () {
       this.loading1 = true
       let params = {
-        pageNum: this.pageNum, // 请求的页码
+        pageNum: '1', // 请求的页码
         pageSize: this.pageSize, // 每页显示条数
         projectId: this.form.projectId,
         projectName: this.form.projectName,
@@ -384,7 +384,7 @@ export default {
       this.$router.push({
         name: '任务发布',
         query: {
-          date: param
+          data: param
         }
 
       })
@@ -418,7 +418,7 @@ export default {
 }
 
 </script>
-<style lang="scss" scoped>
+<style lang="scss" scope>
   .el-row {
     margin-bottom: 30px;
     margin-top: 10px;
