@@ -1,7 +1,7 @@
 <template>
   <div class="login-wrapper">
     <div class="login-content clearfix">
-      <div class="logo"></div>
+      <div class="wx-logo"></div>
       <div class="welcome-img"></div>
       <div class="sys-maggen-box" id="wechat_container">
       </div>

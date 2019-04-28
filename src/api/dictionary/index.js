@@ -8,6 +8,15 @@ const dictionary = {
       url: '/dictionaries/getDictionaries',
       data: params
     })
+  },
+
+  // 获取树形字典
+  getDictionariesTree (params) {
+    return axios({
+      method: 'post',
+      url: '/dictionaries/getDictionariesTree',
+      data: params
+    })
   }
 }
 export default {

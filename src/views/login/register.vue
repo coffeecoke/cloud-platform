@@ -8,17 +8,18 @@
           <div class="in-certification_success">
             <div class="notice-icon"><i class="el-icon-success"></i></div>
              <p>审核中，请等待审核结束~</p>
-             <p>联系电话：110</p>
+             <p>联系电话：18410880234</p>
           </div>
+          <div class="back-wxCodePage" @click="toWxcodePage"><i class="el-icon-back" ></i> 返回扫码页 </div>
         </div>
         <div class="in-certification" v-if='isShowError'>
           <div class="in-certification_fail">
             <div class="notice-icon"><i class="el-icon-error"></i></div>
              <p>审核失败</p>
-             <p>联系电话：110</p>
+             <p>联系电话：18410880234</p>
           </div>
+          <div class="back-wxCodePage" @click="toWxcodePage"><i class="el-icon-back" ></i> 返回扫码页 </div>
         </div>
-        <div class="back-wxCodePage"><i class="el-icon-back" @click="toWxcodePage"></i> 返回扫码页 </div>
         <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" v-if="isShowForm" label-position="left" label-width="0px"
           class="demo-ruleForm login-container">
           <div class="identity-proving-text"><img :src="formTitleImg" alt=""></div>
@@ -50,10 +51,10 @@ export default {
   data () {
     return {
       logining: false,
-      isShowRegister: true, // 是否显示主页面内容
+      isShowRegister: false, // 是否显示主页面内容
       isShowForm: false, // 是否显示表单
       isShowInCert: false, // 是否显示审核中
-      isShowError: true, // 是否显示审核失败
+      isShowError: false, // 是否显示审核失败
       formTitleImg: require('@/assets/imgs/identity-proving.png'),
       ruleForm2: {
         userOrgNm: '',
@@ -88,8 +89,6 @@ export default {
     localStorage.setItem('wxCode', wxCode)
     this.$api.userInfo.submitWxCode({wxCode: wxCode}).then(res => { // 把code传给后台获取token
       let result = res.data
-      console.log('提交code~')
-      console.log(result)
       let { status, code } = result
       let { unionID } = result.data
       localStorage.setItem('unionID', unionID)

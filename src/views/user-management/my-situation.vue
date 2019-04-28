@@ -49,7 +49,7 @@ export default {
       },
       resume: {
         linkName: '继续完善',
-        link: '/1-1',
+        link: '/1-2',
         data: {
           name: '培训经历',
           value: 60
@@ -57,7 +57,7 @@ export default {
       },
       selfRatingView: {
         linkName: '继续完善',
-        link: '/1-1',
+        link: '/1-3',
         data: {
           name: '自我评价',
           value: 70
@@ -65,7 +65,7 @@ export default {
       },
       taskUndertaking: {
         linkName: '继续完善',
-        link: '/1-1',
+        link: '/1-4',
         data: {
           name: '任务承接',
           value: 80
@@ -73,7 +73,7 @@ export default {
       },
       externalProject: {
         linkName: '补充',
-        link: '/1-1',
+        link: '/1-5',
         data: {
           name: '外部项目',
           value: 90
@@ -81,7 +81,7 @@ export default {
       },
       resoftProject: {
         linkName: '补充',
-        link: '/1-1',
+        link: '/1-6',
         data: {
           name: '融鑫项目',
           value: 100

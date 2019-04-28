@@ -13,7 +13,7 @@ import TaskGroup from '@/views/task-system/task-group'
 import Mytodo from '@/views/task-system/my-todo'
 
 export default [{
-  path: 'taskSystem',
+  path: 'projectManager',
   component: TaskSystem,
   name: '项目管理',
   redirect: '/2-1',

@@ -3,16 +3,16 @@
     <template slot="boxHeaderTitle">业务能力</template>
     <template slot="boxBodyInner">
       <el-table :data="tableData" border style="width: 100%" v-loading="loading">
-        <el-table-column prop="businessCategory" label="业务类型">
+        <el-table-column prop="businessSkill" label="业务类型">
           <template slot-scope="scope">
             <template v-if="scope.row.edit">
-              <el-select v-model="scope.row.businessCategory" placeholder="请选择业务类型">
-                <el-option v-for="item in businessCategory" :key="item.dictCode" :label="item.dictName" :value="item.dictCode"
+              <el-select v-model="scope.row.businessSkill" placeholder="请选择业务类型">
+                <el-option v-for="item in businessSkill" :key="item.dictCode" :label="item.dictName" :value="item.dictCode"
                   :disabled="item.disabled">
                 </el-option>
               </el-select>
             </template>
-            <span v-else>{{ formatCategory(scope.row.businessCategory)}}</span>
+            <span v-else>{{ formatCategory(scope.row.businessSkill)}}</span>
           </template>
         </el-table-column>
         <el-table-column prop="usageTime" label="使用时间">
@@ -71,7 +71,7 @@ export default {
     return {
       isAddRow: true, // 保存上一条数据之后，才允许新增
       loading: false, // 数据加载的loading效果
-      businessCategory: [
+      businessSkill: [
         {
           dictCode: '1',
           dictName: '借款'
@@ -94,7 +94,7 @@ export default {
       ],
       list: {
         id: null, // id为空表示新增
-        businessCategory: '',
+        businessSkill: '',
         usageTime: '',
         masteryLevel: '',
         recentUsage: '',
@@ -102,7 +102,7 @@ export default {
       },
       tableData: [{
         id: '1', // id为空表示新增
-        businessCategory: '1',
+        businessSkill: '1',
         usageTime: '23月',
         masteryLevel: '1',
         recentUsage: '2014-09-08',
@@ -112,7 +112,7 @@ export default {
   },
   created () {
     let dictionaryObj = {
-      dict_code: [ 'businessCategory', 'masteryLevel' ]
+      dict_code: [ 'businessSkill', 'masteryLevel' ]
     }
     this.$api.dictionary.getDictionaries(dictionaryObj).then(res => {
       let result = res.data
@@ -120,7 +120,7 @@ export default {
       result.data.forEach(item => {
         Object.assign(dictionary, item)
       })
-      this.businessCategory = dictionary.businessCategory
+      this.businessSkill = dictionary.businessSkill
       this.masteryLevel = dictionary.masteryLevel
     })
 
@@ -139,7 +139,7 @@ export default {
   },
   methods: {
     formatCategory (value) {
-      let currObj = this.businessCategory.filter(obj => {
+      let currObj = this.businessSkill.filter(obj => {
         return obj.dictCode === value
       })
       return currObj.length > 0 ? currObj[0].dictName : ''

@@ -10,25 +10,25 @@
         <router-link tag="li" class="tab-item" to="/home">
           <a>我的首页</a>
         </router-link>
-        <router-link tag="li" class="tab-item" to="/knowledge" @click = 'servlesslogin("/rcdp/resoft/dispatchList")'>
+        <router-link tag="li" class="tab-item" to="/knowledge" @click = 'servlesslogin("/rcdp/resoft/cloudView?tabId=workRoom#page&systemId=dispatchList")'>
           <a href="javascript:void(0)">知识库</a>
         </router-link>
-        <router-link tag="li" class="tab-item" to="/taskSystem">
+        <router-link tag="li" class="tab-item" to="/projectManager">
           <a>项目管理</a>
         </router-link>
-        <li class="tab-item" @click = 'servlesslogin("/rcdp/resoft/projectStart-projectInit")'>
+        <li class="tab-item" @click = 'servlesslogin("/rcdp/resoft/cloudView?tabId=workRoom#page&systemId=projectStart-projectInit")'>
           <a href="javascript:void(0)">工作台</a>
         </li>
-        <li class="tab-item" @click = 'servlesslogin("/rcdp/resoft/productMaintain-productMaintain")'>
+        <li class="tab-item" @click = 'servlesslogin("/rcdp/resoft/cloudView?tabId=workRoom#page&systemId=productMaintain-productMaintain")'>
           <a href="javascript:void(0)">产品资料</a>
         </li>
-        <li class="tab-item" @click = 'servlesslogin("/rcdp/resoft/org")'>
+        <li class="tab-item" @click = 'servlesslogin("/rcdp/resoft/cloudView?tabId=workRoom#page&systemId=org")'>
           系统管理
         </li>
-         <router-link tag="li" class="tab-item" to="/personalManagement">
+         <router-link tag="li" class="tab-item" to="/partnerManager">
           <a>合伙人管理</a>
         </router-link>
-        <li class="tab-item" @click = 'servlesslogin("/rcdp/resoft/cloudEnv")'>
+        <li class="tab-item" @click = 'servlesslogin("/rcdp/resoft/cloudView?tabId=workRoom#page&systemId=cloudEnv")'>
           <a href="javascript:void(0)">云环境</a>
         </li>
         <!-- <router-link tag="li" class="tab-item" to="/qu-1">

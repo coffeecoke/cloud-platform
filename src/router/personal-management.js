@@ -20,7 +20,7 @@ import capabilityRatingModel from '@/views/personal-management/capability-rating
 // 人员费用计价模型
 import costPricingModel from '@/views/personal-management/cost-pricing-model'
 export default [{
-  path: '/personalManagement',
+  path: '/partnerManager',
   component: PersonalManagement,
   name: '合伙人管理',
   // redirect: '/nav1',
