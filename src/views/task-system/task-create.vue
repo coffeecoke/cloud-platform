@@ -220,6 +220,7 @@ export default {
     }
   },
   methods: {
+    // 承接的方法
     underTake (index, row) {
 
     },
@@ -233,9 +234,8 @@ export default {
       this.loading = true
       let params = {
         pageNum: this.pageNum, // 请求的页码
-        pageSize: this.pageSize, // 每页显示条数
-        customerNumber: this.customerNumber,
-        customerFullName: this.customerFullName
+        pageSize: this.pageSize // 每页显示条数
+
         // customerNumber: '999999'
       }
       this.$api.partner.getEnterprise(params).then(res => {
@@ -256,8 +256,10 @@ export default {
     },
     getTableList () {
       let params = {
-        pageNum: this.pageNum, // 请求的页码
-        pageSize: this.pageSize
+        pageNum: '1', // 请求的页码
+        pageSize: this.pageSize,
+        customerNumber: this.customerNumber,
+        customerFullName: this.customerFullName
         // 每页显示条数
         // customerNumber: '999999'
       }
@@ -267,6 +269,30 @@ export default {
         if (result.status === '1') {
           // console.log(result.data.list.length)
           this.EnterpriseTableData = result.data.list || []
+          this.total = result.data.total
+          this.currPage = result.data.pageNum
+        } else {
+          this.$message({
+            type: 'error',
+            message: '请求数据失败'
+          })
+        }
+      })
+    },
+    getTableList1 () {
+      this.loading = true
+      let params = {
+        pageNum: '1', // 请求的页码
+        pageSize: this.pageSize, // 每页显示条数
+        customerNumber: '999999',
+        name: this.name
+      }
+      this.$api.partner.getUserAll(params).then(res => {
+        let result = res.data
+        this.loading = false
+        if (result.status === '1') {
+          console.log(result.data.list.length)
+          this.PersonalTableData = result.data.list || []
           this.total = result.data.total
           this.currPage = result.data.pageNum
         } else {
@@ -289,6 +315,7 @@ export default {
         pageNum: this.pageNum, // 请求的页码
         pageSize: this.pageSize, // 每页显示条数
         customerNumber: '999999'
+        // name: this.name
       }
       this.$api.partner.getUserAll(params).then(res => {
         let result = res.data
@@ -314,6 +341,7 @@ export default {
         let params = {
           pageNum: '1', // 请求的页码
           pageSize: this.pageSize
+
           // 每页显示条数
           // customerNumber: '999999'
         }
@@ -338,6 +366,7 @@ export default {
           pageNum: '1', // 请求的页码
           pageSize: this.pageSize, // 每页显示条数
           customerNumber: '999999'
+
         }
         this.$api.partner.getUserAll(params).then(res => {
           let result = res.data

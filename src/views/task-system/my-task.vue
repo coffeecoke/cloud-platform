@@ -1,7 +1,7 @@
 <template>
   <div class="box-table">
     <el-form ref="form" :model="form" label-width="80px" label-position="top">
-      <el-row type="flex" justify="space-between">
+      <el-row type="flex" justify="flex-start" :gutter="18">
         <el-col :span="3">
           <el-autocomplete class="input1" v-model="form.projectId" :fetch-suggestions="querySearch" placeholder="项目编号"  clearable
             :trigger-on-focus="false" @select="handleSelect"></el-autocomplete>
@@ -12,45 +12,64 @@
         <el-col :span="3">
          <el-input placeholder="任务/组名称" class="input1" v-model="form.tname"  clearable></el-input>
         </el-col>
-        <el-col :span="3">
-          <el-select class="select1" v-model="form.taskClass" clearable placeholder="类型">
-            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
-          </el-select>
-        </el-col>
-        <el-col :span="3">
-          <el-select class="select1" v-model="form.effectDegree" clearable placeholder="影响度">
-            <el-option v-for="item in options1" :key="item.value1" :label="item.label1" :value="item.value1">
-            </el-option>
-          </el-select>
-        </el-col>
-        <el-col :span="3">
-          <el-select class="select1" v-model="form.dependencyDegree" clearable placeholder="依赖度">
-            <el-option v-for="item in options2" :key="item.value2" :label="item.label2" :value="item.value2">
-            </el-option>
-          </el-select>
-        </el-col>
 
-        <el-col :span="3">
+        <el-col :span="15">
           <div class="button">
             <el-button type="primary" style="float:right" round @click.native.prevent="confirm">查询</el-button>
           </div>
         </el-col>
       </el-row>
     </el-form>
-    <el-table :data="tableData" style="height: 100%" v-loading="loading" border :header-cell-style="{background:'#1a74ee',color:'#f9fafc'}">
-       <el-table-column prop="projectId" label="项目名称" align="center"></el-table-column>
-      <el-table-column prop="tid" label="任务/组编码" align="center"></el-table-column>
-      <el-table-column prop="tname" label="任务/组名称" align="center"></el-table-column>
-      <el-table-column prop="postTask" label="影响项" align="center"></el-table-column>
-      <el-table-column prop="effectDegree" label="影响度" align="center"></el-table-column>
-      <el-table-column prop="predecessorTask" label="依赖项" align="center"></el-table-column>
-      <el-table-column prop="dependencyDegree" label="依赖度" align="center"></el-table-column>
-      <el-table-column fixed="right" label="操作" align="center">
-        <template slot-scope="scope">
-          <el-button @click.native.prevent="taskCollection(scope.$index,scope.row)" type="text" icon="el-icon-sold-out">任务领取</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+    <el-table :data="tableData" border style="width: 100%" v-loading="loading">
+        <el-table-column prop="project" label="项目信息">
+          <template slot-scope="scope2">
+            <div>
+              <p>{{scope2.row.projectId}}</p>
+              <p>{{scope2.row.projectName}}</p>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column prop="taskName" label="任务名称" align="center">
+        </el-table-column>
+        <el-table-column prop="taskStatus" label="任务状态" align="center">
+        </el-table-column>
+        <el-table-column prop="mastery" label="任务时间" align="center">
+          <template slot-scope="scope1">
+            <div>
+              计划开始时间：<p>{{scope1.row.planStartTime}}</p>
+              实际开始时间：<p>{{scope1.row.actualStartTime}}</p>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column prop="actualEndTime" label="任务结束时间" align="center">
+        </el-table-column>
+        <el-table-column prop="recentUsage" label="预警信息" align="center">
+        </el-table-column>
+        <el-table-column prop="recentUsage" label="标准工时" align="center">
+        </el-table-column>
+        <el-table-column prop="recentUsage" label="成果矫正" align="center">
+        </el-table-column>
+        <el-table-column prop="recentUsage" label="评价" width="170px" align="center">
+          <template >
+            <span>效率</span>
+            <el-rate v-model="value" disabled show-score text-color="#ff9900" score-template="{value}">
+            </el-rate>
+            <span>质量</span>
+            <el-rate v-model="value" disabled show-score text-color="#ff9900" score-template="{value}">
+            </el-rate>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" align="center">
+          <template slot-scope="scope">
+            <div class="btn-icons-group">
+              <!-- <i class="edit el-icon-edit" @click="scope.row.edit=true;isAddRow=false">完成任务</i>
+              <i class="delect el-icon-delete" @click="CancelTask(scope.$index, scope.row)">取消任务</i> -->
+               <el-button @click.native.prevent="taskCollection(scope.$index,scope.row)" type="text" icon="el-icon-edit">完成任务</el-button>
+                <el-button @click.native.prevent="CancelTask(scope.$index,scope.row)" type="text" icon="el-icon-delete">取消任务</el-button>
+            </div>
+          </template>
+        </el-table-column>
+      </el-table>
      <div class="pagination-wrap">
 
       <el-pagination
@@ -70,6 +89,8 @@
 export default {
   data () {
     return {
+      value: 1,
+
       // 页面跳转带的参数，不删
       data: '',
       loading: false,
@@ -88,51 +109,51 @@ export default {
       },
       formLabelWidth: '72px',
       // select选择框
-      options: [{
-        value: 'T',
-        label: '任务'
-      }, {
-        value: 'G',
-        label: '任务组'
-      }],
-      options1: [{
-        value1: '0',
-        label1: '无影响'
-      }, {
-        value1: '1',
-        label1: '一级（影响项<=2个）'
-      }, {
-        value1: '2',
-        label1: '二级（影响项<=5个）'
-      }, {
-        value1: '3',
-        label1: '三级（影响项<=8个）'
-      }, {
-        value1: '4',
-        label1: '四级（影响项<=12个）'
-      }, {
-        value1: '5',
-        label1: '五级（影响项>12个）'
-      }],
-      options2: [{
-        value2: '0',
-        label2: '无依赖'
-      }, {
-        value2: '1',
-        label2: '一级（依赖项<=2个）'
-      }, {
-        value2: '2',
-        label2: '二级（依赖项<=5个）'
-      }, {
-        value2: '3',
-        label2: '三级（依赖项<=8个）'
-      }, {
-        value2: '4',
-        label2: '四级（依赖项<=12个）'
-      }, {
-        value2: '5',
-        label2: '五级（依赖项>12个）'
-      }],
+      // options: [{
+      //   value: 'T',
+      //   label: '任务'
+      // }, {
+      //   value: 'G',
+      //   label: '任务组'
+      // }],
+      // options1: [{
+      //   value1: '0',
+      //   label1: '无影响'
+      // }, {
+      //   value1: '1',
+      //   label1: '一级（影响项<=2个）'
+      // }, {
+      //   value1: '2',
+      //   label1: '二级（影响项<=5个）'
+      // }, {
+      //   value1: '3',
+      //   label1: '三级（影响项<=8个）'
+      // }, {
+      //   value1: '4',
+      //   label1: '四级（影响项<=12个）'
+      // }, {
+      //   value1: '5',
+      //   label1: '五级（影响项>12个）'
+      // }],
+      // options2: [{
+      //   value2: '0',
+      //   label2: '无依赖'
+      // }, {
+      //   value2: '1',
+      //   label2: '一级（依赖项<=2个）'
+      // }, {
+      //   value2: '2',
+      //   label2: '二级（依赖项<=5个）'
+      // }, {
+      //   value2: '3',
+      //   label2: '三级（依赖项<=8个）'
+      // }, {
+      //   value2: '4',
+      //   label2: '四级（依赖项<=12个）'
+      // }, {
+      //   value2: '5',
+      //   label2: '五级（依赖项>12个）'
+      // }],
       tableData: [{
         tid: '',
         tname: '',

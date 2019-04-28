@@ -17,6 +17,8 @@ import Resoft from '@/views/task-system/resoft-undertake'
 import Thirdparty from '@/views/task-system/third-party'
 // 融鑫承接
 import PersonUnderTake from '@/views/task-system/person-undertake'
+// 融鑫承接
+import MyTask from '@/views/task-system/my-task'
 
 export default [{
   path: 'projectManager',
@@ -68,6 +70,11 @@ export default [{
       path: '/2-9',
       name: '个人承接',
       component: PersonUnderTake
+    },
+    {
+      path: '/2-10',
+      name: '我的任务',
+      component: MyTask
     }
   ]
 }]

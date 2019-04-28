@@ -52,7 +52,7 @@
             <el-rate v-model="value" disabled show-score text-color="#ff9900" score-template="{value}">
             </el-rate>
             <span>质量</span>
-            <el-rate v-model="value" disabled show-score text-color="#ff9900" score-template="{value}">
+            <el-rate v-model="value1" disabled show-score text-color="#ff9900" score-template="{value1}">
             </el-rate>
           </template>
         </el-table-column>
@@ -65,6 +65,7 @@
           </template>
         </el-table-column>
       </el-table>
+      <div class="add-row" @click.prevent="myTask()"><span>+ 更多</span></div>
     </template>
   </box-wrap>
 </template>
@@ -77,9 +78,10 @@ export default {
   },
   data () {
     return {
+      isLimit: 'Y',
       loading: false,
-      value: 2.5,
-      value1: 3.8,
+      value: 1,
+      value1: 1,
 
       tableData: []
     }
@@ -114,11 +116,20 @@ export default {
           message: '取消领取'
         })
       })
+    },
+    myTask () {
+      this.$router.push({
+        name: '我的任务',
+        query: {
+          data: '1'
+        }
+
+      })
     }
 
   },
   mounted () {
-    this.$api.Wdrw.getAllMyTask().then(res => {
+    this.$api.Wdrw.getAllMyTask({isLimit: this.isLimit}).then(res => {
       let result = res.data
       console.log(result.data)
       this.tableData = result.data
