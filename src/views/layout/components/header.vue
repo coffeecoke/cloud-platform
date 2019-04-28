@@ -2,7 +2,7 @@
   <div class="header">
     <div class="logo"></div>
     <div class="top-nav">
-      <ul class="top-nav__list">
+      <ul class="top-nav__list" ref="topNav">
         <!-- <li class="nav-item" v-for="(item, i) in topNavs" :key="item.id" :class="{selected:select == i}" @click="clickLi(i)">
           {{item.name}}
         </li> -->
@@ -10,34 +10,34 @@
         <router-link tag="li" class="tab-item" to="/home">
           <a>我的首页</a>
         </router-link>
-        <router-link tag="li" class="tab-item" to="/knowledge">
-          <a>知识库</a>
+        <router-link tag="li" class="tab-item" to="/knowledge" @click = 'servlesslogin("/rcdp/resoft/dispatchList")'>
+          <a href="javascript:void(0)">知识库</a>
         </router-link>
         <router-link tag="li" class="tab-item" to="/taskSystem">
           <a>项目管理</a>
         </router-link>
-        <li class="tab-item">
-          <a>工作台</a>
+        <li class="tab-item" @click = 'servlesslogin("/rcdp/resoft/projectStart-projectInit")'>
+          <a href="javascript:void(0)">工作台</a>
         </li>
-        <li class="tab-item">
-          <a>产品资料</a>
+        <li class="tab-item" @click = 'servlesslogin("/rcdp/resoft/productMaintain-productMaintain")'>
+          <a href="javascript:void(0)">产品资料</a>
         </li>
-        <li class="tab-item">
-          <a>系统管理</a>
+        <li class="tab-item" @click = 'servlesslogin("/rcdp/resoft/org")'>
+          系统管理
         </li>
          <router-link tag="li" class="tab-item" to="/personalManagement">
           <a>合伙人管理</a>
         </router-link>
-        <li class="tab-item">
-          <a>云环境</a>
+        <li class="tab-item" @click = 'servlesslogin("/rcdp/resoft/cloudEnv")'>
+          <a href="javascript:void(0)">云环境</a>
         </li>
         <!-- <router-link tag="li" class="tab-item" to="/qu-1">
           <a>调查问卷</a>
         </router-link> -->
       </ul>
     </div>
-    <div class="user-name">
-      欢迎您 <span @click = 'toUserManagement'>[{{userName}}]</span>
+    <div class="right-options">
+      欢迎您 <span @click = 'toUserManagement' class="user-name">[{{userName}}]</span>
       <span class="logout" @click="logout">登出</span>
     </div>
   </div>
@@ -48,11 +48,15 @@ export default {
   data () {
     return {
       activeName: 'second',
-      userName: '吴超亭',
-      select: 0
+      userName: '',
+      select: 0,
+      origin: window.location.origin
     }
   },
   activated () {},
+  mounted () {
+    this.userName = window.localStorage.getItem('userName') || '亲~'
+  },
   methods: {
     handleClick (tab, event) {
       console.log(tab, event)
@@ -62,10 +66,24 @@ export default {
     },
     logout () {
       localStorage.setItem('token', '')
-      this.$router.push({ path: '/login' })
+      if (window.location.origin === 'http://cloud.chinaresoft.com') {
+        this.$router.push({ path: '/wxCodePage' })
+      } else {
+        this.$router.push({ path: '/login' })
+      }
     },
     toUserManagement () {
       this.$router.push({ path: '/userManagement' })
+    },
+    servlesslogin (link) {
+      this.$api.userInfo.servlesslogin({
+        uid: localStorage.getItem('userName'),
+        token: localStorage.getItem('token')
+      }).then(res => {
+        let result = res.data
+        console.log(result)
+        window.location.href = this.origin + link
+      })
     }
   }
 }
@@ -75,6 +93,8 @@ export default {
   $baseHeight:60px;
 
   .header {
+    width:100%;
+    overflow:hidden;
     height: 60px;
     position: relative;
 
@@ -109,7 +129,7 @@ export default {
           color:#fff;
           text-decoration: none;
         }
-        &.router-link-active {
+        &.router-link-exact-active {
           color: #fff;
 
           &:after {
@@ -125,10 +145,13 @@ export default {
       }
     }
   }
-  .user-name {
+  .right-options {
       float: right;
       color: #fff;
       line-height: $baseHeight;
+      .user-name {
+        cursor: pointer;
+      }
   }
   .logout {
     margin-left:20px;

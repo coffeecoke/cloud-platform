@@ -107,7 +107,7 @@
             </el-col>
           </el-row>
         </el-form>
-        <el-table :data="tableData3" :header-cell-style="{background:'#1a74ee',color:'#f9fafc'}">
+        <el-table :data="tableData3" v-loading="loading" :header-cell-style="{background:'#1a74ee',color:'#f9fafc'}">
           <el-table-column prop="suggestOrder" label="建议顺序" align="center"></el-table-column>
           <el-table-column prop="actualOrder" label="实际顺序" align="center"></el-table-column>
           <el-table-column prop="taskName" label="任务名称" align="center"></el-table-column>
@@ -120,6 +120,17 @@
             </template>
           </el-table-column>
         </el-table>
+          <div class="pagination-wrap">
+      <el-pagination
+      background
+      layout="prev, pager, next"
+      :page-size= "pageSize"
+      :total="total"
+      @current-change = "handleCurrChange"
+      @size-change = "handleSizeChange"
+      >
+      </el-pagination>
+    </div>
       </el-col>
     </el-row>
   </div>
@@ -132,6 +143,11 @@ export default {
   name: 'slot-tree',
   data () {
     return {
+      loading: false,
+      currPage: 1, // 当前页
+      total: 1, // 总条数
+      pageSize: 10, // 一页显示多少条
+      pageNum: 1, // 需要查询的页码
       maxexpandId: api.maxexpandId, // 新增节点开始id
       dialogTimeandCondition: false,
       // 结构调整级联选择器
@@ -185,6 +201,15 @@ export default {
     }
   },
   methods: {
+    // 条目改变时
+    handleSizeChange (value) {
+      // console.log(currPage)
+    },
+    // 点击页码改变时
+    handleCurrChange (value) {
+      this.pageNum = value
+      this.confirm1()
+    },
     handleSelect (item) {
       console.log(item)
     },
@@ -238,33 +263,46 @@ export default {
       // this.addEventForm.taskGroupParentName = data.label
       // console.log(this.addEventForm.taskGroupParentName)
       if (!(data.children && data.children.length !== 0)) {
-        let formData = new FormData()
-        this.form.taskGroupId = data.id
-        Object.keys(this.form).forEach(key => {
-          formData.append(key, this.form[key])
-        })
-        this.$api.TaskGroup.getTaskList(formData).then(res => {
+        let params = {
+          pageNum: this.pageNum, // 请求的页码
+          pageSize: this.pageSize, // 每页显示条数
+          projectId: this.form.projectId,
+          taskId: this.form.taskId,
+          taskName: this.form.taskName,
+          taskTarget: this.form.taskTarget,
+          predecessorTask: this.form.predecessorTask,
+          taskGroupId: this.form.taskGroupId
+        }
+        this.$api.TaskGroup.getTaskList(params).then(res => {
           var result = res.data
-          console.log(result.data)
-          this.tableData3 = result.data
+          this.loading = false
+          // this.tableData = result.data
+          this.tableData3 = result.data.list || []
+          this.total = result.data.total
+          this.currPage = result.data.pageNum
         })
       }
     },
     confirm1 () {
       // this.addEventForm.taskGroupParentName = data.label
       // console.log(this.addEventForm.taskGroupParentName)
-      let formData = new FormData()
-      Object.keys(this.form).forEach(key => {
-        console.log(key)
-        formData.append(key, this.form[key])
-      })
-      // console.log(formData.get('taskGroupId'))
-      // formData.append('taskGroupId', this.form.taskGroupId)
-
-      this.$api.TaskGroup.getTaskList(formData).then(res => {
+      let params = {
+        pageNum: this.pageNum, // 请求的页码
+        pageSize: this.pageSize, // 每页显示条数
+        projectId: this.form.projectId,
+        taskId: this.form.taskId,
+        taskName: this.form.taskName,
+        taskTarget: this.form.taskTarget,
+        predecessorTask: this.form.predecessorTask,
+        taskGroupId: this.form.taskGroupId
+      }
+      this.$api.TaskGroup.getTaskList(params).then(res => {
         var result = res.data
-        console.log(result.data)
-        this.tableData3 = result.data
+        this.loading = false
+        // this.tableData = result.data
+        this.tableData3 = result.data.list || []
+        this.total = result.data.total
+        this.currPage = result.data.pageNum
       })
     },
     /* 渲染函数 */
@@ -511,7 +549,7 @@ export default {
 
 </script>
 
-<style>
+<style lang="scss" scoped>
   .slot-tree {
     width: 100%;
     height: 100%;
@@ -560,6 +598,12 @@ export default {
     width: 90%;
     border-radius: 8px;
     border: 1px solid #DCDFE6;
+  }
+   .pagination-wrap {
+    padding: 20px;
+       .el-pagination {
+      float: right;
+     }
   }
 
 </style>

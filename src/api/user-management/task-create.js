@@ -5,18 +5,18 @@ const TaskCreate = {
   getProject () {
     return axios({
       method: 'post',
-      url: '/taskClaim/getProject'
+      url: '/taskCount/getProject'
       // data: params
     })
   },
-  //  任务功能
-  claim (params) {
-    return axios({
-      method: 'post',
-      url: '/taskClaim/claim',
-      data: params
-    })
-  },
+  // //  任务功能
+  // claim (params) {
+  //   return axios({
+  //     method: 'post',
+  //     url: '/taskClaim/claim',
+  //     data: params
+  //   })
+  // },
   // 任务体系查询
   getCountTaskList (params) {
     return axios({

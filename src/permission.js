@@ -7,11 +7,11 @@ import 'nprogress/nprogress.css' // progress bar style
 
 NProgress.configure({ showSpinner: false })// NProgress configuration
 
-const whiteList = ['/login'] // 不重定向白名单
+const whiteList = ['/login', '/wxCodePage', '/register'] // 不重定向白名单
 router.beforeEach((to, from, next) => {
   NProgress.start()
   if (localStorage.getItem('token')) {
-    if (to.path === '/login') {
+    if (to.path === '/wxCodePage' || to.path === '/login') {
       next({ path: '/' })
       NProgress.done() //
     } else {
@@ -34,7 +34,12 @@ router.beforeEach((to, from, next) => {
       next()
     } else {
       // next(`/login?redirect=${to.path}`) // 否则全部重定向到登录页
-      next({path: `/login?redirect=${to.path}`}) // 否则全部重定向到登录页
+      // next({path: `/wxCodePage?redirect=${to.path}`})
+      if (window.location.origin === 'http://cloud.chinaresoft.com') {
+        next({path: `/wxCodePage?redirect=${to.path}`}) // 否则全部重定向到登录页
+      } else {
+        next({path: `/login?redirect=${to.path}`}) // 否则全部重定向到登录页
+      }
       NProgress.done()
     }
   }

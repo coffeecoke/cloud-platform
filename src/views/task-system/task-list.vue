@@ -34,6 +34,7 @@
       style="height: 100%"
       @selection-change="handleSelectionChange"
       :header-cell-style="{background:'#1a74ee',color:'#f9fafc'}"
+      v-loading="loading"
       >
       <el-table-column  type="selection"  width="55"  align="center"></el-table-column>
       <el-table-column prop="project" label="项目信息" width="200px"  align="center">
@@ -67,6 +68,17 @@
             </template>
           </el-table-column>
 </el-table>
+  <div class="pagination-wrap">
+      <el-pagination
+      background
+      layout="prev, pager, next"
+      :page-size= "pageSize"
+      :total="total"
+      @current-change = "handleCurrChange"
+      @size-change = "handleSizeChange"
+      >
+      </el-pagination>
+    </div>
     <!--  设置按钮 -->
     <el-dialog title="设置所属人" :visible.sync="dialogPersonVisible" center>
     <el-tabs v-model="activeName" @tab-click="setDepartment" type="border-card">
@@ -82,7 +94,18 @@
       <el-button @click="allocation(scope.row)" type="text" >分配</el-button>
       </template>
     </el-table-column>
-    </el-table></el-tab-pane>
+    </el-table>
+     <div class="pagination-wrap">
+      <el-pagination
+      background
+      layout="prev, pager, next"
+      :page-size= "pageSize"
+      :total="total"
+      @current-change = "handleCurrChange1"
+      @size-change = "handleSizeChange1"
+      >
+      </el-pagination>
+    </div></el-tab-pane>
 
     <el-tab-pane label="上级部门" name="H" v-model="department" ><el-table
       :data="tableData3"
@@ -96,7 +119,17 @@
       <el-button @click="allocation(scope.row)" type="text" >分配</el-button>
       </template>
     </el-table-column>
-    </el-table></el-tab-pane>
+    </el-table>  <div class="pagination-wrap">
+      <el-pagination
+      background
+      layout="prev, pager, next"
+      :page-size= "pageSize"
+      :total="total"
+      @current-change = "handleCurrChange2"
+      @size-change = "handleSizeChange2"
+      >
+      </el-pagination>
+    </div></el-tab-pane>
 
     <el-tab-pane label="公司" name="C" v-model="department" ><el-table
       :data="tableData3"
@@ -108,10 +141,19 @@
       <el-table-column  fixed="right"  label="操作" align="center">
       <el-button @click="allocation(scope.row)" type="text" >分配</el-button>
     </el-table-column>
-    </el-table></el-tab-pane>
+    </el-table>  <div class="pagination-wrap">
+      <el-pagination
+      background
+      layout="prev, pager, next"
+      :page-size= "pageSize"
+      :total="total"
+      @current-change = "handleCurrChange3"
+      @size-change = "handleSizeChange3"
+      >
+      </el-pagination>
+    </div></el-tab-pane>
   </el-tabs>
     </el-dialog>
-
     <el-dialog  title="设置属组" :visible.sync="dialogGroupVisible"   width="27%"  right>
     请选择属组：
      <el-cascader
@@ -151,13 +193,18 @@
 export default {
   data () {
     return {
+      loading: false,
+      currPage: 1, // 当前页
+      total: 1, // 总条数
+      pageSize: 10, // 一页显示多少条
+      pageNum: 1, // 需要查询的页码
       formp: {
         planStartTime: '',
         planedProjectDuration: ''
       },
       // 设置所属人
       tableData3: [],
-      department: '',
+      department: 'T',
       multipleSelection: [],
       // 任务查询form表单
       form: {
@@ -186,6 +233,58 @@ export default {
   },
 
   methods: {
+    // 条目改变时
+    handleSizeChange (value) {
+      // console.log(currPage)
+    },
+    // 点击页码改变时
+    handleCurrChange (value) {
+      this.pageNum = value
+      this.loading = true
+      let params = {
+        pageNum: this.pageNum, // 请求的页码
+        pageSize: this.pageSize, // 每页显示条数
+        projectId: this.form.projectId,
+        taskId: this.form.taskId,
+        taskName: this.form.taskName,
+        taskTarget: this.form.taskTarget,
+        taskGroupId: this.form.taskGroupId
+      }
+      this.$api.TaskList.getTaskList(params).then(res => {
+        var result = res.data
+        this.loading = false
+        this.tableData = result.data.list || []
+        this.total = result.data.total
+        this.currPage = result.data.pageNum
+      })
+    },
+    // 条目改变时
+    handleSizeChange1 (value) {
+      // console.log(currPage)
+    },
+    // 点击页码改变时
+    handleCurrChange1 (value) {
+      this.pageNum = value
+      this.setDepartment()
+    },
+    // 条目改变时
+    handleSizeChange2 (value) {
+      // console.log(currPage)
+    },
+    // 点击页码改变时
+    handleCurrChange2 (value) {
+      this.pageNum = value
+      this.setDepartment()
+    },
+    // 条目改变时
+    handleSizeChange3 (value) {
+      // console.log(currPage)
+    },
+    // 点击页码改变时
+    handleCurrChange3 (value) {
+      this.pageNum = value
+      this.setDepartment()
+    },
     // 设置任务计划
     setTaskPlan () {
       if (this.multipleSelection && this.multipleSelection.length !== 0) {
@@ -204,16 +303,22 @@ export default {
         var result = res.data
         if (result.status === '1') {
           this.dialogSetTaskPlanVisible = false
-          let formData = new FormData()
-          // this.form.taskGroupId = data.id
-          Object.keys(this.form).forEach(key => {
-            console.log(key)
-            formData.append(key, this.form[key])
-          })
-          this.$api.TaskList.getTaskList(formData).then(res => {
-            var result1 = res.data
-            console.log(result1.data)
-            this.tableData = result1.data
+          this.loading = true
+          let params = {
+            pageNum: this.pageNum, // 请求的页码
+            pageSize: this.pageSize, // 每页显示条数
+            projectId: this.form.projectId,
+            taskId: this.form.taskId,
+            taskName: this.form.taskName,
+            taskTarget: this.form.taskTarget,
+            taskGroupId: this.form.taskGroupId
+          }
+          this.$api.TaskList.getTaskList(params).then(res => {
+            var result = res.data
+            this.loading = false
+            this.tableData = result.data.list || []
+            this.total = result.data.total
+            this.currPage = result.data.pageNum
           })
           this.$message({
             type: 'success',
@@ -234,16 +339,22 @@ export default {
         this.$api.TaskList.acceptTask({projectId: row.projectId, taskId: row.taskId}).then(res => {
           var result = res.data
           if (result.status === '1') {
-            let formData = new FormData()
-            // this.form.taskGroupId = data.id
-            Object.keys(this.form).forEach(key => {
-              console.log(key)
-              formData.append(key, this.form[key])
-            })
-            this.$api.TaskList.getTaskList(formData).then(res => {
-              var result1 = res.data
-              console.log(result1.data)
-              this.tableData = result1.data
+            this.loading = true
+            let params = {
+              pageNum: this.pageNum, // 请求的页码
+              pageSize: this.pageSize, // 每页显示条数
+              projectId: this.form.projectId,
+              taskId: this.form.taskId,
+              taskName: this.form.taskName,
+              taskTarget: this.form.taskTarget,
+              taskGroupId: this.form.taskGroupId
+            }
+            this.$api.TaskList.getTaskList(params).then(res => {
+              var result = res.data
+              this.loading = false
+              this.tableData = result.data.list || []
+              this.total = result.data.total
+              this.currPage = result.data.pageNum
             })
             this.$message({
               type: 'success',
@@ -270,16 +381,22 @@ export default {
         this.$api.TaskList.auditTask({projectId: row.projectId, taskId: row.taskId}).then(res => {
           var result = res.data
           if (result.status === '1') {
-            let formData = new FormData()
-            // this.form.taskGroupId = data.id
-            Object.keys(this.form).forEach(key => {
-              console.log(key)
-              formData.append(key, this.form[key])
-            })
-            this.$api.TaskList.getTaskList(formData).then(res => {
-              var result1 = res.data
-              console.log(result1.data)
-              this.tableData = result1.data
+            this.loading = true
+            let params = {
+              pageNum: this.pageNum, // 请求的页码
+              pageSize: this.pageSize, // 每页显示条数
+              projectId: this.form.projectId,
+              taskId: this.form.taskId,
+              taskName: this.form.taskName,
+              taskTarget: this.form.taskTarget,
+              taskGroupId: this.form.taskGroupId
+            }
+            this.$api.TaskList.getTaskList(params).then(res => {
+              var result = res.data
+              this.loading = false
+              this.tableData = result.data.list || []
+              this.total = result.data.total
+              this.currPage = result.data.pageNum
             })
             this.$message({
               type: 'success',
@@ -297,12 +414,20 @@ export default {
       })
     },
     setDepartment (tab, event) {
+      this.loading = true
+      let params = {
+        pageNum: this.pageNum, // 请求的页码
+        pageSize: this.pageSize, // 每页显示条数
+        department: tab.name
+      }
       console.log(tab.name)
       this.dialogPersonVisible = true
-      this.$api.TaskList.getTaskPersonList({department: tab.name}).then(res => {
+      this.$api.TaskList.getTaskPersonList(params).then(res => {
         var result = res.data
-        console.log(result.data)
-        this.tableData3 = result.data
+        this.loading = false
+        this.tableData3 = result.data.list || []
+        this.total = result.data.total
+        this.currPage = result.data.pageNum
       })
     },
     // 标签页下事件
@@ -311,15 +436,22 @@ export default {
     // },
     // 确定按钮
     confirm () {
-      let formData = new FormData()
-      Object.keys(this.form).forEach(key => {
-        console.log(key)
-        formData.append(key, this.form[key])
-      })
-      this.$api.TaskList.getTaskList(formData).then(res => {
+      this.loading = true
+      let params = {
+        pageNum: '1', // 请求的页码
+        pageSize: this.pageSize, // 每页显示条数
+        projectId: this.form.projectId,
+        taskId: this.form.taskId,
+        taskName: this.form.taskName,
+        taskTarget: this.form.taskTarget,
+        taskGroupId: this.form.taskGroupId
+      }
+      this.$api.TaskList.getTaskList(params).then(res => {
         var result = res.data
-        console.log(result.data)
-        this.tableData = result.data
+        this.loading = false
+        this.tableData = result.data.list || []
+        this.total = result.data.total
+        this.currPage = result.data.pageNum
       })
     },
     handchange (value) {
@@ -328,11 +460,21 @@ export default {
     },
     setTaskPerson () {
       if (this.multipleSelection && this.multipleSelection.length !== 0) {
+        this.loading = true
         this.dialogPersonVisible = true
-        this.$api.TaskList.getTaskPersonList({department: 'T'}).then(res => {
+        let params = {
+          pageNum: this.pageNum, // 请求的页码
+          pageSize: this.pageSize, // 每页显示条数
+          department: this.department
+
+        }
+        this.$api.TaskList.getTaskPersonList(params).then(res => {
           var result = res.data
-          console.log(result.data)
-          this.tableData3 = result.data
+          this.loading = false
+          // this.tableData = result.data
+          this.tableData3 = result.data.list || []
+          this.total = result.data.total
+          this.currPage = result.data.pageNum
         })
       } else {
         this.$message({
@@ -367,16 +509,22 @@ export default {
         var result = res.data
         if (result.status === '1') {
           this.dialogPersonVisible = false
-          let formData = new FormData()
-          // this.form.taskGroupId = data.id
-          Object.keys(this.form).forEach(key => {
-            console.log(key)
-            formData.append(key, this.form[key])
-          })
-          this.$api.TaskList.getTaskList(formData).then(res => {
+          this.loading = true
+          let params = {
+            pageNum: this.pageNum, // 请求的页码
+            pageSize: this.pageSize, // 每页显示条数
+            projectId: this.form.projectId,
+            taskId: this.form.taskId,
+            taskName: this.form.taskName,
+            taskTarget: this.form.taskTarget,
+            taskGroupId: this.form.taskGroupId
+          }
+          this.$api.TaskList.getTaskList(params).then(res => {
             var result = res.data
-            console.log(result.data)
-            this.tableData = result.data
+            this.loading = false
+            this.tableData = result.data.list || []
+            this.total = result.data.total
+            this.currPage = result.data.pageNum
           })
           // console.log(data.id)
           // this.confirm()
@@ -398,16 +546,22 @@ export default {
         var result = res.data
         if (result.status === '1') {
           this.dialogGroupVisible = false
-          let formData = new FormData()
-          // this.form.taskGroupId = data.id
-          Object.keys(this.form).forEach(key => {
-            console.log(key)
-            formData.append(key, this.form[key])
-          })
-          this.$api.TaskList.getTaskList(formData).then(res => {
+          this.loading = true
+          let params = {
+            pageNum: this.pageNum, // 请求的页码
+            pageSize: this.pageSize, // 每页显示条数
+            projectId: this.form.projectId,
+            taskId: this.form.taskId,
+            taskName: this.form.taskName,
+            taskTarget: this.form.taskTarget,
+            taskGroupId: this.form.taskGroupId
+          }
+          this.$api.TaskList.getTaskList(params).then(res => {
             var result = res.data
-            console.log(result.data)
-            this.tableData = result.data
+            this.loading = false
+            this.tableData = result.data.list || []
+            this.total = result.data.total
+            this.currPage = result.data.pageNum
           })
           // console.log(data.id)
           // this.confirm()
@@ -488,4 +642,11 @@ export default {
    background: #f0f3f8;
       border-radius: 8px;
 }
+  .pagination-wrap {
+    padding: 20px;
+    .el-pagination {
+      float: right;
+    }
+  }
+
 </style>

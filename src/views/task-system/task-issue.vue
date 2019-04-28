@@ -39,7 +39,7 @@
         </el-col>
       </el-row>
     </el-form>
-    <el-table :data="tableData" style="height: 100%" :header-cell-style="{background:'#1a74ee',color:'#f9fafc'}">
+    <el-table :data="tableData" style="height: 100%"  v-loading="loading" :header-cell-style="{background:'#1a74ee',color:'#f9fafc'}">
       <el-table-column prop="tid" label="任务/组编码" align="center"></el-table-column>
       <el-table-column prop="tname" label="任务/组名称" align="center"></el-table-column>
       <el-table-column prop="postTask" label="影响项" align="center"></el-table-column>
@@ -52,6 +52,17 @@
         </template>
       </el-table-column>
     </el-table>
+    <div class="pagination-wrap">
+      <el-pagination
+      background
+      layout="prev, pager, next"
+      :page-size= "pageSize"
+      :total="total"
+      @current-change = "handleCurrChange"
+      @size-change = "handleSizeChange"
+      >
+      </el-pagination>
+    </div>
 
     <el-dialog title="任务发布设置" :visible.sync="dialogTimeandCondition" width="40%" center>
       <div class="block">
@@ -107,6 +118,11 @@
 export default {
   data () {
     return {
+      loading: false,
+      currPage: 1, // 当前页
+      total: 1, // 总条数
+      pageSize: 10, // 一页显示多少条
+      pageNum: 1, // 需要查询的页码
       forma: {
         taskClaimPeriod: '',
         taskBasePrice: ''
@@ -117,7 +133,6 @@ export default {
       price: '',
       isAddRow: true,
       value7: '',
-      loading: true, // 数据加载的loading效果
       dialogTimeandCondition: false,
       projectid: [],
       taskcode: [],
@@ -192,6 +207,34 @@ export default {
     }
   },
   methods: {
+    // 条目改变时
+    handleSizeChange (value) {
+      // console.log(currPage)
+    },
+    // 点击页码改变时
+    handleCurrChange (value) {
+      this.pageNum = value
+      this.loading = true
+      let params = {
+        pageNum: this.pageNum, // 请求的页码
+        pageSize: this.pageSize, // 每页显示条数
+        projectId: this.form.projectId,
+        tid: this.form.tid,
+        tname: this.form.tname,
+        taskClass: this.form.taskClass,
+        effectDegree: this.form.effectDegree,
+        dependencyDegree: this.form.dependencyDegree
+      }
+      this.$api.taskIssue.getPublishTaskList(params).then(res => {
+        var result = res.data
+        console.log(result.data)
+        this.loading = false
+        // this.tableData = result.data
+        this.tableData = result.data.list || []
+        this.total = result.data.total
+        this.currPage = result.data.pageNum
+      })
+    },
     // handleChange (value) {
     //   // console.log(value[value.length - 1])
     //   // this.allData = Object.assign({taskBasePrice: this.forma.taskBasePrice}, {planStartTime: this.forma.planStartTime}, {Row: this.Row})
@@ -229,15 +272,25 @@ export default {
     },
     // 查询
     confirm () {
-      let formData = new FormData()
-      Object.keys(this.form).forEach(key => {
-        console.log(key)
-        formData.append(key, this.form[key])
-      })
-      this.$api.taskIssue.getPublishTaskList(formData).then(res => {
+      this.loading = true
+      let params = {
+        pageNum: '1', // 请求的页码
+        pageSize: this.pageSize, // 每页显示条数
+        projectId: this.form.projectId,
+        tid: this.form.tid,
+        tname: this.form.tname,
+        taskClass: this.form.taskClass,
+        effectDegree: this.form.effectDegree,
+        dependencyDegree: this.form.dependencyDegree
+      }
+      this.$api.taskIssue.getPublishTaskList(params).then(res => {
         var result = res.data
         console.log(result.data)
-        this.tableData = result.data
+        this.loading = false
+        // this.tableData = result.data
+        this.tableData = result.data.list || []
+        this.total = result.data.total
+        this.currPage = result.data.pageNum
       })
     },
     // 获取技能级联
@@ -370,7 +423,7 @@ export default {
     }
   },
   mounted () {
-    this.projectId = this.$route.query.date
+    this.form.projectId = this.$route.query.date
     // 初始化模糊查询
     this.$api.taskIssue.getProject().then(res => {
       let result = res.data
@@ -452,6 +505,12 @@ export default {
     .el-input__inner {
       border-radius: 5px;
       border: 1px solid #DCDFE6;
+    }
+  }
+   .pagination-wrap {
+    padding: 20px;
+    .el-pagination {
+      float: right;
     }
   }
 

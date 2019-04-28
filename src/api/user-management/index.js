@@ -7,6 +7,8 @@ import baseInfo from './base-info'
 import trainingExperience from './training-experience'
 // 融鑫项目
 import resoftProject from './rx-project.js'
+// 外部项目
+import externalProject from './external-project.js'
 // 业务能力
 import ywnl from './ywnl'
 // 技术能力
@@ -35,6 +37,7 @@ export default {
   baseInfo,
   trainingExperience,
   resoftProject,
+  externalProject,
   ywnl,
   jsnl,
   yynl,

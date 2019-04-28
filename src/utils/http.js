@@ -22,18 +22,27 @@ const tip = msg => {
  * 携带当前页面路由，以期在登录页面完成登录后返回当前页面
  */
 const toLogin = () => {
-  router.replace({
-    path: '/login',
-    query: {
-      redirect: router.currentRoute.fullPath // 登录成功后跳转到当前页面
-    }
-  })
+  if (window.location.origin === 'http://cloud.chinaresoft.com') {
+    router.replace({
+      path: '/wxCodePage',
+      query: {
+        redirect: router.currentRoute.fullPath // 登录成功后跳转到当前页面
+      }
+    })
+  } else {
+    router.replace({
+      path: '/login',
+      query: {
+        redirect: router.currentRoute.fullPath // 登录成功后跳转到当前页面
+      }
+    })
+  }
 }
-const toWxLogin = () => {
-  router.replace({
-    path: '/wxCodePage'
-  })
-}
+// const toWxLogin = () => {
+//   router.replace({
+//     path: '/wxCodePage'
+//   })
+// }
 
 /**
  * 请求失败后的错误统一处理
@@ -67,6 +76,10 @@ const errorHandle = (status, msg) => {
       // 通过微信API获取【TOKEN】失败
     case 1202:
       tip(msg)
+      setTimeout(() => {
+        // toWxLogin()
+        toLogin()
+      })
       break
       // 通过微信API获取微信用户信息失败！
     case 1203:
@@ -80,14 +93,16 @@ const errorHandle = (status, msg) => {
     case 1207:
       tip(msg)
       setTimeout(() => {
-        toWxLogin()
+        // toWxLogin()
+        toLogin()
       })
       break
       // 注册信息提交失败
     case 1212:
       tip(msg)
       setTimeout(() => {
-        toWxLogin()
+        // toWxLogin()
+        toLogin()
       })
       break
 
@@ -101,7 +116,7 @@ const errorHandle = (status, msg) => {
 }
 
 // 创建axios实例
-var instance = axios.create({timeout: 1000 * 12})
+var instance = axios.create({timeout: 1000 * 60})
 // 设置post请求头
 instance.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8'
 // instance.defaults.headers.token = '6S2Ng1VO3ifU6fqGUmKNmRpJPEUSzIjI' // 临时设置cookie测试用

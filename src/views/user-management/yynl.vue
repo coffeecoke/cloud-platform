@@ -3,23 +3,23 @@
     <template slot="boxHeaderTitle">语言能力</template>
     <template slot="boxBodyInner">
       <el-table :data="tableData" border style="width: 100%" v-loading="loading">
-        <el-table-column prop="language" label="语种">
+        <el-table-column prop="languages" label="语种">
           <template slot-scope="scope">
             <template v-if="scope.row.edit">
-              <el-select v-model="scope.row.language" placeholder="请选择语种">
-                <el-option v-for="item in languageOptions" :key="item.label" :label="item.label" :value="item.value"
+              <el-select v-model="scope.row.languages" placeholder="请选择语种">
+                <el-option v-for="item in languages" :key="item.dictCode" :label="item.dictName" :value="item.dictCode"
                   :disabled="item.disabled">
                 </el-option>
               </el-select>
             </template>
-            <span v-else>{{ formatLanguage(scope.row.language) }}</span>
+            <span v-else>{{ formatLanguage(scope.row.languages) }}</span>
           </template>
         </el-table-column>
         <el-table-column prop="literacy" label="读写能力">
           <template slot-scope="scope">
             <template v-if="scope.row.edit">
               <el-select v-model="scope.row.literacy">
-                <el-option v-for="item in literacyOptions" :key="item.value" :label="item.label" :value="item.value"
+                <el-option v-for="item in masteryLevel" :key="item.dictCode" :label="item.dictName" :value="item.dictCode"
                   :disabled="item.disabled">
                 </el-option>
               </el-select>
@@ -31,7 +31,7 @@
           <template slot-scope="scope">
             <template v-if="scope.row.edit">
               <el-select v-model="scope.row.lsAblility">
-                <el-option v-for="item in lsAblilityOptions" :key="item.key" :label="item.label" :value="item.value"
+                <el-option v-for="item in masteryLevel" :key="item.dictCode" :label="item.dictName" :value="item.dictCode"
                   :disabled="item.disabled">
                 </el-option>
               </el-select>
@@ -64,50 +64,39 @@ export default {
   },
   data () {
     return {
-      languageOptions: [
+      languages: [
         {
-          value: '1',
-          label: '英语'
+          dictCode: '1',
+          dictName: '英语'
         },
         {
-          value: '2',
-          label: '日语'
+          dictCode: '2',
+          dictName: '日语'
         }
       ],
       // 读写字典表
-      literacyOptions: [
+      masteryLevel: [
         {
-          value: '1',
-          label: '精通'
+          dictCode: '1',
+          dictName: '精通'
         },
         {
-          value: '2',
-          label: '一般'
-        }
-      ],
-      // 听说字典表
-      lsAblilityOptions: [
-        {
-          value: '1',
-          label: '精通'
-        },
-        {
-          value: '2',
-          label: '一般'
+          dictCode: '2',
+          dictName: '一般'
         }
       ],
       isAddRow: true, // 保存上一条数据之后，才允许新增
       loading: false, // 数据加载的loading效果
       list: {
         id: '', // id为空表示新增
-        language: null,
-        literacy: null,
-        lsAblility: null,
+        languages: '',
+        literacy: '',
+        lsAblility: '',
         edit: true
       },
       tableData: [{
         id: '3232',
-        language: '1',
+        languages: '1',
         literacy: '2',
         lsAblility: '1',
         edit: false
@@ -115,6 +104,19 @@ export default {
     }
   },
   created () {
+    let dictionaryObj = {
+      dict_code: [ 'languages', 'masteryLevel' ]
+    }
+    this.$api.dictionary.getDictionaries(dictionaryObj).then(res => {
+      let result = res.data
+      let dictionary = {}
+      result.data.forEach(item => {
+        Object.assign(dictionary, item)
+      })
+      this.languages = dictionary.languages
+      this.masteryLevel = dictionary.masteryLevel
+    })
+
     // 参数为用户认证之后的token，token放在http header中,方便以后做api响应拦截
     this.$api.yynl.queryLanguageAbility().then(res => {
       let result = res.data
@@ -127,22 +129,23 @@ export default {
   },
   methods: {
     formatLanguage (value) {
-      let currObj = this.languageOptions.filter(obj => {
-        return obj.value === value
+      let currObj = this.languages.filter(obj => {
+        return obj.dictCode === value
       })
-      return currObj[0].label
+      console.log(currObj)
+      return currObj.length > 0 ? currObj[0].dictName : ''
     },
     formatLiteracy (value) {
-      let currObj = this.literacyOptions.filter(obj => {
-        return obj.value === value
+      let currObj = this.masteryLevel.filter(obj => {
+        return obj.dictCode === value
       })
-      return currObj[0].label
+      return currObj.length > 0 ? currObj[0].dictName : ''
     },
     formatLsAblility (value) {
-      let currObj = this.lsAblilityOptions.filter(obj => {
-        return obj.value === value
+      let currObj = this.masteryLevel.filter(obj => {
+        return obj.dictCode === value
       })
-      return currObj[0].label
+      return currObj.length > 0 ? currObj[0].dictName : ''
     },
     // 添加一行
     addRow () {

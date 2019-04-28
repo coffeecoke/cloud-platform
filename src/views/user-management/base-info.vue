@@ -10,7 +10,7 @@
           <el-row type="flex" justify="space-between">
             <el-col :span="10">
               <el-form-item label="姓名">
-                <el-input v-model="form.name" placeholder="请输入姓名"></el-input>
+                <el-input v-model="form.name" placeholder="请输入姓名" :disabled="true"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="10">
@@ -20,6 +20,13 @@
                     {{item.dictName}}
                   </el-radio>
                 </el-radio-group>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row type="flex" justify="space-between">
+            <el-col :span="10">
+              <el-form-item label="客户全称">
+                <el-input v-model="form.customerFullName" placeholder="客户全称"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -180,6 +187,7 @@ export default {
       form: {
         name: '',
         D_SEX: '',
+        customerFullName: '融鑫人',
         email: '',
         contact: '',
         contactInfo: '',
@@ -197,10 +205,10 @@ export default {
   },
   mounted () {
     // 获取字典
-    var obj = {
+    var dictionaryObj = {
       dict_code: [ 'major', 'education', 'degree', 'fullTime', 'D_SEX' ]
     }
-    this.$api.dictionary.getDictionaries(obj).then(res => {
+    this.$api.dictionary.getDictionaries(dictionaryObj).then(res => {
       let result = res.data
       let dictionary = {}
       result.data.forEach(item => {
@@ -229,9 +237,15 @@ export default {
       this.$api.baseInfo.registerUser(formData).then(res => {
         let result = res.data
         if (result.status === '1') {
-          this.$message('提交成功')
+          this.$message({
+            type: 'success',
+            message: '提交成功'
+          })
         } else {
-          this.$message('提交失败')
+          this.$message({
+            type: 'error',
+            message: '提交失败'
+          })
         }
       })
     }
