@@ -5,6 +5,7 @@ import axios from 'axios'
 import '@/permission'
 import api from './api' // 导入api接口
 import 'normalize.css/normalize.css' // css样式重置
+import '@/styles/font-awesome.css'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import '@/styles/transition.scss'

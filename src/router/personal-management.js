@@ -25,7 +25,7 @@ export default [{
   path: '/partnerManager',
   component: PersonalManagement,
   name: '合伙人管理',
-  // redirect: '/nav1',
+  redirect: '/partner-1',
   children: [
     {
       path: '/partner-1',

@@ -114,7 +114,7 @@
               <i class="edit el-icon-edit" @click="scope.row.edit=true;isAddRow=false"></i>
               <i class="delect el-icon-delete" @click="deleteRow(scope.$index, tableData)">
               </i>
-              <i class="save el-icon-upload2" @click="saveClick(scope.$index,scope.row)">
+              <i class="save fa fa-save" @click="saveClick(scope.$index,scope.row)">
               </i>
             </div>
           </template>
