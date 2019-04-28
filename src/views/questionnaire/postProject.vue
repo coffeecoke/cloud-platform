@@ -63,14 +63,16 @@
       </el-table-column>
       <el-table-column fixed="right" label="操作" width="150px" align="center">
         <template slot-scope="scope">
-          <el-button @click="taskissue(scope.row.projectId)" type="text" size="medium"><i class="el-icon-upload"
+         <!--  <el-button @click="taskissue(scope.row.projectId)" type="text" size="medium"><i class="el-icon-upload"
               title="跳转到任务发布"></i></el-button>
           <el-button type="text" size="medium">
             <router-link to="/#/1-2"><i class="el-icon-share" title="跳转到任务脉络"></i></router-link>
           </el-button>
-          <el-button @click="skipUndertake(scope.row)" type="text" size="medium"><i class="el-icon-upload"></i></el-button>
+          <el-button @click="skipUndertake(scope.row)" type="text" size="medium"><i class="el-icon-upload"></i></el-button> -->
           <el-button @click="showCreateQuestPanl(scope.row.projectId,scope.row.projectName)" type="text" size="medium"><i class="el-icon-document"
               title="生成调查问卷"></i></el-button>
+              <el-button @click="showPostProjectPanl(scope.row.projectId,scope.row.projectName)" type="text" size="medium"><i class="el-icon-sort"
+              title="项目结转"></i></el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -208,6 +210,78 @@
     </el-dialog>
     <!--发布用户调查问卷 end-->
 
+<!--发布用户调查问卷 start-->
+    <el-dialog title="项目结转" :visible.sync="postProjectPanl"    fullscreen>
+  <el-row :span="24">
+    <el-col :span="11">
+      <el-table
+          :data="leftTable"
+          style="width: 100%;margin-bottom: 20px;"
+          border
+          row-key="id">
+          <el-table-column
+            prop="tableId"
+            label="表名"
+            width="180">
+          </el-table-column>
+          <el-table-column
+            prop="projectCode"
+            label="项目编号"
+            width="180">
+          </el-table-column>
+          <el-table-column
+            prop="projectName"
+            label="项目名称">
+          </el-table-column>
+        </el-table>
+    </el-col>
+    <el-col :span="2">&nbsp;</el-col>
+   <el-col :span="11">
+        <el-table
+      :data="rightTable"
+      style="width: 100%;margin-bottom: 20px;"
+      border
+      row-key="id">
+      <el-table-column
+        prop="tableId"
+        label="表名"
+        width="180">
+      </el-table-column>
+      <el-table-column
+        prop="projectCode"
+        label="项目编号"
+        width="180">
+      </el-table-column>
+      <el-table-column
+        prop="projectName"
+        label="项目名称">
+      </el-table-column>
+    </el-table>
+    </el-col>
+</el-row>
+
+<el-dialog title="结转选项" :visible.sync="dialogFormVisible" append-to-body>
+  <el-form :model="form">
+    <el-form-item label="结转方案" :label-width="formLabelWidth">
+      <el-select v-model="form.region" placeholder="请选择结转方案">
+        <el-option label="左侧覆盖右侧" value="1"></el-option>
+        <el-option label="右侧覆盖左侧" value="2"></el-option>
+        <el-option label="全部保留" value="3"></el-option>
+      </el-select>
+    </el-form-item>
+  </el-form>
+  <div slot="footer" class="dialog-footer">
+    <el-button @click="dialogFormVisible = false">取 消</el-button>
+    <el-button type="primary" @click="subFormVisible">确 定</el-button>
+  </div>
+</el-dialog>
+ <div slot="footer" class="dialog-footer">
+    <el-button @click="postProjectPanl = false">取 消</el-button>
+    <el-button type="primary" @click="dialogFormVisible = true">确 定</el-button>
+  </div>
+    </el-dialog>
+    <!--发布用户调查问卷 end-->
+
   </div>
 </template>
 <script>
@@ -247,7 +321,12 @@ export default {
       createQuestPanl: false,
       tableData: [{
         projectId: ''
-      }]
+      }],
+      postProjectPanl: false,
+      leftTable: [],
+      rightTable: [],
+      dialogFormVisible: false,
+      formLabelWidth: '120px'
     }
   },
   methods: {
@@ -343,7 +422,7 @@ export default {
         // console.log('11111111111111111111111111')
         this.loading = true
         let params = {
-          pageNum: '1', // 请求的页码
+          pageNum: this.pageNum, // 请求的页码
           pageSize: this.pageSize
           // 每页显示条数
           // customerNumber: '999999'
@@ -366,7 +445,7 @@ export default {
       } else {
         this.loading = true
         let params = {
-          pageNum: '1', // 请求的页码
+          pageNum: this.pageNum, // 请求的页码
           pageSize: this.pageSize, // 每页显示条数
           customerNumber: '999999'
         }
@@ -395,7 +474,7 @@ export default {
     confirm () {
       this.loading1 = true
       let params = {
-        pageNum: '1', // 请求的页码
+        pageNum: this.pageNum, // 请求的页码
         pageSize: this.pageSize, // 每页显示条数
         projectId: this.form.projectId,
         projectName: this.form.projectName,
@@ -415,7 +494,7 @@ export default {
       this.$router.push({
         name: '任务发布',
         query: {
-          data: param
+          date: param
         }
 
       })
@@ -437,11 +516,6 @@ export default {
     },
     handleSelect (item) {
       console.log(item)
-    },
-    showCreateQuestPanl (projectId, projectName) {
-      this.questionnaire.projectId = projectId
-      this.questionnaire.projectName = projectName
-      this.createQuestPanl = true
     },
     quTitleSearchAsync (queryString, cb) {
       var restaurants = []
@@ -487,6 +561,28 @@ export default {
     },
     handleSelectUser (item) {
       this.questionnaire.answerUserId = item.uId
+    },
+    showCreateQuestPanl (projectId, projectName) {
+      this.questionnaire.projectId = projectId
+      this.questionnaire.projectName = projectName
+      this.createQuestPanl = true
+    },
+    showPostProjectPanl (projectId, projectName) {
+      this.$api.questionPublic.loadDataCompareResult({projectId: projectId, projectName: projectName}).then(res => {
+        let result = res.data
+        console.log(result.data)
+        this.leftTable = result.data.leftTable
+        this.rightTable = result.data.rightTable
+      })
+      this.postProjectPanl = true
+    },
+    subFormVisible () {
+      this.dialogFormVisible = false
+      this.postProjectPanl = false
+      this.$message({
+        type: 'success',
+        message: '项目结转成功'
+      })
     }
 
   },
@@ -500,7 +596,7 @@ export default {
 }
 
 </script>
-<style lang="scss" scope>
+<style lang="scss" scoped>
   .el-row {
     margin-bottom: 30px;
     margin-top: 10px;
@@ -548,6 +644,18 @@ export default {
     .el-pagination {
       float: right;
     }
+  }
+  .demo-table-expand {
+    font-size: 0;
+  }
+  .demo-table-expand label {
+    width: 90px;
+    color: #99a9bf;
+  }
+  .demo-table-expand .el-form-item {
+    margin-right: 0;
+    margin-bottom: 0;
+    width: 50%;
   }
   // .el-table /deep/ .tableHeader {
   //   background:#1a74ee;
