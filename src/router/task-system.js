@@ -17,6 +17,8 @@ import Resoft from '@/views/task-system/resoft-undertake'
 import Thirdparty from '@/views/task-system/third-party'
 // 融鑫承接
 import PersonUnderTake from '@/views/task-system/person-undertake'
+// 融鑫承接
+import MyTask from '@/views/task-system/my-task'
 
 import QuestionPublic from '@/views/questionnaire/questionPublic'
 
@@ -77,6 +79,11 @@ export default [{
       path: '/qu-3',
       name: '问卷调查',
       component: QuestionPublic
+    },
+    {
+      path: '/2-10',
+      name: '我的任务',
+      component: MyTask
     },
     {
       path: '/qu-6',

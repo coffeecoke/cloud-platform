@@ -35,6 +35,7 @@
           </template>
         </el-table-column> -->
       </el-table>
+       <div class="add-row" @click.prevent="myCollection()"><span>+ 更多</span></div>
     </template>
   </box-wrap>
 </template>
@@ -55,14 +56,22 @@ export default {
     }
   },
   methods: {
+    myCollection () {
+      this.$router.push({
+        name: '任务领取',
+        query: {
+          data: '1'
+        }
+      })
+    }
   },
   mounted () {
-    let params = {
-      projectId: this.projectId,
-      taskClass: this.taskClass,
-      isLimit: this.isLimit
-    }
-    this.$api.Wdrl.getClaimTaskList(params).then(res => {
+    // let params = {
+    //   projectId: this.projectId,
+    //   taskClass: this.taskClass,
+    //   isLimit: this.isLimit
+    // }
+    this.$api.Wdrl.getClaimTaskList().then(res => {
       let result = res.data
       console.log(result.data)
       this.tableData = result.data
