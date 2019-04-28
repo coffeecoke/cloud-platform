@@ -207,34 +207,10 @@ export default {
         duties: '',
         businessSkill: '',
         techSkill: [],
+        content: '',
         edit: true
       },
-      tableData: [{
-        id: '1', // id为后台传入，后台的增删都是根据id进行的
-        date: '',
-        industry: 1,
-        projectName: '',
-        projectScale: '',
-        projectRole: '',
-        duties: '',
-        businessSkill: '',
-        techSkill: '',
-        content: '报送银监会报送银监会报送银监会报送银监会报送银监会报送银监会报送银监会',
-        edit: false
-      },
-      {
-        id: '2',
-        date: '',
-        industry: 2,
-        projectName: '',
-        projectSize: '1',
-        projectRole: '2',
-        duties: '',
-        business: '1',
-        techSkill: '1',
-        content: '',
-        edit: false
-      }
+      tableData: [
       ]
     }
   },

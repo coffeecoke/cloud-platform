@@ -60,9 +60,10 @@ export default {
           this.logining = true
           var loginParams = { loginName: this.ruleForm2.loginName, password: this.ruleForm2.password }
           this.$api.userInfo.getUserInfo(loginParams).then(res => {
+            let result = res.data
             this.logining = false
             console.log(res)
-            let { msg, status, token, userName } = res.data
+            let { msg, status, token, userName } = result
             if (status !== '1') {
               this.$message({
                 message: msg,

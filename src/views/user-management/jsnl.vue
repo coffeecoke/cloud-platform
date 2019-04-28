@@ -118,15 +118,7 @@ export default {
         recentUsage: '',
         edit: true
       },
-      tableData: [{
-        id: '1', // id为空表示新增
-        techSkill: [],
-        formatTechSkill: '',
-        usageTime: '',
-        masteryLevel: '1',
-        recentUsage: '2018-09-07',
-        edit: false
-      }]
+      tableData: []
     }
   },
   created () {

@@ -156,46 +156,7 @@ export default {
         fileList: [],
         edit: true
       },
-      tableData: [{
-        id: '1',
-        date: '2018-01-01',
-        endtime: '2019-02-02',
-        trainingMode: '培训方式',
-        trainname: '培训机构名称',
-        traincon: '培训内容',
-        techSkill: [1, 4, 9, 10],
-        formatTechSkill: '11',
-        diploma: '证书',
-        fileList: [{
-          id: '222',
-          name: '学历1.jpeg',
-          url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
-        }, {
-          id: null,
-          name: 'food2.jpeg',
-          url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
-        }],
-        edit: false
-      },
-      {
-        id: '2',
-        date: '2018-01-01',
-        endtime: '2019-02-02',
-        trainingMode: '培训方式',
-        trainname: '培训名称',
-        traincon: '培训内容',
-        techSkill: [5, 6, 3, 7, 8],
-        formatTechSkill: '22',
-        diploma: '',
-        fileList: [{
-          name: '学历1.jpeg',
-          url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
-        }, {
-          name: '学历2.jpeg',
-          url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
-        }],
-        edit: false
-      }
+      tableData: [
       ]
     }
   },

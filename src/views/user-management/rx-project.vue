@@ -203,34 +203,8 @@ export default {
         formatTechSkill: '',
         edit: true
       },
-      tableData: [{
-        id: '1', // id为后台传入，后台的增删都是根据id进行的
-        date: ['2019-04-05', '2019-09-08'],
-        industry: 1,
-        projectName: '',
-        projectScale: '',
-        projectRole: '',
-        duties: '',
-        businessSkill: '',
-        techSkill: [],
-        formatTechSkill: '',
-        content: '报送银监会报送银监会报送银监会报送银监会报送银监会报送银监会报送银监会',
-        edit: false
-      },
-      {
-        id: '2',
-        date: '',
-        industry: 2,
-        projectName: '',
-        projectSize: '1',
-        projectRole: '2',
-        duties: '',
-        business: '1',
-        techSkill: [],
-        formatTechSkill: '',
-        content: '',
-        edit: false
-      }
+      tableData: [
+
       ]
     }
   },

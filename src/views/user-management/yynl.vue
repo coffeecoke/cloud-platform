@@ -94,13 +94,7 @@ export default {
         lsAblility: '',
         edit: true
       },
-      tableData: [{
-        id: '3232',
-        languages: '1',
-        literacy: '2',
-        lsAblility: '1',
-        edit: false
-      }]
+      tableData: []
     }
   },
   created () {

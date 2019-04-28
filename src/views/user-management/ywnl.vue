@@ -100,14 +100,7 @@ export default {
         recentUsage: '',
         edit: true
       },
-      tableData: [{
-        id: '1', // id为空表示新增
-        businessSkill: '1',
-        usageTime: '23月',
-        masteryLevel: '1',
-        recentUsage: '2014-09-08',
-        edit: false
-      }]
+      tableData: []
     }
   },
   created () {
