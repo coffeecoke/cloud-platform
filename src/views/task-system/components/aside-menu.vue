@@ -5,7 +5,7 @@
       <template slot="title">项目管理</template>
       <el-menu-item-group>
         <el-menu-item index="2-1">项目列表</el-menu-item>
-        <el-menu-item index="2-2">任务列表</el-menu-item>
+        <!-- <el-menu-item index="2-2">任务列表</el-menu-item> -->
       </el-menu-item-group>
     </el-submenu>
     <el-submenu index="taskSystem2">

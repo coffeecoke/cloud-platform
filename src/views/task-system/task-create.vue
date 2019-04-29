@@ -31,7 +31,7 @@
 
     <el-table :data="tableData" style="height: 100%;margin-top:10px;" v-loading="loading1"
       :header-cell-style="{background:'#1a74ee',color:'#f9fafc'}" :height = 'tableHeight'>
-      <el-table-column width="250px" prop="projectId" label="项目" align="left">
+      <el-table-column width="250px" prop="projectId" label="项目" align="center">
         <template slot-scope="scope2">
           <div>
             <p>{{scope2.row.projectId}}</p>
@@ -232,7 +232,7 @@ export default {
       total: 1, // 总条数
       pageSize: 10, // 一页显示多少条
       pageNum: 1, // 需要查询的页码
-
+      createQuestPanl: false,
       dialogPersonalAndEnterprise: false,
       form: {
         projectId: '',
@@ -249,6 +249,7 @@ export default {
         answerUserName: ''
       },
       projectid: [],
+      tableHeight: null,
       tableData: [],
       Pro: null
     }

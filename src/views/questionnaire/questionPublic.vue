@@ -25,7 +25,7 @@
 
 <!--表单分页 start-->
 <el-row>
-   <el-table v-loading="loading" :data="tableData" border style="width: 100%">
+   <el-table v-loading="loading" :data="tableData" border style="width: 100%" :height = "tableHeight">
     <el-table-column prop="quTitle" label="问卷名称" ></el-table-column>
     <el-table-column prop="quType" label="问卷类型" ></el-table-column>
     <el-table-column prop="projectName" label="归属项目" ></el-table-column>
@@ -86,11 +86,16 @@ export default {
         createDate: ''
       },
       questAdd: false,
+      tableHeight: null,
       tableData: []
     }
   },
   mounted () {
     this.initDataTable()
+    this.tableHeight = document.body.clientHeight - 280 + 'px'
+    window.onresize = () => {
+      this.tableHeight = document.body.clientHeight - 280 + 'px'
+    }
   },
   methods: {
     initDataTable () {

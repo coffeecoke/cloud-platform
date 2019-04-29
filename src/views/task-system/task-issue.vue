@@ -4,15 +4,15 @@
       <el-row type="flex" justify="space-between">
         <el-col :span="3">
           <el-autocomplete class="input1" v-model="form.projectId" :fetch-suggestions="querySearch" placeholder="项目编号"
-            :trigger-on-focus="false" @select="handleSelect"></el-autocomplete>
+            :trigger-on-focus="false" @select="handleSelect" :disabled="true"></el-autocomplete>
         </el-col>
         <el-col :span="3">
-          <el-autocomplete class="input1" v-model="form.tid" placeholder="任务/组编码" :trigger-on-focus="false"
-            @select="handleSelect"></el-autocomplete>
+          <el-input class="input1" v-model="form.tid" placeholder="任务/组编码"
+            clearable></el-input>
         </el-col>
         <el-col :span="3">
-          <el-autocomplete class="input1" v-model="form.tname" placeholder="任务/组名称" :trigger-on-focus="false"
-            @select="handleSelect"></el-autocomplete>
+          <el-input class="input1" v-model="form.tname" placeholder="任务/组名称"
+            clearable></el-input>
         </el-col>
         <el-col :span="3">
           <el-select class="select1" v-model="form.taskClass" clearable placeholder="类型">
@@ -156,41 +156,41 @@ export default {
         label: '任务组'
       }],
       options1: [{
-        value1: '选项1',
+        value1: '0',
         label1: '无影响'
       }, {
-        value1: '选项2',
+        value1: '1',
         label1: '一级（影响项<=2个）'
       }, {
-        value1: '选项3',
+        value1: '2',
         label1: '二级（影响项<=5个）'
       }, {
-        value1: '选项4',
+        value1: '3',
         label1: '三级（影响项<=8个）'
       }, {
-        value1: '选项5',
+        value1: '4',
         label1: '四级（影响项<=12个）'
       }, {
-        value1: '选项6',
+        value1: '5',
         label1: '五级（影响项>12个）'
       }],
       options2: [{
-        value2: '选项1',
+        value2: '0',
         label2: '无依赖'
       }, {
-        value2: '选项2',
+        value2: '1',
         label2: '一级（依赖项<=2个）'
       }, {
-        value2: '选项3',
+        value2: '2',
         label2: '二级（依赖项<=5个）'
       }, {
-        value2: '选项4',
+        value2: '3',
         label2: '三级（依赖项<=8个）'
       }, {
-        value2: '选项5',
+        value2: '4',
         label2: '四级（依赖项<=12个）'
       }, {
-        value2: '选项6',
+        value2: '5',
         label2: '五级（依赖项>12个）'
       }],
       tableData: [],
@@ -251,16 +251,25 @@ export default {
           console.log(result.data)
           if (result.status === '1') {
             this.dialogTimeandCondition = false
-            let formData = new FormData()
-            // this.form.taskGroupId = data.id
-            Object.keys(this.form).forEach(key => {
-              console.log(key)
-              formData.append(key, this.form[key])
-            })
-            this.$api.taskIssue.getPublishTaskList(formData).then(res => {
+            this.loading = true
+            let params = {
+              pageNum: '1', // 请求的页码
+              pageSize: this.pageSize, // 每页显示条数
+              projectId: this.form.projectId,
+              tid: this.form.tid,
+              tname: this.form.tname,
+              taskClass: this.form.taskClass,
+              effectDegree: this.form.effectDegree,
+              dependencyDegree: this.form.dependencyDegree
+            }
+            this.$api.taskIssue.getPublishTaskList(params).then(res => {
               var result = res.data
               console.log(result.data)
-              this.tableData = result.data
+              this.loading = false
+              // this.tableData = result.data
+              this.tableData = result.data.list || []
+              this.total = result.data.total
+              this.currPage = result.data.pageNum
             })
             // console.log(data.id)
             // this.confirm()
@@ -432,6 +441,26 @@ export default {
   },
   mounted () {
     this.form.projectId = this.$route.query.data
+    this.loading = true
+    let params = {
+      pageNum: '1', // 请求的页码
+      pageSize: this.pageSize, // 每页显示条数
+      projectId: this.form.projectId,
+      tid: this.form.tid,
+      tname: this.form.tname,
+      taskClass: this.form.taskClass,
+      effectDegree: this.form.effectDegree,
+      dependencyDegree: this.form.dependencyDegree
+    }
+    this.$api.taskIssue.getPublishTaskList(params).then(res => {
+      var result = res.data
+      console.log(result.data)
+      this.loading = false
+      // this.tableData = result.data
+      this.tableData = result.data.list || []
+      this.total = result.data.total
+      this.currPage = result.data.pageNum
+    })
     // 初始化模糊查询
     this.$api.TaskCreate.getProject().then(res => {
       let result = res.data
