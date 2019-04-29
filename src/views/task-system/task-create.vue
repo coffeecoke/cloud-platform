@@ -4,7 +4,7 @@
       <el-row :gutter="18">
         <el-col :span="4">
           <el-autocomplete class="input1" v-model="form.projectId" :fetch-suggestions="querySearch" placeholder="项目编号"
-            :trigger-on-focus="false" @select="handleSelect"></el-autocomplete>
+            :trigger-on-focus="false" @select="handleSelect" clearable></el-autocomplete>
         </el-col>
         <el-col :span="4">
           <div class="grid-content bg-purple">
@@ -29,9 +29,10 @@
       </el-row>
     </el-form>
 
-    <el-table :data="tableData" style="height: 100%" v-loading="loading1" :header-cell-style="{background:'#1a74ee',color:'#f9fafc'}">
+    <el-table :data="tableData" style="height: 100%" v-loading="loading1"
+      :header-cell-style="{background:'#1a74ee',color:'#f9fafc'}">
       <el-table-column width="250px" prop="projectId" label="项目" align="left">
-         <template slot-scope="scope2">
+        <template slot-scope="scope2">
           <div>
             <p>{{scope2.row.projectId}}</p>
             <p>{{scope2.row.projectName}}</p>
@@ -46,18 +47,31 @@
       <el-table-column width="100px" prop="taskTotalCount" label="任务总数" align="center"></el-table-column>
       <el-table-column width="200px" prop="taskPer" label="任务" align="right">
         <template slot-scope="scope">
-          <span>分配情况</span><el-progress :text-inside="true" :stroke-width="6" :percentage="scope.row.taskDistributedPer"
+          <span>分配情况</span>
+          <el-progress :text-inside="true" :stroke-width="6" :percentage="scope.row.taskDistributedPer"
             :show-text="false"></el-progress>
 
-          <span>完成情况</span><el-progress :text-inside="true" :stroke-width="6" :percentage="scope.row.taskFinishedPer"
-            :show-text="false"></el-progress>
+          <span>完成情况</span>
+          <el-progress :text-inside="true" :stroke-width="6" :percentage="scope.row.taskFinishedPer" :show-text="false">
+          </el-progress>
         </template>
       </el-table-column>
       <el-table-column width="100px" prop="taskTotalCount" label="" align="left">
         <template slot-scope="scope1">
           <div>
-            <p>{{scope1.row.taskDistributedLabel}}</p>
-            <p>{{scope1.row.taskFinishedLabel}}</p>
+            <router-link class="tab-item" :to="{path: '/2-2', query: {data:scope1.row.projectId,taskStatus:'d'}}">
+              <a>{{scope1.row.taskDistributed}}</a>
+            </router-link>/<router-link class="tab-item"
+              :to="{path: '/2-2', query: {data:scope1.row.projectId,taskStatus:'ud'}}">
+              <a>{{scope1.row.taskUnDistributed}}</a></router-link><br>
+            <router-link class="tab-item" :to="{path: '/2-2', query: {data:scope1.row.projectId,taskStatus:'f'}}">
+              <a>{{scope1.row.taskFinished}}</a>
+            </router-link>/<router-link class="tab-item"
+              :to="{path: '/2-2', query: {data:scope1.row.projectId,taskStatus:'d'}}">
+              <a>{{scope1.row.taskDistributed}}</a></router-link>
+            <!-- <el-link type="primary"><p>{{scope1.row.taskFinishedLabel}}</p></el-link> -->
+            <!-- <p>{{scope1.row.taskDistributedLabel}}</p>
+            <p>{{scope1.row.taskFinishedLabel}}</p> -->
           </div>
         </template>
       </el-table-column>
@@ -68,124 +82,115 @@
           <!-- <el-button type="text" size="medium">
             <router-link to="/#/1-2"><i class="el-icon-share" title="跳转到任务脉络"></i></router-link>
           </el-button> -->
-          <el-button @click="skipUndertake(scope.row)" type="text" size="medium"><i class="el-icon-goods" title="承接项目"></i></el-button>
+          <el-button @click="skipUndertake(scope.row)" type="text" size="medium"><i class="el-icon-goods"
+              title="承接项目"></i></el-button>
         </template>
       </el-table-column>
-    </el-table>
-     <div class="pagination-wrap">
-
-      <el-pagination
-      background
-      layout="prev, pager, next"
-      :page-size= "pageSize"
-      :total="total"
-      @current-change = "handleCurrChange"
-      @size-change = "handleSizeChange"
-      >
-      </el-pagination>
-    </div>
-     <div class="cretable">
-     <el-dialog title="任务承接" :visible.sync="dialogPersonalAndEnterprise" center>
-    <el-tabs v-model="activeName" @tab-click="PersonalAndEnterprise" type="border-card">
-    <el-tab-pane label="企业" name="C" v-model="department" ><div class="" id="">
-       <el-row :gutter="20">
-      <el-col :span="4">
-       <div class="grid-content bg-purple">
-            <el-input placeholder="客户编号" class="input1" v-model="customerNumber" clearable></el-input>
-          </div>
-          </el-col>
-           <el-col :span="4">
-           <div class="grid-content bg-purple">
-            <el-input placeholder="客户名称" class="input1" v-model="customerFullName" clearable></el-input>
-          </div>
-           </el-col>
-            <el-col :span="16">
-          <div class="button">
-            <el-button type="primary" style="float:right" round @click.native.prevent="getTableList">确定</el-button>
-          </div>
-        </el-col>
-        </el-row>
-    <el-table :data="EnterpriseTableData" border  v-loading="loading" header-cell-class-name="tableHeader"  height="600"  :header-cell-style="{background:'#1a74ee',color:'#f9fafc'}">
-      <el-table-column prop="customerNumber" label="客户编号">
-      </el-table-column>
-      <el-table-column prop="customerFullName" label="客户全称">
-      </el-table-column>
-      <el-table-column prop="customerAbbreviation" label="客户简称">
-      </el-table-column>
-      <el-table-column prop="taxonomy" label="分类类别">
-      </el-table-column>
-      <el-table-column prop="detailedCategories" label="详细分类类别">
-      </el-table-column>
-      <el-table-column fixed="right" label="操作" align="center">
-        <template slot-scope="scope">
-          <el-button @click.native.prevent="viewInfo(scope.$index,scope.row)" type="text">查看</el-button>
-          <el-button @click.native.prevent="underTake(scope.$index,scope.row)" type="text">承接</el-button>
-        </template>
-      </el-table-column>
-
     </el-table>
     <div class="pagination-wrap">
 
-      <el-pagination
-      background
-      layout="prev, pager, next"
-      :page-size= "pageSize"
-      :total="total"
-      @current-change = "handleCurrChange"
-      @size-change = "handleSizeChange"
-      >
+      <el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="total"
+        @current-change="handleCurrChange" @size-change="handleSizeChange">
       </el-pagination>
     </div>
-  </div></el-tab-pane>
+    <div class="cretable">
+      <el-dialog title="任务承接" :visible.sync="dialogPersonalAndEnterprise" center>
+        <el-tabs v-model="activeName" @tab-click="PersonalAndEnterprise" type="border-card">
+          <el-tab-pane label="企业" name="C" v-model="department">
+            <div class="" id="">
+              <el-row :gutter="20">
+                <el-col :span="4">
+                  <div class="grid-content bg-purple">
+                    <el-input placeholder="客户编号" class="input1" v-model="customerNumber" clearable></el-input>
+                  </div>
+                </el-col>
+                <el-col :span="4">
+                  <div class="grid-content bg-purple">
+                    <el-input placeholder="客户名称" class="input1" v-model="customerFullName" clearable></el-input>
+                  </div>
+                </el-col>
+                <el-col :span="16">
+                  <div class="button">
+                    <el-button type="primary" style="float:right" round @click.native.prevent="getTableList">确定
+                    </el-button>
+                  </div>
+                </el-col>
+              </el-row>
+              <el-table :data="EnterpriseTableData" border v-loading="loading" header-cell-class-name="tableHeader"
+                height="600" :header-cell-style="{background:'#1a74ee',color:'#f9fafc'}">
+                <el-table-column prop="customerNumber" label="客户编号">
+                </el-table-column>
+                <el-table-column prop="customerFullName" label="客户全称">
+                </el-table-column>
+                <el-table-column prop="customerAbbreviation" label="客户简称">
+                </el-table-column>
+                <el-table-column prop="taxonomy" label="分类类别">
+                </el-table-column>
+                <el-table-column prop="detailedCategories" label="详细分类类别">
+                </el-table-column>
+                <el-table-column fixed="right" label="操作" align="center">
+                  <template slot-scope="scope">
+                    <el-button @click.native.prevent="viewInfo(scope.$index,scope.row)" type="text">查看</el-button>
+                    <el-button @click.native.prevent="underTake(scope.$index,scope.row)" type="text">承接</el-button>
+                  </template>
+                </el-table-column>
 
-    <el-tab-pane label="个人" name="P" v-model="department" > <div class="" id="">
-       <el-col :span="4">
-       <div class="grid-content bg-purple">
-            <el-input placeholder="姓名" class="input1" v-model="name" clearable></el-input>
-          </div>
-          </el-col>
-           <el-col :span="16">
-          <div class="button">
-            <el-button type="primary" style="float:right" round @click.native.prevent="getTableList1">确定</el-button>
-          </div>
-        </el-col>
-    <el-table :data="PersonalTableData" border  v-loading="loading" header-cell-class-name="tableHeader" height="600" :header-cell-style="{background:'#1a74ee',color:'#f9fafc'}">
-      <el-table-column prop="name" label="姓名">
-      </el-table-column>
-      <el-table-column prop="D_SEX" label="性别">
-      </el-table-column>
-      <el-table-column prop="phone" label="电话">
-      </el-table-column>
-      <el-table-column prop="email" label="邮箱">
-      </el-table-column>
-      <el-table-column prop="education" label="学历">
-      </el-table-column>
-      <el-table-column prop="major" label="专业">
-      </el-table-column>
-      <el-table-column fixed="right" label="操作" align="center">
-        <template slot-scope="scope">
-          <el-button @click.native.prevent="viewInfo(scope.$index,scope.row)" type="text">查看</el-button>
-          <el-button @click.native.prevent="underTake1(scope.$index,scope.row)" type="text">承接</el-button>
-        </template>
+              </el-table>
+              <div class="pagination-wrap">
 
-      </el-table-column>
+                <el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="total"
+                  @current-change="handleCurrChange" @size-change="handleSizeChange">
+                </el-pagination>
+              </div>
+            </div>
+          </el-tab-pane>
 
-    </el-table>
-    <div class="pagination-wrap">
+          <el-tab-pane label="个人" name="P" v-model="department">
+            <div class="" id="">
+              <el-col :span="4">
+                <div class="grid-content bg-purple">
+                  <el-input placeholder="姓名" class="input1" v-model="name" clearable></el-input>
+                </div>
+              </el-col>
+              <el-col :span="16">
+                <div class="button">
+                  <el-button type="primary" style="float:right" round @click.native.prevent="getTableList1">确定
+                  </el-button>
+                </div>
+              </el-col>
+              <el-table :data="PersonalTableData" border v-loading="loading" header-cell-class-name="tableHeader"
+                height="600" :header-cell-style="{background:'#1a74ee',color:'#f9fafc'}">
+                <el-table-column prop="name" label="姓名">
+                </el-table-column>
+                <el-table-column prop="D_SEX" label="性别">
+                </el-table-column>
+                <el-table-column prop="phone" label="电话">
+                </el-table-column>
+                <el-table-column prop="email" label="邮箱">
+                </el-table-column>
+                <el-table-column prop="education" label="学历">
+                </el-table-column>
+                <el-table-column prop="major" label="专业">
+                </el-table-column>
+                <el-table-column fixed="right" label="操作" align="center">
+                  <template slot-scope="scope">
+                    <el-button @click.native.prevent="viewInfo(scope.$index,scope.row)" type="text">查看</el-button>
+                    <el-button @click.native.prevent="underTake1(scope.$index,scope.row)" type="text">承接</el-button>
+                  </template>
 
-      <el-pagination
-      background
-      layout="prev, pager, next"
-      :page-size= "pageSize"
-      :total="total"
-      @current-change = "handleCurrChange1"
-      @size-change = "handleSizeChange1"
-      >
-      </el-pagination>
-    </div>
-  </div></el-tab-pane>
-  </el-tabs>
-    </el-dialog>
+                </el-table-column>
+
+              </el-table>
+              <div class="pagination-wrap">
+
+                <el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="total"
+                  @current-change="handleCurrChange1" @size-change="handleSizeChange1">
+                </el-pagination>
+              </div>
+            </div>
+          </el-tab-pane>
+        </el-tabs>
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -216,13 +221,17 @@ export default {
         proDirector: ''
       },
       projectid: [],
-      tableData: [{
-        projectId: ''
-      }],
+      tableData: [],
       Pro: null
     }
   },
   methods: {
+    aaaa () {
+      alert('22222222222')
+    },
+    bbbb () {
+      alert('22222222222')
+    },
     // 企业承接的方法
     underTake (index, row) {
       let params = {
@@ -230,7 +239,7 @@ export default {
         projectId: this.Pro,
         underTakingId: this.customerNumber
       }
-      this.$api.partner.getEnterprise(params).then(res => {
+      this.$api.partner.underTakingProjectId(params).then(res => {
         let result = res.data
         this.loading = false
         if (result.status === '1') {
@@ -249,7 +258,7 @@ export default {
             proManager: this.form.proManager,
             proDirector: this.form.proDirector
           }
-          this.$api.TaskCreate.getCountTaskList(params).then(res => {
+          this.$api.TaskCreate.underTakingProjectId(params).then(res => {
             var result = res.data
             // this.loading1 = false
             // this.tableData = result.data
@@ -560,14 +569,18 @@ export default {
       border: 1px solid #DCDFE6;
     }
   }
-    .pagination-wrap {
+
+  .pagination-wrap {
     padding: 20px;
+
     .el-pagination {
       float: right;
     }
   }
+
   // .el-table /deep/ .tableHeader {
   //   background:#1a74ee;
   //   color:#f9fafc;
   // }
+
 </style>

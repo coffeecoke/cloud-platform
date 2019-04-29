@@ -1,7 +1,9 @@
 <template>
  <box-wrap>
     <template slot="boxHeaderTitle">我的认领</template>
+
     <template slot="boxBodyInner">
+       <!-- <div class="add-row" @click.prevent="myCollection()" right><span>+ 更多</span></div> -->
       <el-table :data="tableData" border style="width: 100%" v-loading="loading">
         <el-table-column prop="project" label="项目信息">
           <template slot-scope="scope2">
@@ -35,7 +37,7 @@
           </template>
         </el-table-column> -->
       </el-table>
-       <div class="add-row" @click.prevent="myCollection()"><span>+ 更多</span></div>
+        <div class="add-row" @click.prevent="myCollection()"><span>+ 更多</span></div>
     </template>
   </box-wrap>
 </template>
@@ -80,5 +82,6 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-
+//  .add-row {margin-bottom: 30px;
+//      margin-top: 10px;}
 </style>

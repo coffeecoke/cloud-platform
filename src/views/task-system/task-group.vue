@@ -11,7 +11,7 @@
             size="tiny">
             <el-form ref="addEventForm" :model="addEventForm">
               <el-form-item label="父节点" prop="taskGroupParentName">
-                <el-input v-model="addEventForm.taskGroupParentName" disabled='true'></el-input>
+                <el-input v-model="addEventForm.taskGroupParentName" :disabled="true"></el-input>
               </el-form-item>
               <el-form-item label="任务组编号" prop="taskGroupId">
                 <el-input v-model="addEventForm.taskGroupId"></el-input>
@@ -49,7 +49,7 @@
             size="tiny">
             <el-form>
               <el-form-item label="任务组编号" prop="taskGroupId">
-                <el-input v-model="taskGroupId" disabled='true'></el-input>
+                <el-input v-model="taskGroupId" :disabled="true"></el-input>
               </el-form-item>
               <el-form-item label="任务组名称" prop="taskGroupName">
                 <el-input v-model="taskGroupName"></el-input>
@@ -82,7 +82,7 @@
             </el-col> -->
              <el-col :span="4">
               <div class="group">
-                <el-input placeholder="任务组名称" class="input1" v-model="form.taskGroupId" clearable disabled="true"></el-input>
+                <el-input placeholder="任务组名称" class="input1" v-model="form.taskGroupId" clearable  :disabled="true"></el-input>
               </div>
             </el-col>
             <el-col :span="4">
@@ -186,13 +186,7 @@ export default {
         taskGroupId: '',
         taskGroupName: ''
       },
-      tableData3: [{
-        suggestOrder: '111',
-        taskName: '1111',
-        taskId: '111',
-        taskTarget: '111',
-        postTask: '111'
-      }],
+      tableData3: [],
       form: {
         projectId: '',
         taskId: '',
