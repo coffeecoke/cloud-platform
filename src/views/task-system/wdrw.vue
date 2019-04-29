@@ -26,28 +26,28 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="taskName" label="任务名称" align="center">
+        <el-table-column prop="taskName" label="任务名称" align="left">
         </el-table-column>
-        <el-table-column prop="taskStatus" label="任务状态" align="center">
+        <el-table-column prop="taskStatus" label="任务状态" align="left">
         </el-table-column>
-        <el-table-column prop="mastery" label="任务时间" align="center">
+        <el-table-column prop="mastery" label="任务时间" align="left">
           <template slot-scope="scope1">
             <div>
-              计划开始时间：<p>{{scope1.row.planStartTime}}</p>
-              实际开始时间：<p>{{scope1.row.actualStartTime}}</p>
+              <p>计划开始时间：{{scope1.row.planStartTime}}</p>
+              <p>实际开始时间：{{scope1.row.actualStartTime}}</p>
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="actualEndTime" label="任务结束时间" align="center">
+        <el-table-column prop="actualEndTime" label="任务结束时间" align="left">
         </el-table-column>
-        <el-table-column prop="recentUsage" label="预警信息" align="center">
+        <el-table-column prop="recentUsage" label="预警信息" align="left">
         </el-table-column>
-        <el-table-column prop="recentUsage" label="标准工时" align="center">
+        <el-table-column prop="recentUsage" label="标准工时" align="left">
         </el-table-column>
-        <el-table-column prop="recentUsage" label="成果矫正" align="center">
+        <el-table-column prop="recentUsage" label="成果矫正" align="left">
         </el-table-column>
-        <el-table-column prop="recentUsage" label="评价" width="170px" align="center">
-          <template >
+        <el-table-column prop="recentUsage" label="评价" width="170px" align="left">
+          <template>
             <span>效率</span>
             <el-rate v-model="value" disabled show-score text-color="#ff9900" score-template="{value}">
             </el-rate>
@@ -59,8 +59,16 @@
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <div class="btn-icons-group">
-              <el-button @click.native.prevent="taskCollection(scope.$index,scope.row)" type="text" icon="el-icon-edit">完成任务</el-button>
-                <el-button @click.native.prevent="CancelTask(scope.$index,scope.row)" type="text" icon="el-icon-delete">取消任务</el-button>
+              <el-row>
+                <el-col>
+                  <el-button @click.native.prevent="taskCollection(scope.$index,scope.row)" type="text"
+                    icon="el-icon-edit">完成任务</el-button>
+                </el-col>
+                <el-col>
+                  <el-button @click.native.prevent="CancelTask(scope.$index,scope.row)" type="text"
+                    icon="el-icon-delete">取消任务</el-button>
+                </el-col>
+              </el-row>
             </div>
           </template>
         </el-table-column>
@@ -93,10 +101,13 @@ export default {
         type: 'warning'
       }).then(() => {
         this.$api.Wdrw.cancelTask({
-          row}).then(res => {
+          row
+        }).then(res => {
           var result = res.data
           if (result.status === '1') {
-            this.$api.Wdrw.getMyTaskList({isLimit: this.isLimit}).then(res => {
+            this.$api.Wdrw.getMyTaskList({
+              isLimit: this.isLimit
+            }).then(res => {
               let result1 = res.data
               console.log(result1.data)
               this.tableData = result1.data
@@ -128,7 +139,9 @@ export default {
 
   },
   mounted () {
-    this.$api.Wdrw.getMyTaskList({isLimit: this.isLimit}).then(res => {
+    this.$api.Wdrw.getMyTaskList({
+      isLimit: this.isLimit
+    }).then(res => {
       let result = res.data
       console.log(result.data)
       this.tableData = result.data

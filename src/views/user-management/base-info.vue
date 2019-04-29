@@ -51,8 +51,8 @@
             <el-col :span="10">
               <el-form-item label="学历">
                 <el-select v-model="form.education" placeholder="请选择学历">
-                  <el-option v-for="item in education" :key="item.dictCode" :label="item.dictName" :value="item.dictCode"
-                    :disabled="item.disabled">
+                  <el-option v-for="item in education" :key="item.dictCode" :label="item.dictName"
+                    :value="item.dictCode" :disabled="item.disabled">
                   </el-option>
                 </el-select>
               </el-form-item>
@@ -60,8 +60,8 @@
             <el-col :span="10">
               <el-form-item label="专业">
                 <el-select v-model="form.major" multiple placeholder="请选择专业">
-                  <el-option v-for="item in major" :key="item.dictCode" :label="item.dictName"
-                    :value="item.dictCode" :disabled="item.diasbled">
+                  <el-option v-for="item in major" :key="item.dictCode" :label="item.dictName" :value="item.dictCode"
+                    :disabled="item.diasbled">
                   </el-option>
                 </el-select>
               </el-form-item>
@@ -81,8 +81,8 @@
             <el-col :span="10">
               <el-form-item label="学位">
                 <el-select v-model="form.degree" multiple placeholder="请选择学位">
-                  <el-option v-for="item in degree" :key="item.dictCode" :label="item.dictName"
-                    :value="item.dictCode" :disabled="item.diasbled">
+                  <el-option v-for="item in degree" :key="item.dictCode" :label="item.dictName" :value="item.dictCode"
+                    :disabled="item.diasbled">
                   </el-option>
                 </el-select>
               </el-form-item>
@@ -191,7 +191,7 @@ export default {
   mounted () {
     // 获取字典表，渲染下拉框
     var dictionaryObj = {
-      dict_code: [ 'major', 'education', 'degree', 'fullTime', 'D_SEX' ]
+      dict_code: ['major', 'education', 'degree', 'fullTime', 'D_SEX']
     }
     this.$api.dictionary.getDictionaries(dictionaryObj).then(res => {
       let result = res.data
@@ -251,6 +251,13 @@ export default {
     padding-right: 50px;
   }
 
+  .base-info /deep/ .el-input__inner {
+    border-radius: 0;
+    border-top:none;
+    border-left:none;
+    border-right:none;
+  }
+
   .gray-btn {
     color: #666;
     font-size: 14px;
@@ -261,7 +268,10 @@ export default {
   .base-info /deep/ .el-form--label-top .el-form-item__label {
     padding: 0;
   }
-  .el-form-item--mini.el-form-item, .el-form-item--small.el-form-item {
-    margin-bottom:6px;
+
+  .el-form-item--mini.el-form-item,
+  .el-form-item--small.el-form-item {
+    margin-bottom: 6px;
   }
+
 </style>

@@ -3,14 +3,14 @@
     <el-form ref="form" :model="form" label-width="80px" label-position="top">
       <el-row type="flex" justify="flex-start" :gutter="24">
         <el-col :span="5">
-          <el-autocomplete class="input1" v-model="form.projectId" :fetch-suggestions="querySearch" placeholder="项目编号"  clearable
-            :trigger-on-focus="false" @select="handleSelect"></el-autocomplete>
+          <el-autocomplete class="input1" v-model="form.projectId" :fetch-suggestions="querySearch" placeholder="项目编号"
+            clearable :trigger-on-focus="false" @select="handleSelect"></el-autocomplete>
         </el-col>
         <el-col :span="5">
-          <el-input placeholder="任务编码" class="input1" v-model="form.taskId"  clearable></el-input>
+          <el-input placeholder="任务编码" class="input1" v-model="form.taskId" clearable></el-input>
         </el-col>
         <el-col :span="5">
-         <el-input placeholder="任务名称" class="input1" v-model="form.taskName"  clearable></el-input>
+          <el-input placeholder="任务名称" class="input1" v-model="form.taskName" clearable></el-input>
         </el-col>
 
         <el-col :span="15">
@@ -20,66 +20,66 @@
         </el-col>
       </el-row>
     </el-form>
-    <el-table :data="tableData" border style="width: 100%" v-loading="loading" :height = "tableHeight">
-        <el-table-column prop="project" label="项目信息">
-          <template slot-scope="scope2">
-            <div>
-              <p>{{scope2.row.projectId}}</p>
-              <p>{{scope2.row.projectName}}</p>
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column prop="taskName" label="任务名称" align="center">
-        </el-table-column>
-        <el-table-column prop="taskStatus" label="任务状态" align="center">
-        </el-table-column>
-        <el-table-column prop="mastery" label="任务时间" align="center">
-          <template slot-scope="scope1">
-            <div>
-              计划开始时间：<p>{{scope1.row.planStartTime}}</p>
-              实际开始时间：<p>{{scope1.row.actualStartTime}}</p>
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column prop="actualEndTime" label="任务结束时间" align="center">
-        </el-table-column>
-        <el-table-column prop="recentUsage" label="预警信息" align="center">
-        </el-table-column>
-        <el-table-column prop="recentUsage" label="标准工时" align="center">
-        </el-table-column>
-        <el-table-column prop="recentUsage" label="成果矫正" align="center">
-        </el-table-column>
-        <el-table-column prop="recentUsage" label="评价" width="170px" align="center">
-          <template >
-            <span>效率</span>
-            <el-rate v-model="value" disabled show-score text-color="#ff9900" score-template="{value}">
-            </el-rate>
-            <span>质量</span>
-            <el-rate v-model="value" disabled show-score text-color="#ff9900" score-template="{value}">
-            </el-rate>
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" align="center">
-          <template slot-scope="scope">
-            <div class="btn-icons-group">
-              <!-- <i class="edit el-icon-edit" @click="scope.row.edit=true;isAddRow=false">完成任务</i>
-              <i class="delect el-icon-delete" @click="CancelTask(scope.$index, scope.row)">取消任务</i> -->
-               <el-button @click.native.prevent="taskCollection(scope.$index,scope.row)" type="text" icon="el-icon-edit">完成任务</el-button>
-                <el-button @click.native.prevent="CancelTask(scope.$index,scope.row)" type="text" icon="el-icon-delete">取消任务</el-button>
-            </div>
-          </template>
-        </el-table-column>
-      </el-table>
-     <div class="pagination-wrap">
+    <el-table :data="tableData" border style="width: 100%" v-loading="loading" :height="tableHeight">
+      <el-table-column prop="project" label="项目信息">
+        <template slot-scope="scope2">
+          <div>
+            <p>{{scope2.row.projectId}}</p>
+            <p>{{scope2.row.projectName}}</p>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column prop="taskName" label="任务名称" align="left">
+      </el-table-column>
+      <el-table-column prop="taskStatus" label="任务状态" align="left">
+      </el-table-column>
+      <el-table-column prop="mastery" label="任务时间" width = "220px" align="left">
+        <template slot-scope="scope1">
+          <div>
+            <p>计划开始时间：{{scope1.row.planStartTime}}</p>
+            <p>实际开始时间：{{scope1.row.actualStartTime}}</p>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column prop="actualEndTime" label="任务结束时间" align="left">
+      </el-table-column>
+      <el-table-column prop="recentUsage" label="预警信息" align="left">
+      </el-table-column>
+      <el-table-column prop="recentUsage" label="标准工时" align="left">
+      </el-table-column>
+      <el-table-column prop="recentUsage" label="成果矫正" align="left">
+      </el-table-column>
+      <el-table-column prop="recentUsage" label="评价" width="170px" align="left">
+        <template>
+          <span>效率</span>
+          <el-rate v-model="value" disabled show-score text-color="#ff9900" score-template="{value}">
+          </el-rate>
+          <span>质量</span>
+          <el-rate v-model="value" disabled show-score text-color="#ff9900" score-template="{value}">
+          </el-rate>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" align="center">
+        <template slot-scope="scope">
+          <div class="btn-icons-group">
+            <el-row>
+              <el-col>
+                <el-button @click.native.prevent="taskCollection(scope.$index,scope.row)" type="text"
+                  icon="el-icon-edit">完成任务</el-button>
+              </el-col>
+              <el-col>
+                <el-button @click.native.prevent="CancelTask(scope.$index,scope.row)" type="text" icon="el-icon-delete">
+                  取消任务</el-button>
+              </el-col>
+            </el-row>
+          </div>
+        </template>
+      </el-table-column>
+    </el-table>
+    <div class="pagination-wrap">
 
-      <el-pagination
-      background
-      layout="prev, pager, next"
-      :page-size= "pageSize"
-      :total="total"
-      @current-change = "handleCurrChange"
-      @size-change = "handleSizeChange"
-      >
+      <el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="total"
+        @current-change="handleCurrChange" @size-change="handleSizeChange">
       </el-pagination>
     </div>
   </div>
@@ -121,7 +121,8 @@ export default {
         type: 'warning'
       }).then(() => {
         this.$api.Wdrw.cancelTask({
-          row}).then(res => {
+          row
+        }).then(res => {
           var result = res.data
           if (result.status === '1') {
             this.loading = true
@@ -343,8 +344,10 @@ export default {
     border-radius: 8px;
 
   }
-   .pagination-wrap {
+
+  .pagination-wrap {
     padding: 20px;
+
     .el-pagination {
       float: right;
     }

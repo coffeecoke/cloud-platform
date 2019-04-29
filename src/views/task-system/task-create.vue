@@ -1,22 +1,22 @@
 <template>
   <div class="create-table">
     <el-form ref="form" :model="form" label-width="80px" label-position="top">
-      <el-row :gutter="24">
-        <el-col :span="5">
+      <el-row :gutter="20">
+        <el-col :span="4">
           <el-autocomplete class="input1" v-model="form.projectId" :fetch-suggestions="querySearch" placeholder="项目编号"
             :trigger-on-focus="false" @select="handleSelect" clearable></el-autocomplete>
         </el-col>
-        <el-col :span="5">
+        <el-col :span="4">
           <div class="grid-content bg-purple">
             <el-input placeholder="项目名称" class="input1" v-model="form.projectName" clearable></el-input>
           </div>
         </el-col>
-        <el-col :span="5">
+        <el-col :span="4">
           <div class="grid-content bg-purple">
             <el-input placeholder="项目经理" class="input1" v-model="form.proManager" clearable></el-input>
           </div>
         </el-col>
-        <el-col :span="5">
+        <el-col :span="4">
           <div class="grid-content bg-purple">
             <el-input placeholder="项目总监" class="input1" v-model="form.proDirector" clearable></el-input>
           </div>
@@ -255,12 +255,6 @@ export default {
     }
   },
   methods: {
-    aaaa () {
-      alert('22222222222')
-    },
-    bbbb () {
-      alert('22222222222')
-    },
     // 企业承接的方法
     underTake (index, row) {
       let params = {
@@ -648,8 +642,6 @@ export default {
   }
   .input1 {
     .el-input__inner {
-      height: 40px;
-      width: 200px;
       background: #f9fafc;
       border-radius: 8px;
       border: 1px solid #DCDFE6;
