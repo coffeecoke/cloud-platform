@@ -43,7 +43,7 @@
       <el-table-column width="90px" prop="proManager" label="项目经理" align="center"></el-table-column>
       <el-table-column width="150px" prop="proDirector" label="项目总监" align="center"></el-table-column>
       <el-table-column width="150px" prop="proQualityManager" label="质量管理" align="center"></el-table-column>
-      <el-table-column width="150px" prop="proQualityManager" label="承接类型" align="center"></el-table-column>
+      <el-table-column width="150px" prop="underTakingType" label="承接类型" align="center"></el-table-column>
       <el-table-column width="100px" prop="taskTotalCount" label="任务总数" align="center"></el-table-column>
       <el-table-column width="200px" prop="taskPer" label="任务" align="right">
         <template slot-scope="scope">
@@ -63,21 +63,38 @@
         </template>
       </el-table-column>
       <el-table-column fixed="right" label="操作" width="150px" align="center">
-        <template slot-scope="scope">
+        <!-- <template slot-scope="scope">
           <el-button @click="taskissue(scope.row.projectId)" type="text" size="medium"><i class="el-icon-upload"
               title="跳转到任务发布"></i></el-button>
           <el-button type="text" size="medium">
             <router-link to="/#/1-2"><i class="el-icon-share" title="跳转到任务脉络"></i></router-link>
           </el-button>
-        </template>
+        </template> -->
       </el-table-column>
     </el-table>
+     <div class="pagination-wrap">
+
+      <el-pagination
+      background
+      layout="prev, pager, next"
+      :page-size= "pageSize"
+      :total="total"
+      @current-change = "handleCurrChange"
+      @size-change = "handleSizeChange"
+      >
+      </el-pagination>
+    </div>
   </div>
 </template>
 <script>
 export default {
   data () {
     return {
+      loading: false,
+      currPage: 1, // 当前页
+      total: 1, // 总条数
+      pageSize: 10, // 一页显示多少条
+      pageNum: 1, // 需要查询的页码
       form: {
         projectId: '',
         projectName: '',
@@ -89,28 +106,61 @@ export default {
     }
   },
   methods: {
+    // 条目改变时
+    handleSizeChange (value) {
+      // console.log(currPage)
+    },
+    // 点击页码改变时
+    handleCurrChange (value) {
+      this.pageNum = value
+      // this.loading = true
+      this.loading = true
+      let params = {
+        pageNum: this.pageNum, // 请求的页码
+        pageSize: this.pageSize, // 每页显示条数
+        projectId: this.form.projectId,
+        projectName: this.form.projectName,
+        proManager: this.form.proManager,
+        proDirector: this.form.proDirector
+      }
+      this.$api.TaskCreate.getUnderTakingList(params).then(res => {
+        var result = res.data
+        this.loading = false
+        // this.tableData = result.data
+        this.tableData = result.data.list || []
+        this.total = result.data.total
+        this.currPage = result.data.pageNum
+      })
+    },
     // 查询
     confirm () {
-      let formData = new FormData()
-      Object.keys(this.form).forEach(key => {
-        console.log(key)
-        formData.append(key, this.form[key])
-      })
-      this.$api.TaskCreate.getCountTaskList(formData).then(res => {
+      this.loading = true
+      let params = {
+        pageNum: '1', // 请求的页码
+        pageSize: this.pageSize, // 每页显示条数
+        projectId: this.form.projectId,
+        projectName: this.form.projectName,
+        proManager: this.form.proManager,
+        proDirector: this.form.proDirector
+      }
+      this.$api.TaskCreate.getUnderTakingList(params).then(res => {
         var result = res.data
-        console.log(result.data)
-        this.tableData = result.data
+        this.loading = false
+        // this.tableData = result.data
+        this.tableData = result.data.list || []
+        this.total = result.data.total
+        this.currPage = result.data.pageNum
       })
     },
-    taskissue (param) {
-      this.$router.push({
-        name: '任务发布',
-        query: {
-          date: param
-        }
+    // taskissue (param) {
+    //   this.$router.push({
+    //     name: '任务发布',
+    //     query: {
+    //       date: param
+    //     }
 
-      })
-    },
+    //   })
+    // },
     handleClick (row) {
       console.log(row)
     },

@@ -65,12 +65,10 @@
         <template slot-scope="scope">
           <el-button @click="taskissue(scope.row.projectId)" type="text" size="medium"><i class="el-icon-upload"
               title="跳转到任务发布"></i></el-button>
-          <el-button type="text" size="medium">
+          <!-- <el-button type="text" size="medium">
             <router-link to="/#/1-2"><i class="el-icon-share" title="跳转到任务脉络"></i></router-link>
-          </el-button>
-          <el-button @click="skipUndertake(scope.row)" type="text" size="medium"><i class="el-icon-upload"></i></el-button>
-          <el-button @click="showCreateQuestPanl(scope.row.projectId,scope.row.projectName)" type="text" size="medium"><i class="el-icon-document"
-              title="生成调查问卷"></i></el-button>
+          </el-button> -->
+          <el-button @click="skipUndertake(scope.row)" type="text" size="medium"><i class="el-icon-goods" title="承接项目"></i></el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -89,7 +87,7 @@
      <div class="cretable">
      <el-dialog title="任务承接" :visible.sync="dialogPersonalAndEnterprise" center>
     <el-tabs v-model="activeName" @tab-click="PersonalAndEnterprise" type="border-card">
-    <el-tab-pane label="企业" name="E" v-model="department" ><div class="" id="">
+    <el-tab-pane label="企业" name="C" v-model="department" ><div class="" id="">
        <el-row :gutter="20">
       <el-col :span="4">
        <div class="grid-content bg-purple">
@@ -107,7 +105,7 @@
           </div>
         </el-col>
         </el-row>
-    <el-table :data="EnterpriseTableData" border  v-loading="loading" header-cell-class-name="tableHeader"  height="600">
+    <el-table :data="EnterpriseTableData" border  v-loading="loading" header-cell-class-name="tableHeader"  height="600"  :header-cell-style="{background:'#1a74ee',color:'#f9fafc'}">
       <el-table-column prop="customerNumber" label="客户编号">
       </el-table-column>
       <el-table-column prop="customerFullName" label="客户全称">
@@ -121,6 +119,7 @@
       <el-table-column fixed="right" label="操作" align="center">
         <template slot-scope="scope">
           <el-button @click.native.prevent="viewInfo(scope.$index,scope.row)" type="text">查看</el-button>
+          <el-button @click.native.prevent="underTake(scope.$index,scope.row)" type="text">承接</el-button>
         </template>
       </el-table-column>
 
@@ -150,7 +149,7 @@
             <el-button type="primary" style="float:right" round @click.native.prevent="getTableList1">确定</el-button>
           </div>
         </el-col>
-    <el-table :data="PersonalTableData" border  v-loading="loading" header-cell-class-name="tableHeader" height="600">
+    <el-table :data="PersonalTableData" border  v-loading="loading" header-cell-class-name="tableHeader" height="600" :header-cell-style="{background:'#1a74ee',color:'#f9fafc'}">
       <el-table-column prop="name" label="姓名">
       </el-table-column>
       <el-table-column prop="D_SEX" label="性别">
@@ -166,7 +165,7 @@
       <el-table-column fixed="right" label="操作" align="center">
         <template slot-scope="scope">
           <el-button @click.native.prevent="viewInfo(scope.$index,scope.row)" type="text">查看</el-button>
-          <el-button @click.native.prevent="underTake(scope.$index,scope.row)" type="text">承接</el-button>
+          <el-button @click.native.prevent="underTake1(scope.$index,scope.row)" type="text">承接</el-button>
         </template>
 
       </el-table-column>
@@ -214,9 +213,10 @@
 export default {
   data () {
     return {
+      // underTakingType: '',
       loading1: false,
       name: '',
-      activeName: 'E',
+      activeName: 'C',
       PersonalTableData: [],
       EnterpriseTableData: [],
       customerNumber: '',
@@ -247,13 +247,82 @@ export default {
       createQuestPanl: false,
       tableData: [{
         projectId: ''
-      }]
+      }],
+      Pro: null
     }
   },
   methods: {
-    // 承接的方法
+    // 企业承接的方法
     underTake (index, row) {
-
+      let params = {
+        underTakingType: 'C',
+        projectId: this.Pro,
+        underTakingId: this.customerNumber
+      }
+      this.$api.partner.getEnterprise(params).then(res => {
+        let result = res.data
+        this.loading = false
+        if (result.status === '1') {
+          // this.$message({
+          //   type: 'success',
+          //   message: '承接成功'
+          // })
+          // this.dialogPersonalAndEnterprise = true
+          // console.log(result.data.list.length)
+          this.dialogPersonalAndEnterprise = false
+          let params = {
+            pageNum: this.pageNum, // 请求的页码
+            pageSize: this.pageSize, // 每页显示条数
+            projectId: this.form.projectId,
+            projectName: this.form.projectName,
+            proManager: this.form.proManager,
+            proDirector: this.form.proDirector
+          }
+          this.$api.TaskCreate.getCountTaskList(params).then(res => {
+            var result = res.data
+            // this.loading1 = false
+            // this.tableData = result.data
+            this.tableData = result.data.list || []
+            this.total = result.data.total
+            this.currPage = result.data.pageNum
+          })
+        }
+      })
+    },
+    // 个人承接方法
+    underTake1 (index, row) {
+      let params = {
+        underTakingType: 'P',
+        projectId: this.Pro,
+        underTakingId: this.userId
+      }
+      this.$api.partner.getEnterprise(params).then(res => {
+        let result = res.data
+        // this.loading = false
+        if (result.status === '1') {
+          // this.$message({
+          //   type: 'success',
+          //   message: '承接成功'
+          // })
+          this.dialogPersonalAndEnterprise = false
+          let params = {
+            pageNum: this.pageNum, // 请求的页码
+            pageSize: this.pageSize, // 每页显示条数
+            projectId: this.form.projectId,
+            projectName: this.form.projectName,
+            proManager: this.form.proManager,
+            proDirector: this.form.proDirector
+          }
+          this.$api.TaskCreate.getCountTaskList(params).then(res => {
+            var result = res.data
+            // this.loading1 = false
+            // this.tableData = result.data
+            this.tableData = result.data.list || []
+            this.total = result.data.total
+            this.currPage = result.data.pageNum
+          })
+        }
+      })
     },
     // 条目改变时
     handleSizeChange (value) {
@@ -366,7 +435,7 @@ export default {
     },
     //  个人或企业之间的跳转并同时向后台发请求返回table数据
     PersonalAndEnterprise (tab, event) {
-      if (tab.name === 'E') {
+      if (tab.name === 'C') {
         // console.log('11111111111111111111111111')
         this.loading = true
         let params = {
@@ -417,8 +486,9 @@ export default {
       }
     },
     // 承接跳转
-    skipUndertake () {
+    skipUndertake (row) {
       this.dialogPersonalAndEnterprise = true
+      this.Pro = row.projectId
     },
     // 查询
     confirm () {

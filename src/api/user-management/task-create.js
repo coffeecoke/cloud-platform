@@ -24,6 +24,13 @@ const TaskCreate = {
       url: '/taskCount/getCountTaskList',
       data: params
     })
+  },
+  getUnderTakingList (params) {
+    return axios({
+      method: 'post',
+      url: '/taskCount/getUnderTakingList',
+      data: params
+    })
   }
 
 }

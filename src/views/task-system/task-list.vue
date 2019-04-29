@@ -17,7 +17,7 @@
   <el-col :span="4"><div class="grid-content bg-purple"><el-input placeholder="任务名称" class="input1" v-model="form.taskName"  clearable></el-input></div></el-col>
   <el-col :span="4"><div class="grid-content bg-purple"><el-input placeholder="任务标的" class="input1" v-model="form.taskTarget"  clearable></el-input></div></el-col>
   <el-col :span="4"><div class="grid-content bg-purple"><el-input placeholder="任务所属组" class="input1" v-model="form.taskGroupId"  clearable></el-input></div></el-col>
-  <el-col :span="3"><div class="button"><el-button type="primary" style="float:right"   @click="confirm">确定</el-button></div></el-col>
+  <el-col :span="3"><div class="button"><el-button type="primary" style="float:right"   @click="confirm">查询</el-button></div></el-col>
 </el-row></el-form>
 
 <el-row>
@@ -182,7 +182,7 @@
       </div>
   <div slot="footer" class="dialog-footer">
     <el-button @click="dialogSetTaskPlanVisible = false">取 消</el-button>
-    <el-button type="primary" @click="confirmPlan()">确 定</el-button>
+    <el-button type="primary" @click="savePlan()">确 定</el-button>
   </div>
 </el-dialog>
 </div>
@@ -193,6 +193,7 @@
 export default {
   data () {
     return {
+      // 模糊匹配数组
       projectid: [],
       name: '',
       loading: false,
@@ -200,6 +201,7 @@ export default {
       total: 1, // 总条数
       pageSize: 10, // 一页显示多少条
       pageNum: 1, // 需要查询的页码
+      // 任务计划提交表单
       formp: {
         planStartTime: '',
         planedProjectDuration: ''
@@ -208,7 +210,8 @@ export default {
       tableData3: [],
       department: 'T',
       multipleSelection: [],
-      // 任务查询form表单
+      activeName: 'T',
+      // 任务列表查询form表单
       form: {
         projectId: '2018725-020B',
         taskId: '',
@@ -222,12 +225,9 @@ export default {
       dialogSetTaskPlanVisible: false,
       dialogPersonVisible: false,
       dialogGroupVisible: false,
-      // 项目编号输入框
-      restaurants: [],
-      state2: '',
       // 任务列表
       tableData: [],
-      activeName: 'T',
+      // 定义的变量用于保存数据
       moveObj: null,
       setPerson: null,
       setPlan: null
@@ -243,7 +243,6 @@ export default {
         query: {
           data: params1
         }
-
       })
     },
     // 条目改变时
@@ -355,8 +354,8 @@ export default {
         })
       }
     },
-    // 任务计划确定按钮
-    confirmPlan () {
+    // 设置任务计划中的保存按钮
+    savePlan () {
       this.setPlan = Object.assign({planedProjectDuration: this.formp.planedProjectDuration}, {planStartTime: this.formp.planStartTime}, {multipleSelection: this.multipleSelection})
       this.$api.TaskList.saveTaskPlan({setPlan: this.setPlan}).then(res => {
         var result = res.data
@@ -472,6 +471,7 @@ export default {
         })
       })
     },
+    // 标签页下的事件
     setDepartment (tab, event) {
       this.loading = true
       let params = {
@@ -479,7 +479,7 @@ export default {
         pageSize: this.pageSize, // 每页显示条数
         department: tab.name
       }
-      console.log(tab.name)
+      // console.log(tab.name)
       this.dialogPersonVisible = true
       this.$api.TaskList.getTaskPersonList(params).then(res => {
         var result = res.data
@@ -489,11 +489,7 @@ export default {
         this.currPage = result.data.pageNum
       })
     },
-    // 标签页下事件
-    // setDepartment (tab, event) {
-    //   console.log(tab.name) // 获取到当前元素的id
-    // },
-    // 确定按钮
+    // 查询按钮
     confirm () {
       this.loading = true
       let params = {
@@ -513,6 +509,7 @@ export default {
         this.currPage = result.data.pageNum
       })
     },
+    // 设置属组下的改变事件
     handchange (value) {
       let taskGroupId = value[value.length - 1]
       this.moveObj = Object.assign({}, {taskGroupId: taskGroupId}, {multipleSelection: this.multipleSelection})

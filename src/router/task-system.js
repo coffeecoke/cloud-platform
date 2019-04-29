@@ -32,7 +32,7 @@ export default [{
   children: [
     {
       path: '/2-1',
-      name: '任务统计',
+      name: '项目列表',
       component: TaskCreate
     },
     {
