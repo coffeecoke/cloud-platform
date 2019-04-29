@@ -53,12 +53,12 @@ export default {
   },
   methods: {
     handleSubmit2 (ev) {
-      var _this = this
+      let _this = this
       this.$refs.ruleForm2.validate((valid) => {
         if (valid) {
           // _this.$router.replace('/table');
           this.logining = true
-          var loginParams = { loginName: this.ruleForm2.loginName, password: this.ruleForm2.password }
+          let loginParams = { loginName: this.ruleForm2.loginName, password: this.ruleForm2.password }
           this.$api.userInfo.getUserInfo(loginParams).then(res => {
             let result = res.data
             this.logining = false
@@ -72,7 +72,7 @@ export default {
             } else {
               localStorage.setItem('token', token)
               localStorage.setItem('userName', userName)
-
+              console.log(localStorage.getItem('userName'))
               _this.$router.push({ path: '/' })
             }
           })
@@ -89,17 +89,19 @@ export default {
 
 <style lang="scss" scoped>
   .login-container {
-    /*box-shadow: 0 0px 8px 0 rgba(0, 0, 0, 0.06), 0 1px 0px 0 rgba(0, 0, 0, 0.02);*/
     -webkit-border-radius: 5px;
     border-radius: 5px;
     -moz-border-radius: 5px;
     background-clip: padding-box;
-    margin: 180px auto;
     width: 350px;
     padding: 35px 35px 15px 35px;
     background: #fff;
     border: 1px solid #eaeaea;
     box-shadow: 0 0 25px #cac6c6;
+    position: absolute;
+    top:180px;
+    left:50%;
+    transform: translateX(-50%);
     .title {
       margin: 0px auto 40px auto;
       text-align: center;

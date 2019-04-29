@@ -54,8 +54,9 @@ export default {
     }
   },
   activated () {},
-  mounted () {
-    this.userName = window.localStorage.getItem('userName') || '亲~'
+  created () {
+    console.log(this.userName)
+    this.userName = localStorage.getItem('userName') || '亲~'
   },
   methods: {
     handleClick (tab, event) {
