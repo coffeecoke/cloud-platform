@@ -169,10 +169,21 @@ export default {
           row}).then(res => {
           var result = res.data
           if (result.status === '1') {
-            this.$api.Wdrw.getMyTaskList().then(res => {
-              let result1 = res.data
-              console.log(result1.data)
-              this.tableData = result1.data
+            this.loading = true
+            let params = {
+              pageNum: '1', // 请求的页码
+              pageSize: this.pageSize, // 每页显示条数
+              projectId: this.form.projectId,
+              taskId: this.form.taskId,
+              taskName: this.form.taskName
+            }
+            this.$api.Wdrw.getMyTaskList(params).then(res => {
+              var result = res.data
+              this.loading = false
+              // this.tableData = result.data
+              this.tableData = result.data.list || []
+              this.total = result.data.total
+              this.currPage = result.data.pageNum
             })
             this.$message({
               type: 'success',

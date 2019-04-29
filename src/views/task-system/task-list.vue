@@ -11,7 +11,7 @@
       placeholder="项目编号"
       :trigger-on-focus="false"
       @select="handleSelect"
-    ></el-autocomplete>
+    clearable :disabled="true"></el-autocomplete>
   </el-col>
   <el-col :span="4"><div class="grid-content bg-purple"><el-input placeholder="任务编号" class="input1" v-model="form.taskId"  clearable></el-input></div></el-col>
   <el-col :span="4"><div class="grid-content bg-purple"><el-input placeholder="任务名称" class="input1" v-model="form.taskName"  clearable></el-input></div></el-col>
@@ -170,13 +170,13 @@
     <el-dialog title="设置任务计划" :visible.sync="dialogSetTaskPlanVisible">
    <div class="block">
         <el-form :inline="true" :model="formp" class="demo-form-inline">
-          <el-form-item label="请设置认领时限：">
+          <el-form-item label="请设置计划开始时间：">
             <el-date-picker v-model="formp.planStartTime" type="date" placeholder="选择日期" format="yyyy 年 MM 月 dd 日"
               value-format="yyyy-MM-dd">
             </el-date-picker>
           </el-form-item>
           <el-form-item label="请设置计划工期：">
-            <el-input placeholder="请输入工期" v-model="formp.planedProjectDuration" clearable></el-input>
+            <el-input placeholder="请输入工期" v-model="formp.planedProjectDuration"  type="number" clearable></el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -364,6 +364,7 @@ export default {
           this.dialogSetTaskPlanVisible = false
           this.loading = true
           let params = {
+            taskStatus: this.taskStatus,
             pageNum: this.pageNum, // 请求的页码
             pageSize: this.pageSize, // 每页显示条数
             projectId: this.form.projectId,
@@ -568,6 +569,7 @@ export default {
           this.dialogPersonVisible = false
           this.loading = true
           let params = {
+            taskStatus: this.taskStatus,
             pageNum: this.pageNum, // 请求的页码
             pageSize: this.pageSize, // 每页显示条数
             projectId: this.form.projectId,
@@ -605,6 +607,7 @@ export default {
           this.dialogGroupVisible = false
           this.loading = true
           let params = {
+            taskStatus: this.taskStatus,
             pageNum: this.pageNum, // 请求的页码
             pageSize: this.pageSize, // 每页显示条数
             projectId: this.form.projectId,
@@ -724,5 +727,12 @@ export default {
       float: right;
     }
   }
+   input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+    }
+    input[type="number"]{
+        -moz-appearance: textfield;
+    }
 
 </style>

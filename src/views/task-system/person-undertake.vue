@@ -4,7 +4,7 @@
       <el-row :gutter="18">
         <el-col :span="4">
           <el-autocomplete class="input1" v-model="form.projectId" :fetch-suggestions="querySearch" placeholder="项目编号"
-            :trigger-on-focus="false" @select="handleSelect"></el-autocomplete>
+            :trigger-on-focus="false" @select="handleSelect" clearable></el-autocomplete>
         </el-col>
         <el-col :span="4">
           <div class="grid-content bg-purple">

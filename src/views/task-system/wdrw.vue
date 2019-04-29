@@ -52,7 +52,7 @@
             <el-rate v-model="value" disabled show-score text-color="#ff9900" score-template="{value}">
             </el-rate>
             <span>质量</span>
-            <el-rate v-model="value1" disabled show-score text-color="#ff9900" score-template="{value1}">
+            <el-rate v-model="value" disabled show-score text-color="#ff9900" score-template="{value}">
             </el-rate>
           </template>
         </el-table-column>
@@ -81,7 +81,6 @@ export default {
       isLimit: 'Y',
       loading: false,
       value: 1,
-      value1: 1,
 
       tableData: []
     }
@@ -97,7 +96,7 @@ export default {
           row}).then(res => {
           var result = res.data
           if (result.status === '1') {
-            this.$api.Wdrw.getMyTaskList().then(res => {
+            this.$api.Wdrw.getMyTaskList({isLimit: this.isLimit}).then(res => {
               let result1 = res.data
               console.log(result1.data)
               this.tableData = result1.data

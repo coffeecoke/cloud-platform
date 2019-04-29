@@ -134,7 +134,14 @@ export default {
         value2: '5',
         label2: '五级（依赖项>12个）'
       }],
-      tableData: []
+      tableData: [{
+        tid: '',
+        tname: '',
+        postTask: '',
+        effectDegree: '',
+        predecessorTask: '',
+        dependencyDegree: ''
+      }]
     }
   },
   methods: {
@@ -205,7 +212,25 @@ export default {
           row}).then(res => {
           var result = res.data
           if (result.status === '1') {
-            this.confirm()
+            this.loading = true
+            let params = {
+              pageNum: '1', // 请求的页码
+              pageSize: this.pageSize, // 每页显示条数
+              projectId: this.form.projectId,
+              tid: this.form.tid,
+              tname: this.form.tname,
+              taskClass: this.form.taskClass,
+              effectDegree: this.form.effectDegree,
+              dependencyDegree: this.form.dependencyDegree
+            }
+            this.$api.TaskCollection.getClaimTaskList(params).then(res => {
+              var result = res.data
+              this.loading = false
+              // this.tableData = result.data
+              this.tableData = result.data.list || []
+              this.total = result.data.total
+              this.currPage = result.data.pageNum
+            })
             this.$message({
               type: 'success',
               message: '领取成功!'

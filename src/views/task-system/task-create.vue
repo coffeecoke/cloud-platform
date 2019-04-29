@@ -31,7 +31,7 @@
 
     <el-table :data="tableData" style="height: 100%" v-loading="loading1"
       :header-cell-style="{background:'#1a74ee',color:'#f9fafc'}">
-      <el-table-column width="250px" prop="projectId" label="项目" align="left">
+      <el-table-column width="250px" prop="projectId" label="项目" align="center">
         <template slot-scope="scope2">
           <div>
             <p>{{scope2.row.projectId}}</p>
