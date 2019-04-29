@@ -134,14 +134,7 @@ export default {
         value2: '5',
         label2: '五级（依赖项>12个）'
       }],
-      tableData: [{
-        tid: '',
-        tname: '',
-        postTask: '',
-        effectDegree: '',
-        predecessorTask: '',
-        dependencyDegree: ''
-      }]
+      tableData: []
     }
   },
   methods: {
