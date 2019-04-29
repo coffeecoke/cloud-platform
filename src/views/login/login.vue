@@ -54,6 +54,7 @@ export default {
   },
   methods: {
     handleSubmit2 (ev) {
+      localStorage.setItem('loginName', this.ruleForm2.loginName)
       let _this = this
       this.$refs.ruleForm2.validate((valid) => {
         if (valid) {
@@ -73,7 +74,6 @@ export default {
             } else {
               localStorage.setItem('token', token)
               localStorage.setItem('userName', userName)
-              localStorage.setItem('loginName', this.ruleForm2.loginName)
               console.log(localStorage.getItem('userName'))
               _this.$router.push({ path: '/' })
             }
