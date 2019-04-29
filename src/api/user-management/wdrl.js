@@ -18,11 +18,18 @@ const Wdrl = {
     })
   },
   // 任务组查询
-  getClaimTaskList (params) {
+  getMyClaimTaskList (params) {
     return axios({
       method: 'post',
-      url: '/taskClaim/getClaimTaskList',
+      url: '/taskClaim/getMyClaimTaskList',
       data: params
+    })
+  },
+  getMyTaskList (params) {
+    return axios({
+      method: 'post',
+      url: '/taskCount/getMyTaskList'
+      // data: params
     })
   }
 

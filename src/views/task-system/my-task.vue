@@ -7,10 +7,10 @@
             :trigger-on-focus="false" @select="handleSelect"></el-autocomplete>
         </el-col>
         <el-col :span="3">
-          <el-input placeholder="任务/组编码" class="input1" v-model="form.tid"  clearable></el-input>
+          <el-input placeholder="任务编码" class="input1" v-model="form.taskId"  clearable></el-input>
         </el-col>
         <el-col :span="3">
-         <el-input placeholder="任务/组名称" class="input1" v-model="form.tname"  clearable></el-input>
+         <el-input placeholder="任务名称" class="input1" v-model="form.taskName"  clearable></el-input>
         </el-col>
 
         <el-col :span="15">
@@ -89,6 +89,7 @@
 export default {
   data () {
     return {
+      isLimit: '',
       value: 1,
 
       // 页面跳转带的参数，不删
@@ -154,17 +155,40 @@ export default {
       //   value2: '5',
       //   label2: '五级（依赖项>12个）'
       // }],
-      tableData: [{
-        tid: '',
-        tname: '',
-        postTask: '',
-        effectDegree: '',
-        predecessorTask: '',
-        dependencyDegree: ''
-      }]
+      tableData: []
     }
   },
   methods: {
+    CancelTask (index, row) {
+      this.$confirm('是否取消任务?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$api.Wdrw.cancelTask({
+          row}).then(res => {
+          var result = res.data
+          if (result.status === '1') {
+            this.$api.Wdrw.getMyTaskList().then(res => {
+              let result1 = res.data
+              console.log(result1.data)
+              this.tableData = result1.data
+            })
+            this.$message({
+              type: 'success',
+              message: '取消成功!'
+            })
+          } else {
+            this.$message('取消失败！')
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '取消领取'
+        })
+      })
+    },
     // 条目改变时
     handleSizeChange (value) {
       // console.log(currPage)
@@ -177,13 +201,10 @@ export default {
         pageNum: this.pageNum, // 请求的页码
         pageSize: this.pageSize, // 每页显示条数
         projectId: this.form.projectId,
-        tid: this.form.tid,
-        tname: this.form.tname,
-        taskClass: this.form.taskClass,
-        effectDegree: this.form.effectDegree,
-        dependencyDegree: this.form.dependencyDegree
+        taskId: this.form.taskId,
+        taskName: this.form.taskName
       }
-      this.$api.TaskCollection.getClaimTaskList(params).then(res => {
+      this.$api.Wdrw.getMyTaskList(params).then(res => {
         var result = res.data
         this.loading = false
         // this.tableData = result.data
@@ -200,13 +221,10 @@ export default {
           pageNum: '1', // 请求的页码
           pageSize: this.pageSize, // 每页显示条数
           projectId: this.form.projectId,
-          tid: this.form.tid,
-          tname: this.form.tname,
-          taskClass: this.form.taskClass,
-          effectDegree: this.form.effectDegree,
-          dependencyDegree: this.form.dependencyDegree
+          taskId: this.form.taskId,
+          taskName: this.form.taskName
         }
-        this.$api.TaskCollection.getClaimTaskList(params).then(res => {
+        this.$api.Wdrw.getMyTaskList(params).then(res => {
           var result = res.data
           this.loading = false
           // this.tableData = result.data
@@ -221,33 +239,33 @@ export default {
         })
       }
     },
-    // 任务领取
-    taskCollection (index, row) {
-      this.$confirm('是否确认领取?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.$api.TaskCollection.claim({
-          row}).then(res => {
-          var result = res.data
-          if (result.status === '1') {
-            this.confirm()
-            this.$message({
-              type: 'success',
-              message: '领取成功!'
-            })
-          } else {
-            this.$message('领取失败！')
-          }
-        })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '取消领取'
-        })
-      })
-    },
+    // // 任务
+    // taskCollection (index, row) {
+    //   this.$confirm('是否确认领取?', '提示', {
+    //     confirmButtonText: '确定',
+    //     cancelButtonText: '取消',
+    //     type: 'warning'
+    //   }).then(() => {
+    //     this.$api.TaskCollection.claim({
+    //       row}).then(res => {
+    //       var result = res.data
+    //       if (result.status === '1') {
+    //         this.confirm()
+    //         this.$message({
+    //           type: 'success',
+    //           message: '领取成功!'
+    //         })
+    //       } else {
+    //         this.$message('领取失败！')
+    //       }
+    //     })
+    //   }).catch(() => {
+    //     this.$message({
+    //       type: 'info',
+    //       message: '取消领取'
+    //     })
+    //   })
+    // },
     // 项目编号模糊查询
     querySearch (queryString, cb) {
       var taskBlurry = this.projectid
@@ -270,6 +288,17 @@ export default {
       let result = res.data
       console.log(result.data)
       this.projectid = result.data
+    })
+    let params = {
+      pageNum: this.pageNum, // 请求的页码
+      pageSize: this.pageSize, // 每页显示条数
+      isLimit: this.isLimit
+    }
+    this.$api.Wdrw.getMyTaskList(params).then(res => {
+      let result = res.data
+      this.tableData = result.data.list || []
+      this.total = result.data.total
+      this.currPage = result.data.pageNum
     })
   },
   activated () {}

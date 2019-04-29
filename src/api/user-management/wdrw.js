@@ -26,11 +26,11 @@ const Wdrw = {
     })
   },
   // 任务体系查询
-  getAllMyTask (params) {
+  getMyTaskList (params) {
     return axios({
       method: 'post',
-      url: '/taskCount/getAllMyTask'
-      // data: params
+      url: '/taskCount/getMyTaskList',
+      data: params
     })
   },
   // 任务体系查询

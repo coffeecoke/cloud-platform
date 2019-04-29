@@ -73,7 +73,7 @@
             </el-date-picker>
           </el-form-item>
           <el-form-item label="请设置基础价格：">
-            <el-input placeholder="请输入价格" v-model="forma.taskBasePrice" clearable></el-input>
+            <el-input placeholder="请输入价格" v-model="forma.taskBasePrice" type="number" clearable></el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -243,32 +243,40 @@ export default {
     //   // this.moveObj = Object.assign({}, {ability: ability}, {moveRowData: this.moveRowData})
     // },
     taskConfirm () {
-      this.allData = Object.assign({tid: this.tid}, {taskClass: this.form.taskClass}, {taskClass: this.form.taskClass}, {projectId: this.form.projectId}, {taskBasePrice: this.forma.taskBasePrice}, {taskClaimPeriod: this.forma.taskClaimPeriod}, {abilityTable: this.abilityTable})
-      this.$api.taskIssue.publishTask({allData: this.allData}).then(res => {
-        var result = res.data
-        console.log(result.data)
-        if (result.status === '1') {
-          this.dialogTimeandCondition = false
-          let formData = new FormData()
-          // this.form.taskGroupId = data.id
-          Object.keys(this.form).forEach(key => {
-            console.log(key)
-            formData.append(key, this.form[key])
-          })
-          this.$api.taskIssue.getPublishTaskList(formData).then(res => {
-            var result = res.data
-            console.log(result.data)
-            this.tableData = result.data
-          })
-          // console.log(data.id)
-          // this.confirm()
-          this.$message({
-            message: '任务发布成功',
-            type: 'success'
-          })
-        }
+      // if()
+      if (this.forma.taskBasePrice && this.forma.taskClaimPeriod) {
+        this.allData = Object.assign({tid: this.tid}, {taskClass: this.form.taskClass}, {projectId: this.form.projectId}, {taskBasePrice: this.forma.taskBasePrice}, {taskClaimPeriod: this.forma.taskClaimPeriod}, {abilityTable: this.abilityTable})
+        this.$api.taskIssue.publishTask({allData: this.allData}).then(res => {
+          var result = res.data
+          console.log(result.data)
+          if (result.status === '1') {
+            this.dialogTimeandCondition = false
+            let formData = new FormData()
+            // this.form.taskGroupId = data.id
+            Object.keys(this.form).forEach(key => {
+              console.log(key)
+              formData.append(key, this.form[key])
+            })
+            this.$api.taskIssue.getPublishTaskList(formData).then(res => {
+              var result = res.data
+              console.log(result.data)
+              this.tableData = result.data
+            })
+            // console.log(data.id)
+            // this.confirm()
+            this.$message({
+              message: '任务发布成功',
+              type: 'success'
+            })
+          }
         // this.tableData = result.data
-      })
+        })
+      } else {
+        this.$message({
+          message: '请设置认领时限和认领价格',
+          type: 'warning'
+        })
+      }
     },
     // 查询
     confirm () {
@@ -513,5 +521,12 @@ export default {
       float: right;
     }
   }
+   input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+    }
+    input[type="number"]{
+        -moz-appearance: textfield;
+    }
 
 </style>

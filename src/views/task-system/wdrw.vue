@@ -59,8 +59,8 @@
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <div class="btn-icons-group">
-              <i class="edit el-icon-edit" @click="scope.row.edit=true;isAddRow=false">完成任务</i>
-              <i class="delect el-icon-delete" @click="CancelTask(scope.$index, scope.row)">取消任务</i>
+              <el-button @click.native.prevent="taskCollection(scope.$index,scope.row)" type="text" icon="el-icon-edit">完成任务</el-button>
+                <el-button @click.native.prevent="CancelTask(scope.$index,scope.row)" type="text" icon="el-icon-delete">取消任务</el-button>
             </div>
           </template>
         </el-table-column>
@@ -97,7 +97,7 @@ export default {
           row}).then(res => {
           var result = res.data
           if (result.status === '1') {
-            this.$api.Wdrw.getAllMyTask().then(res => {
+            this.$api.Wdrw.getMyTaskList().then(res => {
               let result1 = res.data
               console.log(result1.data)
               this.tableData = result1.data
@@ -129,7 +129,7 @@ export default {
 
   },
   mounted () {
-    this.$api.Wdrw.getAllMyTask({isLimit: this.isLimit}).then(res => {
+    this.$api.Wdrw.getMyTaskList({isLimit: this.isLimit}).then(res => {
       let result = res.data
       console.log(result.data)
       this.tableData = result.data

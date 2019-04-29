@@ -70,6 +70,7 @@
 export default {
   data () {
     return {
+      isLimit: '',
       // 页面跳转带的参数，不删
       data: '',
       loading: false,
@@ -249,6 +250,19 @@ export default {
       let result = res.data
       console.log(result.data)
       this.projectid = result.data
+    })
+    let params = {
+      pageNum: this.pageNum, // 请求的页码
+      pageSize: this.pageSize, // 每页显示条数
+      // projectId: this.projectId,
+      taskClass: this.form.taskClass,
+      isLimit: this.isLimit
+    }
+    this.$api.TaskCollection.getClaimTaskList(params).then(res => {
+      let result = res.data
+      this.tableData = result.data.list || []
+      this.total = result.data.total
+      this.currPage = result.data.pageNum
     })
   },
   activated () {}

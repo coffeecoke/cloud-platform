@@ -66,12 +66,12 @@ export default {
     }
   },
   mounted () {
-    // let params = {
-    //   projectId: this.projectId,
-    //   taskClass: this.taskClass,
-    //   isLimit: this.isLimit
-    // }
-    this.$api.Wdrl.getClaimTaskList().then(res => {
+    let params = {
+      // projectId: this.projectId,
+      taskClass: this.taskClass,
+      isLimit: this.isLimit
+    }
+    this.$api.Wdrl.getMyClaimTaskList(params).then(res => {
       let result = res.data
       console.log(result.data)
       this.tableData = result.data
