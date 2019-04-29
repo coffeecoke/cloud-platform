@@ -37,7 +37,7 @@
         </el-col>
       </el-row>
     </el-form>
-    <el-table :data="tableData" style="height: 100%" v-loading="loading" border :header-cell-style="{background:'#1a74ee',color:'#f9fafc'}">
+    <el-table :data="tableData" style="height: 100%" v-loading="loading" border :header-cell-style="{background:'#1a74ee',color:'#f9fafc'}" :height = "tableHeight">
        <el-table-column prop="projectId" label="项目名称" align="center"></el-table-column>
       <el-table-column prop="tid" label="任务/组编码" align="center"></el-table-column>
       <el-table-column prop="tname" label="任务/组名称" align="center"></el-table-column>
@@ -134,6 +134,7 @@ export default {
         value2: '5',
         label2: '五级（依赖项>12个）'
       }],
+      tableHeight: null,
       tableData: []
     }
   },
@@ -257,6 +258,11 @@ export default {
       this.total = result.data.total
       this.currPage = result.data.pageNum
     })
+
+    this.tableHeight = document.body.clientHeight - 300 + 'px'
+    window.onresize = () => {
+      this.tableHeight = document.body.clientHeight - 300 + 'px'
+    }
   },
   activated () {}
 }

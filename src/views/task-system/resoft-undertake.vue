@@ -29,7 +29,7 @@
       </el-row>
     </el-form>
 
-    <el-table :data="tableData" style="height: 100%" :header-cell-style="{background:'#1a74ee',color:'#f9fafc'}">
+    <el-table :data="tableData" style="height: 100%;margin-top:10px" :header-cell-style="{background:'#1a74ee',color:'#f9fafc'}" :height = 'tableHeight'>
       <el-table-column width="250px" prop="projectId" label="项目" align="left">
          <template slot-scope="scope2">
           <div>
@@ -102,6 +102,7 @@ export default {
         proDirector: ''
       },
       projectid: [],
+      tableHeight: null,
       tableData: []
     }
   },
@@ -186,6 +187,11 @@ export default {
       console.log(result.data)
       this.projectid = result.data
     })
+
+    this.tableHeight = document.body.clientHeight - 280 + 'px'
+    window.onresize = () => {
+      this.tableHeight = document.body.clientHeight - 280 + 'px'
+    }
   }
 }
 

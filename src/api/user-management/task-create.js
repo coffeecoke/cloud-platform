@@ -5,7 +5,7 @@ const TaskCreate = {
   getProject () {
     return axios({
       method: 'post',
-      url: '/taskClaim/getProject'
+      url: '/taskCount/getProject'
       // data: params
     })
   },

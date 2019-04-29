@@ -1,27 +1,27 @@
 <template>
   <div class="create-table">
     <el-form ref="form" :model="form" label-width="80px" label-position="top">
-      <el-row :gutter="18">
-        <el-col :span="4">
+      <el-row :gutter="24">
+        <el-col :span="5">
           <el-autocomplete class="input1" v-model="form.projectId" :fetch-suggestions="querySearch" placeholder="项目编号"
             :trigger-on-focus="false" @select="handleSelect" clearable></el-autocomplete>
         </el-col>
-        <el-col :span="4">
+        <el-col :span="5">
           <div class="grid-content bg-purple">
             <el-input placeholder="项目名称" class="input1" v-model="form.projectName" clearable></el-input>
           </div>
         </el-col>
-        <el-col :span="4">
+        <el-col :span="5">
           <div class="grid-content bg-purple">
             <el-input placeholder="项目经理" class="input1" v-model="form.proManager" clearable></el-input>
           </div>
         </el-col>
-        <el-col :span="4">
+        <el-col :span="5">
           <div class="grid-content bg-purple">
             <el-input placeholder="项目总监" class="input1" v-model="form.proDirector" clearable></el-input>
           </div>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="4">
           <div class="button">
             <el-button type="primary" style="float:right" round @click.native.prevent="confirm">确定</el-button>
           </div>
@@ -29,8 +29,8 @@
       </el-row>
     </el-form>
 
-    <el-table :data="tableData" style="height: 100%" v-loading="loading1"
-      :header-cell-style="{background:'#1a74ee',color:'#f9fafc'}">
+    <el-table :data="tableData" style="height: 100%;margin-top:10px;" v-loading="loading1"
+      :header-cell-style="{background:'#1a74ee',color:'#f9fafc'}" :height = 'tableHeight'>
       <el-table-column width="250px" prop="projectId" label="项目" align="left">
         <template slot-scope="scope2">
           <div>
@@ -603,6 +603,10 @@ export default {
       console.log(result.data)
       this.projectid = result.data
     })
+    this.tableHeight = document.body.clientHeight - 300 + 'px'
+    window.onresize = () => {
+      this.tableHeight = document.body.clientHeight - 300 + 'px'
+    }
   }
 }
 

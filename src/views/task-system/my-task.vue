@@ -1,15 +1,15 @@
 <template>
   <div class="box-table">
     <el-form ref="form" :model="form" label-width="80px" label-position="top">
-      <el-row type="flex" justify="flex-start" :gutter="18">
-        <el-col :span="3">
+      <el-row type="flex" justify="flex-start" :gutter="24">
+        <el-col :span="5">
           <el-autocomplete class="input1" v-model="form.projectId" :fetch-suggestions="querySearch" placeholder="项目编号"  clearable
             :trigger-on-focus="false" @select="handleSelect"></el-autocomplete>
         </el-col>
-        <el-col :span="3">
+        <el-col :span="5">
           <el-input placeholder="任务编码" class="input1" v-model="form.taskId"  clearable></el-input>
         </el-col>
-        <el-col :span="3">
+        <el-col :span="5">
          <el-input placeholder="任务名称" class="input1" v-model="form.taskName"  clearable></el-input>
         </el-col>
 
@@ -20,7 +20,7 @@
         </el-col>
       </el-row>
     </el-form>
-    <el-table :data="tableData" border style="width: 100%" v-loading="loading">
+    <el-table :data="tableData" border style="width: 100%" v-loading="loading" :height = "tableHeight">
         <el-table-column prop="project" label="项目信息">
           <template slot-scope="scope2">
             <div>
@@ -109,52 +109,7 @@ export default {
         dependencyDegree: ''
       },
       formLabelWidth: '72px',
-      // select选择框
-      // options: [{
-      //   value: 'T',
-      //   label: '任务'
-      // }, {
-      //   value: 'G',
-      //   label: '任务组'
-      // }],
-      // options1: [{
-      //   value1: '0',
-      //   label1: '无影响'
-      // }, {
-      //   value1: '1',
-      //   label1: '一级（影响项<=2个）'
-      // }, {
-      //   value1: '2',
-      //   label1: '二级（影响项<=5个）'
-      // }, {
-      //   value1: '3',
-      //   label1: '三级（影响项<=8个）'
-      // }, {
-      //   value1: '4',
-      //   label1: '四级（影响项<=12个）'
-      // }, {
-      //   value1: '5',
-      //   label1: '五级（影响项>12个）'
-      // }],
-      // options2: [{
-      //   value2: '0',
-      //   label2: '无依赖'
-      // }, {
-      //   value2: '1',
-      //   label2: '一级（依赖项<=2个）'
-      // }, {
-      //   value2: '2',
-      //   label2: '二级（依赖项<=5个）'
-      // }, {
-      //   value2: '3',
-      //   label2: '三级（依赖项<=8个）'
-      // }, {
-      //   value2: '4',
-      //   label2: '四级（依赖项<=12个）'
-      // }, {
-      //   value2: '5',
-      //   label2: '五级（依赖项>12个）'
-      // }],
+      tableHeight: null,
       tableData: []
     }
   },
@@ -300,6 +255,11 @@ export default {
       this.total = result.data.total
       this.currPage = result.data.pageNum
     })
+
+    this.tableHeight = document.body.clientHeight - 300 + 'px'
+    window.onresize = () => {
+      this.tableHeight = document.body.clientHeight - 300 + 'px'
+    }
   },
   activated () {}
 }
