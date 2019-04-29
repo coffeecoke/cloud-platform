@@ -108,8 +108,10 @@ export default {
       } else if (status === '1' && code === '200') {
         this.isShowRegister = false // 用户已存在，扫码成功后直接跳转到首页，不需要显示注册页div
         let { token, userName } = result
+        let { loginName } = result.data
         localStorage.setItem('token', token)
         localStorage.setItem('userName', userName)
+        localStorage.setItem('loginName', loginName)
         this.$router.push({ path: '/' })
       }
     })

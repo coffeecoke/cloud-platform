@@ -78,17 +78,13 @@ export default {
     },
     servlesslogin (link) {
       this.$api.userInfo.servlesslogin({
-        uid: localStorage.getItem('userName'),
+        uid: localStorage.getItem('loginName'),
         token: localStorage.getItem('token')
       }).then(res => {
         let result = res.data
         console.log(result)
         if (result.login === 'expires') {
           if (window.location.origin === 'http://cloud.chinaresoft.com') {
-            this.$router.push({ path: '/wxCodePage' })
-          } else {
-            this.$router.push({ path: '/login' })
-          } if (window.location.origin === 'http://cloud.chinaresoft.com') {
             this.$router.push({ path: '/wxCodePage' })
           } else {
             this.$router.push({ path: '/login' })

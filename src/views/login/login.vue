@@ -73,6 +73,7 @@ export default {
             } else {
               localStorage.setItem('token', token)
               localStorage.setItem('userName', userName)
+              localStorage.setItem('loginName', this.ruleForm2.loginName)
               console.log(localStorage.getItem('userName'))
               _this.$router.push({ path: '/' })
             }
