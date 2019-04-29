@@ -79,16 +79,6 @@ export default {
         taskType: 'Oracle'
       },
       tableData: [
-        {
-          date: '2018-09-08',
-          endTime: '2019-0809',
-          taskCode: '',
-          taskName: '',
-          taskType: '',
-          completion: '',
-          reworkNum: '',
-          satisfaction: ''
-        }
       ]
 
     }

@@ -4,7 +4,7 @@
       <el-row :gutter="18">
         <el-col :span="4">
           <el-autocomplete class="input1" v-model="form.projectId" :fetch-suggestions="querySearch" placeholder="项目编号"
-            :trigger-on-focus="false" @select="handleSelect" clearable></el-autocomplete>
+            :trigger-on-focus="false" @select="handleSelect"></el-autocomplete>
         </el-col>
         <el-col :span="4">
           <div class="grid-content bg-purple">
@@ -29,10 +29,9 @@
       </el-row>
     </el-form>
 
-    <el-table :data="tableData" style="height: 100%" v-loading="loading1"
-      :header-cell-style="{background:'#1a74ee',color:'#f9fafc'}">
+    <el-table :data="tableData" style="height: 100%" v-loading="loading1" :header-cell-style="{background:'#1a74ee',color:'#f9fafc'}">
       <el-table-column width="250px" prop="projectId" label="项目" align="left">
-        <template slot-scope="scope2">
+         <template slot-scope="scope2">
           <div>
             <p>{{scope2.row.projectId}}</p>
             <p>{{scope2.row.projectName}}</p>
@@ -47,150 +46,149 @@
       <el-table-column width="100px" prop="taskTotalCount" label="任务总数" align="center"></el-table-column>
       <el-table-column width="200px" prop="taskPer" label="任务" align="right">
         <template slot-scope="scope">
-          <span>分配情况</span>
-          <el-progress :text-inside="true" :stroke-width="6" :percentage="scope.row.taskDistributedPer"
+          <span>分配情况</span><el-progress :text-inside="true" :stroke-width="6" :percentage="scope.row.taskDistributedPer"
             :show-text="false"></el-progress>
 
-          <span>完成情况</span>
-          <el-progress :text-inside="true" :stroke-width="6" :percentage="scope.row.taskFinishedPer" :show-text="false">
-          </el-progress>
+          <span>完成情况</span><el-progress :text-inside="true" :stroke-width="6" :percentage="scope.row.taskFinishedPer"
+            :show-text="false"></el-progress>
         </template>
       </el-table-column>
       <el-table-column width="100px" prop="taskTotalCount" label="" align="left">
         <template slot-scope="scope1">
           <div>
-            <router-link class="tab-item" :to="{path: '/2-2', query: {data:scope1.row.projectId,taskStatus:'d'}}">
-              <a>{{scope1.row.taskDistributed}}</a>
-            </router-link>/<router-link class="tab-item"
-              :to="{path: '/2-2', query: {data:scope1.row.projectId,taskStatus:'ud'}}">
-              <a>{{scope1.row.taskUnDistributed}}</a></router-link><br>
-            <router-link class="tab-item" :to="{path: '/2-2', query: {data:scope1.row.projectId,taskStatus:'f'}}">
-              <a>{{scope1.row.taskFinished}}</a>
-            </router-link>/<router-link class="tab-item"
-              :to="{path: '/2-2', query: {data:scope1.row.projectId,taskStatus:'d'}}">
-              <a>{{scope1.row.taskDistributed}}</a></router-link>
-            <!-- <el-link type="primary"><p>{{scope1.row.taskFinishedLabel}}</p></el-link> -->
-            <!-- <p>{{scope1.row.taskDistributedLabel}}</p>
-            <p>{{scope1.row.taskFinishedLabel}}</p> -->
+            <p>{{scope1.row.taskDistributedLabel}}</p>
+            <p>{{scope1.row.taskFinishedLabel}}</p>
           </div>
         </template>
       </el-table-column>
       <el-table-column fixed="right" label="操作" width="150px" align="center">
         <template slot-scope="scope">
-          <el-button @click="taskissue(scope.row.projectId)" type="text" size="medium"><i class="el-icon-upload"
+         <!--  <el-button @click="taskissue(scope.row.projectId)" type="text" size="medium"><i class="el-icon-upload"
               title="跳转到任务发布"></i></el-button>
-          <!-- <el-button type="text" size="medium">
+          <el-button type="text" size="medium">
             <router-link to="/#/1-2"><i class="el-icon-share" title="跳转到任务脉络"></i></router-link>
-          </el-button> -->
-          <el-button @click="skipUndertake(scope.row)" type="text" size="medium"><i class="el-icon-goods"
-              title="承接项目"></i></el-button>
+          </el-button>
+          <el-button @click="skipUndertake(scope.row)" type="text" size="medium"><i class="el-icon-upload"></i></el-button> -->
+          <el-button @click="showCreateQuestPanl(scope.row.projectId,scope.row.projectName)" type="text" size="medium"><i class="el-icon-document"
+              title="生成调查问卷"></i></el-button>
+              <el-button @click="showPostProjectPanl(scope.row.projectId,scope.row.projectName)" type="text" size="medium"><i class="el-icon-sort"
+              title="项目结转"></i></el-button>
         </template>
       </el-table-column>
     </el-table>
-    <div class="pagination-wrap">
+     <div class="pagination-wrap">
 
-      <el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="total"
-        @current-change="handleCurrChange" @size-change="handleSizeChange">
+      <el-pagination
+      background
+      layout="prev, pager, next"
+      :page-size= "pageSize"
+      :total="total"
+      @current-change = "handleCurrChange"
+      @size-change = "handleSizeChange"
+      >
       </el-pagination>
     </div>
-    <div class="cretable">
-      <el-dialog title="任务承接" :visible.sync="dialogPersonalAndEnterprise" center>
-        <el-tabs v-model="activeName" @tab-click="PersonalAndEnterprise" type="border-card">
-          <el-tab-pane label="企业" name="C" v-model="department">
-            <div class="" id="">
-              <el-row :gutter="20">
-                <el-col :span="4">
-                  <div class="grid-content bg-purple">
-                    <el-input placeholder="客户编号" class="input1" v-model="customerNumber" clearable></el-input>
-                  </div>
-                </el-col>
-                <el-col :span="4">
-                  <div class="grid-content bg-purple">
-                    <el-input placeholder="客户名称" class="input1" v-model="customerFullName" clearable></el-input>
-                  </div>
-                </el-col>
-                <el-col :span="16">
-                  <div class="button">
-                    <el-button type="primary" style="float:right" round @click.native.prevent="getTableList">确定
-                    </el-button>
-                  </div>
-                </el-col>
-              </el-row>
-              <el-table :data="EnterpriseTableData" border v-loading="loading" header-cell-class-name="tableHeader"
-                height="600" :header-cell-style="{background:'#1a74ee',color:'#f9fafc'}">
-                <el-table-column prop="customerNumber" label="客户编号">
-                </el-table-column>
-                <el-table-column prop="customerFullName" label="客户全称">
-                </el-table-column>
-                <el-table-column prop="customerAbbreviation" label="客户简称">
-                </el-table-column>
-                <el-table-column prop="taxonomy" label="分类类别">
-                </el-table-column>
-                <el-table-column prop="detailedCategories" label="详细分类类别">
-                </el-table-column>
-                <el-table-column fixed="right" label="操作" align="center">
-                  <template slot-scope="scope">
-                    <el-button @click.native.prevent="viewInfo(scope.$index,scope.row)" type="text">查看</el-button>
-                    <el-button @click.native.prevent="underTake(scope.$index,scope.row)" type="text">承接</el-button>
-                  </template>
-                </el-table-column>
+     <div class="cretable">
+     <el-dialog title="任务承接" :visible.sync="dialogPersonalAndEnterprise" center>
+    <el-tabs v-model="activeName" @tab-click="PersonalAndEnterprise" type="border-card">
+    <el-tab-pane label="企业" name="E" v-model="department" ><div class="" id="">
+       <el-row :gutter="20">
+      <el-col :span="4">
+       <div class="grid-content bg-purple">
+            <el-input placeholder="客户编号" class="input1" v-model="customerNumber" clearable></el-input>
+          </div>
+          </el-col>
+           <el-col :span="4">
+           <div class="grid-content bg-purple">
+            <el-input placeholder="客户名称" class="input1" v-model="customerFullName" clearable></el-input>
+          </div>
+           </el-col>
+            <el-col :span="16">
+          <div class="button">
+            <el-button type="primary" style="float:right" round @click.native.prevent="getTableList">确定</el-button>
+          </div>
+        </el-col>
+        </el-row>
+    <el-table :data="EnterpriseTableData" border  v-loading="loading" header-cell-class-name="tableHeader"  height="600">
+      <el-table-column prop="customerNumber" label="客户编号">
+      </el-table-column>
+      <el-table-column prop="customerFullName" label="客户全称">
+      </el-table-column>
+      <el-table-column prop="customerAbbreviation" label="客户简称">
+      </el-table-column>
+      <el-table-column prop="taxonomy" label="分类类别">
+      </el-table-column>
+      <el-table-column prop="detailedCategories" label="详细分类类别">
+      </el-table-column>
+      <el-table-column fixed="right" label="操作" align="center">
+        <template slot-scope="scope">
+          <el-button @click.native.prevent="viewInfo(scope.$index,scope.row)" type="text">查看</el-button>
+        </template>
+      </el-table-column>
 
-              </el-table>
-              <div class="pagination-wrap">
+    </el-table>
+    <div class="pagination-wrap">
 
-                <el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="total"
-                  @current-change="handleCurrChange" @size-change="handleSizeChange">
-                </el-pagination>
-              </div>
-            </div>
-          </el-tab-pane>
+      <el-pagination
+      background
+      layout="prev, pager, next"
+      :page-size= "pageSize"
+      :total="total"
+      @current-change = "handleCurrChange"
+      @size-change = "handleSizeChange"
+      >
+      </el-pagination>
+    </div>
+  </div></el-tab-pane>
 
-          <el-tab-pane label="个人" name="P" v-model="department">
-            <div class="" id="">
-              <el-col :span="4">
-                <div class="grid-content bg-purple">
-                  <el-input placeholder="姓名" class="input1" v-model="name" clearable></el-input>
-                </div>
-              </el-col>
-              <el-col :span="16">
-                <div class="button">
-                  <el-button type="primary" style="float:right" round @click.native.prevent="getTableList1">确定
-                  </el-button>
-                </div>
-              </el-col>
-              <el-table :data="PersonalTableData" border v-loading="loading" header-cell-class-name="tableHeader"
-                height="600" :header-cell-style="{background:'#1a74ee',color:'#f9fafc'}">
-                <el-table-column prop="name" label="姓名">
-                </el-table-column>
-                <el-table-column prop="D_SEX" label="性别">
-                </el-table-column>
-                <el-table-column prop="phone" label="电话">
-                </el-table-column>
-                <el-table-column prop="email" label="邮箱">
-                </el-table-column>
-                <el-table-column prop="education" label="学历">
-                </el-table-column>
-                <el-table-column prop="major" label="专业">
-                </el-table-column>
-                <el-table-column fixed="right" label="操作" align="center">
-                  <template slot-scope="scope">
-                    <el-button @click.native.prevent="viewInfo(scope.$index,scope.row)" type="text">查看</el-button>
-                    <el-button @click.native.prevent="underTake1(scope.$index,scope.row)" type="text">承接</el-button>
-                  </template>
+    <el-tab-pane label="个人" name="P" v-model="department" > <div class="" id="">
+       <el-col :span="4">
+       <div class="grid-content bg-purple">
+            <el-input placeholder="姓名" class="input1" v-model="name" clearable></el-input>
+          </div>
+          </el-col>
+           <el-col :span="16">
+          <div class="button">
+            <el-button type="primary" style="float:right" round @click.native.prevent="getTableList1">确定</el-button>
+          </div>
+        </el-col>
+    <el-table :data="PersonalTableData" border  v-loading="loading" header-cell-class-name="tableHeader" height="600">
+      <el-table-column prop="name" label="姓名">
+      </el-table-column>
+      <el-table-column prop="D_SEX" label="性别">
+      </el-table-column>
+      <el-table-column prop="phone" label="电话">
+      </el-table-column>
+      <el-table-column prop="email" label="邮箱">
+      </el-table-column>
+      <el-table-column prop="education" label="学历">
+      </el-table-column>
+      <el-table-column prop="major" label="专业">
+      </el-table-column>
+      <el-table-column fixed="right" label="操作" align="center">
+        <template slot-scope="scope">
+          <el-button @click.native.prevent="viewInfo(scope.$index,scope.row)" type="text">查看</el-button>
+          <el-button @click.native.prevent="underTake(scope.$index,scope.row)" type="text">承接</el-button>
+        </template>
 
-                </el-table-column>
+      </el-table-column>
 
-              </el-table>
-              <div class="pagination-wrap">
+    </el-table>
+    <div class="pagination-wrap">
 
-                <el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="total"
-                  @current-change="handleCurrChange1" @size-change="handleSizeChange1">
-                </el-pagination>
-              </div>
-            </div>
-          </el-tab-pane>
-        </el-tabs>
-      </el-dialog>
+      <el-pagination
+      background
+      layout="prev, pager, next"
+      :page-size= "pageSize"
+      :total="total"
+      @current-change = "handleCurrChange1"
+      @size-change = "handleSizeChange1"
+      >
+      </el-pagination>
+    </div>
+  </div></el-tab-pane>
+  </el-tabs>
+    </el-dialog>
     </div>
 
  <!--发布用户调查问卷 start-->
@@ -212,16 +210,87 @@
     </el-dialog>
     <!--发布用户调查问卷 end-->
 
+<!--发布用户调查问卷 start-->
+    <el-dialog title="项目结转" :visible.sync="postProjectPanl"    fullscreen>
+  <el-row :span="24">
+    <el-col :span="11">
+      <el-table
+          :data="leftTable"
+          style="width: 100%;margin-bottom: 20px;"
+          border
+          row-key="id">
+          <el-table-column
+            prop="tableId"
+            label="表名"
+            width="180">
+          </el-table-column>
+          <el-table-column
+            prop="projectCode"
+            label="项目编号"
+            width="180">
+          </el-table-column>
+          <el-table-column
+            prop="projectName"
+            label="项目名称">
+          </el-table-column>
+        </el-table>
+    </el-col>
+    <el-col :span="2">&nbsp;</el-col>
+   <el-col :span="11">
+        <el-table
+      :data="rightTable"
+      style="width: 100%;margin-bottom: 20px;"
+      border
+      row-key="id">
+      <el-table-column
+        prop="tableId"
+        label="表名"
+        width="180">
+      </el-table-column>
+      <el-table-column
+        prop="projectCode"
+        label="项目编号"
+        width="180">
+      </el-table-column>
+      <el-table-column
+        prop="projectName"
+        label="项目名称">
+      </el-table-column>
+    </el-table>
+    </el-col>
+</el-row>
+
+<el-dialog title="结转选项" :visible.sync="dialogFormVisible" append-to-body>
+  <el-form :model="form">
+    <el-form-item label="结转方案" :label-width="formLabelWidth">
+      <el-select v-model="form.region" placeholder="请选择结转方案">
+        <el-option label="左侧覆盖右侧" value="1"></el-option>
+        <el-option label="右侧覆盖左侧" value="2"></el-option>
+        <el-option label="全部保留" value="3"></el-option>
+      </el-select>
+    </el-form-item>
+  </el-form>
+  <div slot="footer" class="dialog-footer">
+    <el-button @click="dialogFormVisible = false">取 消</el-button>
+    <el-button type="primary" @click="subFormVisible">确 定</el-button>
+  </div>
+</el-dialog>
+ <div slot="footer" class="dialog-footer">
+    <el-button @click="postProjectPanl = false">取 消</el-button>
+    <el-button type="primary" @click="dialogFormVisible = true">确 定</el-button>
+  </div>
+    </el-dialog>
+    <!--发布用户调查问卷 end-->
+
   </div>
 </template>
 <script>
 export default {
   data () {
     return {
-      // underTakingType: '',
       loading1: false,
       name: '',
-      activeName: 'C',
+      activeName: 'E',
       PersonalTableData: [],
       EnterpriseTableData: [],
       customerNumber: '',
@@ -249,88 +318,20 @@ export default {
         answerUserName: ''
       },
       projectid: [],
-      tableData: [],
-      Pro: null
+      createQuestPanl: false,
+      tableData: [{
+        projectId: ''
+      }],
+      postProjectPanl: false,
+      leftTable: [],
+      rightTable: [],
+      dialogFormVisible: false,
+      formLabelWidth: '120px'
     }
   },
   methods: {
-    aaaa () {
-      alert('22222222222')
-    },
-    bbbb () {
-      alert('22222222222')
-    },
-    // 企业承接的方法
     underTake (index, row) {
-      let params = {
-        underTakingType: 'C',
-        projectId: this.Pro,
-        underTakingId: this.customerNumber
-      }
-      this.$api.partner.underTakingProjectId(params).then(res => {
-        let result = res.data
-        this.loading = false
-        if (result.status === '1') {
-          // this.$message({
-          //   type: 'success',
-          //   message: '承接成功'
-          // })
-          // this.dialogPersonalAndEnterprise = true
-          // console.log(result.data.list.length)
-          this.dialogPersonalAndEnterprise = false
-          let params = {
-            pageNum: this.pageNum, // 请求的页码
-            pageSize: this.pageSize, // 每页显示条数
-            projectId: this.form.projectId,
-            projectName: this.form.projectName,
-            proManager: this.form.proManager,
-            proDirector: this.form.proDirector
-          }
-          this.$api.TaskCreate.underTakingProjectId(params).then(res => {
-            var result = res.data
-            // this.loading1 = false
-            // this.tableData = result.data
-            this.tableData = result.data.list || []
-            this.total = result.data.total
-            this.currPage = result.data.pageNum
-          })
-        }
-      })
-    },
-    // 个人承接方法
-    underTake1 (index, row) {
-      let params = {
-        underTakingType: 'P',
-        projectId: this.Pro,
-        underTakingId: this.userId
-      }
-      this.$api.partner.getEnterprise(params).then(res => {
-        let result = res.data
-        // this.loading = false
-        if (result.status === '1') {
-          // this.$message({
-          //   type: 'success',
-          //   message: '承接成功'
-          // })
-          this.dialogPersonalAndEnterprise = false
-          let params = {
-            pageNum: this.pageNum, // 请求的页码
-            pageSize: this.pageSize, // 每页显示条数
-            projectId: this.form.projectId,
-            projectName: this.form.projectName,
-            proManager: this.form.proManager,
-            proDirector: this.form.proDirector
-          }
-          this.$api.TaskCreate.getCountTaskList(params).then(res => {
-            var result = res.data
-            // this.loading1 = false
-            // this.tableData = result.data
-            this.tableData = result.data.list || []
-            this.total = result.data.total
-            this.currPage = result.data.pageNum
-          })
-        }
-      })
+
     },
     // 条目改变时
     handleSizeChange (value) {
@@ -342,8 +343,9 @@ export default {
       this.loading = true
       let params = {
         pageNum: this.pageNum, // 请求的页码
-        pageSize: this.pageSize // 每页显示条数
-
+        pageSize: this.pageSize, // 每页显示条数
+        customerNumber: this.customerNumber,
+        customerFullName: this.customerFullName
         // customerNumber: '999999'
       }
       this.$api.partner.getEnterprise(params).then(res => {
@@ -364,10 +366,8 @@ export default {
     },
     getTableList () {
       let params = {
-        pageNum: '1', // 请求的页码
-        pageSize: this.pageSize,
-        customerNumber: this.customerNumber,
-        customerFullName: this.customerFullName
+        pageNum: this.pageNum, // 请求的页码
+        pageSize: this.pageSize
         // 每页显示条数
         // customerNumber: '999999'
       }
@@ -377,30 +377,6 @@ export default {
         if (result.status === '1') {
           // console.log(result.data.list.length)
           this.EnterpriseTableData = result.data.list || []
-          this.total = result.data.total
-          this.currPage = result.data.pageNum
-        } else {
-          this.$message({
-            type: 'error',
-            message: '请求数据失败'
-          })
-        }
-      })
-    },
-    getTableList1 () {
-      this.loading = true
-      let params = {
-        pageNum: '1', // 请求的页码
-        pageSize: this.pageSize, // 每页显示条数
-        customerNumber: '999999',
-        name: this.name
-      }
-      this.$api.partner.getUserAll(params).then(res => {
-        let result = res.data
-        this.loading = false
-        if (result.status === '1') {
-          console.log(result.data.list.length)
-          this.PersonalTableData = result.data.list || []
           this.total = result.data.total
           this.currPage = result.data.pageNum
         } else {
@@ -423,7 +399,6 @@ export default {
         pageNum: this.pageNum, // 请求的页码
         pageSize: this.pageSize, // 每页显示条数
         customerNumber: '999999'
-        // name: this.name
       }
       this.$api.partner.getUserAll(params).then(res => {
         let result = res.data
@@ -443,13 +418,12 @@ export default {
     },
     //  个人或企业之间的跳转并同时向后台发请求返回table数据
     PersonalAndEnterprise (tab, event) {
-      if (tab.name === 'C') {
+      if (tab.name === 'E') {
         // console.log('11111111111111111111111111')
         this.loading = true
         let params = {
-          pageNum: '1', // 请求的页码
+          pageNum: this.pageNum, // 请求的页码
           pageSize: this.pageSize
-
           // 每页显示条数
           // customerNumber: '999999'
         }
@@ -471,10 +445,9 @@ export default {
       } else {
         this.loading = true
         let params = {
-          pageNum: '1', // 请求的页码
+          pageNum: this.pageNum, // 请求的页码
           pageSize: this.pageSize, // 每页显示条数
           customerNumber: '999999'
-
         }
         this.$api.partner.getUserAll(params).then(res => {
           let result = res.data
@@ -494,15 +467,14 @@ export default {
       }
     },
     // 承接跳转
-    skipUndertake (row) {
+    skipUndertake () {
       this.dialogPersonalAndEnterprise = true
-      this.Pro = row.projectId
     },
     // 查询
     confirm () {
       this.loading1 = true
       let params = {
-        pageNum: '1', // 请求的页码
+        pageNum: this.pageNum, // 请求的页码
         pageSize: this.pageSize, // 每页显示条数
         projectId: this.form.projectId,
         projectName: this.form.projectName,
@@ -522,7 +494,7 @@ export default {
       this.$router.push({
         name: '任务发布',
         query: {
-          data: param
+          date: param
         }
 
       })
@@ -544,11 +516,6 @@ export default {
     },
     handleSelect (item) {
       console.log(item)
-    },
-    showCreateQuestPanl (projectId, projectName) {
-      this.questionnaire.projectId = projectId
-      this.questionnaire.projectName = projectName
-      this.createQuestPanl = true
     },
     quTitleSearchAsync (queryString, cb) {
       var restaurants = []
@@ -594,6 +561,28 @@ export default {
     },
     handleSelectUser (item) {
       this.questionnaire.answerUserId = item.uId
+    },
+    showCreateQuestPanl (projectId, projectName) {
+      this.questionnaire.projectId = projectId
+      this.questionnaire.projectName = projectName
+      this.createQuestPanl = true
+    },
+    showPostProjectPanl (projectId, projectName) {
+      this.$api.questionPublic.loadDataCompareResult({projectId: projectId, projectName: projectName}).then(res => {
+        let result = res.data
+        console.log(result.data)
+        this.leftTable = result.data.leftTable
+        this.rightTable = result.data.rightTable
+      })
+      this.postProjectPanl = true
+    },
+    subFormVisible () {
+      this.dialogFormVisible = false
+      this.postProjectPanl = false
+      this.$message({
+        type: 'success',
+        message: '项目结转成功'
+      })
     }
 
   },
@@ -607,7 +596,7 @@ export default {
 }
 
 </script>
-<style lang="scss" scope>
+<style lang="scss" scoped>
   .el-row {
     margin-bottom: 30px;
     margin-top: 10px;
@@ -650,18 +639,26 @@ export default {
       border: 1px solid #DCDFE6;
     }
   }
-
-  .pagination-wrap {
+    .pagination-wrap {
     padding: 20px;
-
     .el-pagination {
       float: right;
     }
   }
-
+  .demo-table-expand {
+    font-size: 0;
+  }
+  .demo-table-expand label {
+    width: 90px;
+    color: #99a9bf;
+  }
+  .demo-table-expand .el-form-item {
+    margin-right: 0;
+    margin-bottom: 0;
+    width: 50%;
+  }
   // .el-table /deep/ .tableHeader {
   //   background:#1a74ee;
   //   color:#f9fafc;
   // }
-
 </style>

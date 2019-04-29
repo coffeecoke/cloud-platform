@@ -9,7 +9,7 @@ import question from './questionnaire'
 import dictionary from './dictionary'
 // 合伙人管理
 import partner from './personal-management'
-// 对外暴露所有模块的接口
+// 对外暴露所有模块的接口，方便每vue都能调用所有的api
 export default Object.assign({},
   userManagementApi,
   userInfo,

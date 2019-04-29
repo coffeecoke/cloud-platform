@@ -1,4 +1,7 @@
 // 重写覆盖element-ui的样式
+.el-main {
+  padding-top:0px;
+}
 .el-aside {
   background-color:#edf2f8;
 }
@@ -46,4 +49,17 @@
 
 .el-table__fixed-right-patch {
   background:transparent;
+}
+
+.el-table /deep/ .tableHeader {
+  background:#1a74ee;
+  color:#f9fafc;
+}
+
+/* css */
+.pagination-wrap {
+  padding: 10px;
+  display: flex;
+  justify-content: flex-end;
+ 
 }

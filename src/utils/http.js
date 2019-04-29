@@ -22,18 +22,19 @@ const tip = msg => {
  * 携带当前页面路由，以期在登录页面完成登录后返回当前页面
  */
 const toLogin = () => {
+  // 判断域名 外网调到微信扫码页  其他的统一跳转到用户名密码登录
   if (window.location.origin === 'http://cloud.chinaresoft.com') {
     router.replace({
       path: '/wxCodePage',
       query: {
-        redirect: router.currentRoute.fullPath // 登录成功后跳转到当前页面
+        redirect: router.currentRoute.fullPath // 登录成功后跳转到之前的页面
       }
     })
   } else {
     router.replace({
       path: '/login',
       query: {
-        redirect: router.currentRoute.fullPath // 登录成功后跳转到当前页面
+        redirect: router.currentRoute.fullPath // 登录成功后跳转到之前的页面
       }
     })
   }
@@ -53,53 +54,71 @@ const errorHandle = (status, msg) => {
   // 状态码判断
   switch (status) {
     // 401: 未登录状态，跳转登录页
-    case 1001:
-      toLogin()
+    case '1001':
+      localStorage.removeItem('token')
+      setTimeout(() => {
+        toLogin()
+      })
       break
       // 403 token过期
       // 清除token并跳转登录页
-    case 1002:
+    case '1002':
       tip('用户名密码错误')
-      break
-    case 1003:
-      tip('登录过期，请重新登录')
       localStorage.removeItem('token')
+      setTimeout(() => {
+        toLogin()
+      })
+      break
+    case '1003':
+      tip('登录过期，请重新登录')
       // store.commit('loginSuccess', null)
+      localStorage.removeItem('token')
       setTimeout(() => {
         toLogin()
       }, 1000)
       break
       // 参数code读取错误
-    case 1201:
+    case '1201':
       tip(msg)
+      localStorage.removeItem('token')
       break
       // 通过微信API获取【TOKEN】失败
-    case 1202:
+    case '1202':
       tip(msg)
+      localStorage.removeItem('token')
       setTimeout(() => {
-        // toWxLogin()
         toLogin()
       })
       break
       // 通过微信API获取微信用户信息失败！
-    case 1203:
+    case '1203':
       tip(msg)
+      localStorage.removeItem('token')
+      setTimeout(() => {
+        toLogin()
+      }, 1000)
       break
       // 通过微信API获取微信用户信息（UnionID）失败！
-    case 1204:
+    case '1204':
       tip(msg)
+      localStorage.removeItem('token')
+      setTimeout(() => {
+        toLogin()
+      }, 1000)
       break
       // 微信认证未通过
-    case 1207:
+    case '1207':
       tip(msg)
+      localStorage.removeItem('token')
       setTimeout(() => {
         // toWxLogin()
         toLogin()
       })
       break
       // 注册信息提交失败
-    case 1212:
+    case '1212':
       tip(msg)
+      localStorage.removeItem('token')
       setTimeout(() => {
         // toWxLogin()
         toLogin()
@@ -107,7 +126,7 @@ const errorHandle = (status, msg) => {
       break
 
       // 404请求不存在
-    case 404:
+    case '404':
       tip('请求的资源不存在')
       break
     default:
@@ -116,11 +135,11 @@ const errorHandle = (status, msg) => {
 }
 
 // 创建axios实例
-var instance = axios.create({timeout: 1000 * 60})
+var instance = axios.create({timeout: 1000 * 60}) // 设置请求超时时间
 // 设置post请求头
 instance.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8'
 // instance.defaults.headers.token = '6S2Ng1VO3ifU6fqGUmKNmRpJPEUSzIjI' // 临时设置cookie测试用
-instance.defaults.baseURL = '/api1'
+instance.defaults.baseURL = '/api'
 
 /**
  * 请求拦截器

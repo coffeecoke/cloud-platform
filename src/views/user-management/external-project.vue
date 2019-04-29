@@ -114,7 +114,7 @@
             <i class="edit el-icon-edit" @click="scope.row.edit=true;isAddRow=false"></i>
             <i class="delect el-icon-delete" @click="deleteRow(scope.$index, tableData)">
             </i>
-            <i class="save el-icon-upload2" @click="saveClick(scope.$index,scope.row)">
+            <i class="save fa fa-save" @click="saveClick(scope.$index,scope.row)">
             </i>
           </div>
         </template>
@@ -206,35 +206,11 @@ export default {
         projectRole: '',
         duties: '',
         businessSkill: '',
-        sill: '',
+        techSkill: [],
+        content: '',
         edit: true
       },
-      tableData: [{
-        id: '1', // id为后台传入，后台的增删都是根据id进行的
-        date: '',
-        industry: 1,
-        projectName: '',
-        projectScale: '',
-        projectRole: '',
-        duties: '',
-        businessSkill: '',
-        techSkill: '',
-        content: '报送银监会报送银监会报送银监会报送银监会报送银监会报送银监会报送银监会',
-        edit: false
-      },
-      {
-        id: '2',
-        date: '',
-        industry: 2,
-        projectName: '',
-        projectSize: '1',
-        projectRole: '2',
-        duties: '',
-        business: '1',
-        techSkill: '1',
-        content: '',
-        edit: false
-      }
+      tableData: [
       ]
     }
   },
@@ -274,6 +250,7 @@ export default {
     })
   },
   methods: {
+    // 根据字典码，渲染对应的名称
     formatIndustry (value) {
       let currObj = this.industry.filter(obj => {
         return obj.dictCode === value

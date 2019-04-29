@@ -1,6 +1,20 @@
 <template>
   <div class="" id="">
-    <el-table :data="tableData" border  v-loading="loading" header-cell-class-name="tableHeader" height="600">
+    <el-form :inline="true" :model="searchForm" class="search-form">
+      <el-form-item label="客户编号">
+        <el-input v-model="searchForm.customerNumber" placeholder="客户编号"></el-input>
+      </el-form-item>
+      <el-form-item label="客户全称">
+        <el-input v-model="searchForm.customerFullName" placeholder="客户全称"></el-input>
+      </el-form-item>
+      <el-form-item label="客户简称">
+        <el-input v-model="searchForm.customerAbbreviation" placeholder="客户简称"></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="onSubmit">查询</el-button>
+      </el-form-item>
+    </el-form>
+    <el-table :data="tableData" border  v-loading="loading" header-cell-class-name="tableHeader" :height="tableHeight">
       <el-table-column prop="customerNumber" label="客户编号">
       </el-table-column>
       <el-table-column prop="customerFullName" label="客户全称">
@@ -38,7 +52,14 @@
 export default {
   data () {
     return {
+      // 查询条件
+      searchForm: {
+        customerNumber: '',
+        customerFullName: '',
+        customerAbbreviation: ''
+      },
       loading: false,
+      tableHeight: null,
       currPage: 1, // 当前页
       total: 1, // 总条数
       pageSize: 10, // 一页显示多少条
@@ -58,13 +79,20 @@ export default {
     }
   },
   methods: {
+    onSubmit () {
+      this.getTableList()
+    },
     // 获取表格数据
     getTableList () {
       this.loading = true
       let params = {
+        // 分页
         pageNum: this.pageNum, // 请求的页码
         pageSize: this.pageSize, // 每页显示条数
-        customerNumber: '333333'
+        // 查询条件
+        customerNumber: this.searchForm.customerNumber,
+        customerFullName: this.searchForm.customerFullName,
+        customerAbbreviation: this.searchForm.customerAbbreviation
       }
       this.$api.partner.getEnterprise(params).then(res => {
         let result = res.data
@@ -92,11 +120,22 @@ export default {
       this.getTableList()
     },
     viewInfo (index, row) {
-      console.log(index)
+      this.$router.push({
+        path: '/partner-3-1',
+        query: {
+          customerNumber: row.customerNumber
+        }
+      })
     }
   },
   created () {
     this.getTableList()
+  },
+  mounted () {
+    this.tableHeight = document.body.clientHeight - 260 + 'px'
+    window.onresize = () => {
+      this.tableHeight = document.body.clientHeight - 260 + 'px'
+    }
   },
   activated () {}
 }

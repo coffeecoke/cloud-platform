@@ -1,6 +1,6 @@
 <template>
   <div class="" id="">
-    <el-table :data="tableData" border  v-loading="loading" header-cell-class-name="tableHeader" :height="tableHeight">
+    <el-table :data="tableData" border v-loading="loading" header-cell-class-name="tableHeader">
       <el-table-column prop="name" label="姓名">
       </el-table-column>
       <el-table-column prop="D_SEX" label="性别">
@@ -29,15 +29,8 @@
 
     </el-table>
     <div class="pagination-wrap">
-
-      <el-pagination
-      background
-      layout="prev, pager, next"
-      :page-size= "pageSize"
-      :total="total"
-      @current-change = "handleCurrChange"
-      @size-change = "handleSizeChange"
-      >
+      <el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="total"
+        @current-change="handleCurrChange" @size-change="handleSizeChange">
       </el-pagination>
     </div>
 
@@ -270,7 +263,6 @@ export default {
   data () {
     return {
       loading: false,
-      tableHeight: null,
       currPage: 1, // 当前页
       total: 1, // 总条数
       pageSize: 10, // 一页显示多少条
@@ -280,9 +272,20 @@ export default {
       dialogInformationOverview: false,
       // 标签页
       activeName: 'first',
-      // 假数据
-      tableData: [
-      ],
+      // 企业人员列表数据
+      tableData: [{
+        userId: '',
+        name: '',
+        D_SEX: '',
+        phone: '',
+        email: '',
+        contact: '',
+        contactInfo: '',
+        education: '',
+        major: '',
+        degree: '',
+        fullTime: ''
+      }],
       // 培训经历
       trainingTableData: [{
         id: '',
@@ -332,7 +335,7 @@ export default {
       let params = {
         pageNum: this.pageNum, // 请求的页码
         pageSize: this.pageSize, // 每页显示条数
-        customerNumber: '999999'
+        customerNumber: this.$route.query.customerNumber
       }
       this.$api.partner.getUserAll(params).then(res => {
         let result = res.data
@@ -404,15 +407,20 @@ export default {
   created () {
     this.getTableList()
   },
-  mounted () {
-    this.tableHeight = document.body.clientHeight - 200 + 'px'
-    window.onresize = () => {
-      this.tableHeight = document.body.clientHeight - 200 + 'px'
-    }
-  },
   activated () {}
 }
 </script>
 <style scoped lang="scss">
+  /* css */
+  .pagination-wrap {
+    padding: 20px;
+    .el-pagination {
+      float: right;
+    }
+  }
+  .el-table /deep/ .tableHeader {
+    background:#1a74ee;
+    color:#f9fafc;
+  }
 
 </style>

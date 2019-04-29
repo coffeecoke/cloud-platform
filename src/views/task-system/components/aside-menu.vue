@@ -19,8 +19,8 @@
     <el-submenu index="taskSystem3">
       <template slot="title">项目结转</template>
       <el-menu-item-group>
-        <el-menu-item index="qu-1">问卷调查</el-menu-item>
-        <el-menu-item index="qu-2">验收及结转</el-menu-item>
+        <el-menu-item index="qu-3">问卷调查</el-menu-item>
+        <el-menu-item index="qu-6">验收及结转</el-menu-item>
       </el-menu-item-group>
     </el-submenu>
     <el-submenu index="taskSystem4">

@@ -1,11 +1,12 @@
 import axios from '@/utils/http' // 导入http中创建的axios实例
+import Qs from 'qs'
 
 const questionBank = {
   // 问题管理---获取列表信息
   getQuestionBankList: (params) => {
     return axios({
       method: 'post',
-      url: '/quest/getQuestionBankList',
+      url: '/question/getQuestionBankList',
       data: params
     })
   },
@@ -13,7 +14,7 @@ const questionBank = {
   saveQuestionBank: (params) => {
     return axios({
       method: 'post',
-      url: '/quest/saveQuestionBank',
+      url: '/question/saveQuestionBank',
       data: params
     })
   },
@@ -21,15 +22,15 @@ const questionBank = {
   deleteQuestionBank: (params) => {
     return axios({
       method: 'post',
-      url: '/quest/deleteQuestionBank',
-      data: params
+      url: '/question/deleteQuestionBank',
+      data: Qs.stringify(params)
     })
   },
   // 问题管理--添加选项信息
   loadQuestionOptions: (params) => {
     return axios({
       method: 'post',
-      url: '/quest/loadQuestionOptions',
+      url: '/question/loadQuestionOptions',
       data: params
     })
   },
@@ -37,7 +38,7 @@ const questionBank = {
   saveQuestionOption: (params) => {
     return axios({
       method: 'post',
-      url: '/quest/saveQuestionOption',
+      url: '/question/saveQuestionOption',
       data: params
     })
   },
@@ -45,9 +46,34 @@ const questionBank = {
   deleteQuestionOption: (params) => {
     return axios({
       method: 'post',
-      url: '/quest/deleteQuestionOption',
+      url: '/question/deleteQuestionOption',
+      data: Qs.stringify(params)
+    })
+  },
+  // 问题管理--添加选项信息--获取选项列表信息
+  getOptionsList: (params) => {
+    return axios({
+      method: 'post',
+      url: '/question/getOptionsList',
+      data: params
+    })
+  },
+  // 问题管理--保存问题选项数据
+  saveOptions: (params) => {
+    return axios({
+      method: 'post',
+      url: '/quest/saveOptions',
+      data: params
+    })
+  },
+  // 问题管理--删除问题选项
+  delOptions: (params) => {
+    return axios({
+      method: 'post',
+      url: '/quest/delOptions',
       data: params
     })
   }
+
 }
 export default questionBank

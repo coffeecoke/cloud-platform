@@ -50,7 +50,7 @@
               <i class="edit el-icon-edit" @click="scope.row.edit=true;isAddRow=false"></i>
               <i class="delect el-icon-delete" @click="deleteRow(scope.$index, tableData)">
               </i>
-              <i class="save el-icon-upload2" @click="saveClick(scope.$index,scope.row)">
+              <i class="save fa fa-save" @click="saveClick(scope.$index,scope.row)">
               </i>
             </div>
           </template>
@@ -100,20 +100,14 @@ export default {
         recentUsage: '',
         edit: true
       },
-      tableData: [{
-        id: '1', // id为空表示新增
-        businessSkill: '1',
-        usageTime: '23月',
-        masteryLevel: '1',
-        recentUsage: '2014-09-08',
-        edit: false
-      }]
+      tableData: []
     }
   },
   created () {
     let dictionaryObj = {
       dict_code: [ 'businessSkill', 'masteryLevel' ]
     }
+    // 获取字典表
     this.$api.dictionary.getDictionaries(dictionaryObj).then(res => {
       let result = res.data
       let dictionary = {}
@@ -138,6 +132,7 @@ export default {
     })
   },
   methods: {
+    // 根据字典码，渲染对应的名称
     formatCategory (value) {
       let currObj = this.businessSkill.filter(obj => {
         return obj.dictCode === value

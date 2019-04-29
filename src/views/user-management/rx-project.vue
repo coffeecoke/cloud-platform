@@ -12,7 +12,7 @@
       <el-col :span="20">
         <div class="top-btns">
           <el-button class="add-row" @click.prevent="addRow()"><span>项目遗漏手工添加</span></el-button>
-          <el-button class="add-row"><span>申请同步融鑫项目</span></el-button>
+          <!-- <el-button class="add-row"><span>申请同步融鑫项目</span></el-button> -->
         </div>
       </el-col>
     </el-row>
@@ -114,7 +114,7 @@
               <i class="edit el-icon-edit" @click="scope.row.edit=true;isAddRow=false"></i>
               <i class="delect el-icon-delete" @click="deleteRow(scope.$index, tableData)">
               </i>
-              <i class="save el-icon-upload2" @click="saveClick(scope.$index,scope.row)">
+              <i class="save fa fa-save" @click="saveClick(scope.$index,scope.row)">
               </i>
             </div>
           </template>
@@ -203,34 +203,8 @@ export default {
         formatTechSkill: '',
         edit: true
       },
-      tableData: [{
-        id: '1', // id为后台传入，后台的增删都是根据id进行的
-        date: ['2019-04-05', '2019-09-08'],
-        industry: 1,
-        projectName: '',
-        projectScale: '',
-        projectRole: '',
-        duties: '',
-        businessSkill: '',
-        techSkill: [],
-        formatTechSkill: '',
-        content: '报送银监会报送银监会报送银监会报送银监会报送银监会报送银监会报送银监会',
-        edit: false
-      },
-      {
-        id: '2',
-        date: '',
-        industry: 2,
-        projectName: '',
-        projectSize: '1',
-        projectRole: '2',
-        duties: '',
-        business: '1',
-        techSkill: [],
-        formatTechSkill: '',
-        content: '',
-        edit: false
-      }
+      tableData: [
+
       ]
     }
   },

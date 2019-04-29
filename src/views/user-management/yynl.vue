@@ -45,7 +45,7 @@
               <i class="edit el-icon-edit" @click="scope.row.edit=true;isAddRow=false"></i>
               <i class="delect el-icon-delete" @click="deleteRow(scope.$index, tableData)">
               </i>
-              <i class="save el-icon-upload2" @click="saveClick(scope.$index,scope.row)">
+              <i class="save fa fa-save" @click="saveClick(scope.$index,scope.row)">
               </i>
             </div>
           </template>
@@ -94,13 +94,7 @@ export default {
         lsAblility: '',
         edit: true
       },
-      tableData: [{
-        id: '3232',
-        languages: '1',
-        literacy: '2',
-        lsAblility: '1',
-        edit: false
-      }]
+      tableData: []
     }
   },
   created () {
