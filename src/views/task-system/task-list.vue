@@ -213,7 +213,7 @@ export default {
       activeName: 'T',
       // 任务列表查询form表单
       form: {
-        projectId: '2018725-020B',
+        projectId: '',
         taskId: '',
         taskName: '',
         taskTarget: '',
@@ -230,7 +230,8 @@ export default {
       // 定义的变量用于保存数据
       moveObj: null,
       setPerson: null,
-      setPlan: null
+      setPlan: null,
+      taskStatus: null
     }
   },
 
@@ -649,6 +650,23 @@ export default {
       let result = res.data
       console.log(result.data)
       this.projectid = result.data
+    })
+    this.form.projectId = this.$route.query.data
+    this.taskStatus = this.$route.query.taskStatus
+    console.log(this.taskStatus)
+    this.loading = true
+    let params = {
+      pageNum: this.pageNum, // 请求的页码
+      pageSize: this.pageSize, // 每页显示条数
+      projectId: this.form.projectId,
+      taskStatus: this.taskStatus
+    }
+    this.$api.TaskList.getTaskList(params).then(res => {
+      var result = res.data
+      this.loading = false
+      this.tableData = result.data.list || []
+      this.total = result.data.total
+      this.currPage = result.data.pageNum
     })
     // var pro = this.projectId
     // // console.log(pro)
