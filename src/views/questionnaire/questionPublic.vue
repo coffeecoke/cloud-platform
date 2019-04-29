@@ -25,7 +25,7 @@
 
 <!--表单分页 start-->
 <el-row>
-   <el-table :data="tableData" border style="width: 100%">
+   <el-table v-loading="loading" :data="tableData" border style="width: 100%">
     <el-table-column prop="quTitle" label="问卷名称" ></el-table-column>
     <el-table-column prop="quType" label="问卷类型" ></el-table-column>
     <el-table-column prop="projectName" label="归属项目" ></el-table-column>
@@ -75,6 +75,7 @@ export default {
         quType: '',
         projectName: ''
       },
+      loading: false,
       multipleSelection: [],
       questDeploy: {
         id: '',
@@ -93,10 +94,12 @@ export default {
   },
   methods: {
     initDataTable () {
+      this.loading = true
       this.$api.questionPublic.getQuestionDeployList(this.formatForm(this.deployForm)).then(res => {
         let result = res.data
         this.tableData = result.data
       })
+      this.loading = false
     },
     saveQuestion (valForm) {
       this.$refs[valForm].validate((valid) => {
