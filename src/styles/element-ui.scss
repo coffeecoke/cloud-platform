@@ -51,3 +51,15 @@
   background:transparent;
 }
 
+.el-table /deep/ .tableHeader {
+  background:#1a74ee;
+  color:#f9fafc;
+}
+
+/* css */
+.pagination-wrap {
+  padding: 10px;
+  display: flex;
+  justify-content: flex-end;
+ 
+}

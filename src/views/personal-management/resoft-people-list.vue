@@ -8,7 +8,7 @@
         <el-button type="primary" @click="onSubmit">查询</el-button>
       </el-form-item>
     </el-form>
-    <el-table :data="tableData" border v-loading="loading" header-cell-class-name="tableHeader">
+    <el-table :data="tableData" border v-loading="loading" header-cell-class-name="tableHeader" :height="tableHeight">
       <el-table-column prop="name" label="姓名">
       </el-table-column>
       <el-table-column prop="D_SEX" label="性别">
@@ -282,6 +282,7 @@ export default {
       activeName: 'first',
       // 表格
       loading: false,
+      tableHeight: null,
       currPage: 1, // 当前页
       total: 1000, // 总条数
       pageSize: 10, // 一页显示多少条
@@ -429,23 +430,16 @@ export default {
   created () {
     this.getTableList() // 获取人员列表
   },
+  mounted () {
+    this.tableHeight = document.body.clientHeight - 240 + 'px'
+    window.onresize = () => {
+      this.tableHeight = document.body.clientHeight - 240 + 'px'
+    }
+  },
   activated () {}
 }
 
 </script>
 <style scoped lang="scss">
-  /* css */
-  .pagination-wrap {
-    padding: 20px;
-
-    .el-pagination {
-      float: right;
-    }
-  }
-
-  .el-table /deep/ .tableHeader {
-    background: #1a74ee;
-    color: #f9fafc;
-  }
 
 </style>

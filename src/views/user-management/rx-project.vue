@@ -12,7 +12,7 @@
       <el-col :span="20">
         <div class="top-btns">
           <el-button class="add-row" @click.prevent="addRow()"><span>项目遗漏手工添加</span></el-button>
-          <el-button class="add-row"><span>申请同步融鑫项目</span></el-button>
+          <!-- <el-button class="add-row"><span>申请同步融鑫项目</span></el-button> -->
         </div>
       </el-col>
     </el-row>

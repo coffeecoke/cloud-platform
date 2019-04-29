@@ -14,7 +14,7 @@
         <el-button type="primary" @click="onSubmit">查询</el-button>
       </el-form-item>
     </el-form>
-    <el-table :data="tableData" border  v-loading="loading" header-cell-class-name="tableHeader" height="600">
+    <el-table :data="tableData" border  v-loading="loading" header-cell-class-name="tableHeader" :height="tableHeight">
       <el-table-column prop="customerNumber" label="客户编号">
       </el-table-column>
       <el-table-column prop="customerFullName" label="客户全称">
@@ -59,6 +59,7 @@ export default {
         customerAbbreviation: ''
       },
       loading: false,
+      tableHeight: null,
       currPage: 1, // 当前页
       total: 1, // 总条数
       pageSize: 10, // 一页显示多少条
@@ -129,6 +130,12 @@ export default {
   },
   created () {
     this.getTableList()
+  },
+  mounted () {
+    this.tableHeight = document.body.clientHeight - 260 + 'px'
+    window.onresize = () => {
+      this.tableHeight = document.body.clientHeight - 260 + 'px'
+    }
   },
   activated () {}
 }

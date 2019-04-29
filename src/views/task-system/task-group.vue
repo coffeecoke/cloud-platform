@@ -144,7 +144,6 @@
 </template>
 
 <script>
-import api from '@/resource/api'
 import TreeRender from './tree_render.vue'
 export default {
   name: 'slot-tree',
@@ -155,7 +154,6 @@ export default {
       total: 1, // 总条数
       pageSize: 10, // 一页显示多少条
       pageNum: 1, // 需要查询的页码
-      maxexpandId: api.maxexpandId, // 新增节点开始id
       dialogTimeandCondition: false,
       // 结构调整级联选择器
       options: [],

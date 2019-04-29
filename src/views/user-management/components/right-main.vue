@@ -28,6 +28,6 @@ export default {
 <style lang="scss" scoped>
   .content {
     background-color:#fff;
-    padding:30px;
+    padding:10px;
   }
 </style>

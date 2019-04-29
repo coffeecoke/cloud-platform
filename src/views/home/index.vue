@@ -1,18 +1,28 @@
 <template>
-  <div class="" id="">
-    home
-  </div>
+  <el-container class="content">
+    <el-aside width="220px">
+      <aside-menu></aside-menu>
+    </el-aside>
+    <el-main>
+      <right-main></right-main>
+    </el-main>
+  </el-container>
 </template>
+
 <script>
+import RightMain from './components/right-main'
+import asideMenu from './components/aside-menu'
 export default {
-  data () {
-    return {
-    }
-  },
-  activated () {
+  components: {
+    RightMain,
+    asideMenu
   }
 }
+
 </script>
-<style scoped lang="scss">
-/* css */
+<style lang="scss" scoped>
+  .content {
+    height: calc(100% - 60px);
+  }
+
 </style>

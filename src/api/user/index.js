@@ -44,8 +44,8 @@ const userInfo = {
   servlesslogin (params) {
     return axios({
       method: 'post',
-      url: '/rcdp/resoft/wxopen/servlesslogin',
-      params: Qs.stringify(params)
+      url: `${window.location.origin}/rcdp/resoft/wxopen/servlesslogin`,
+      data: Qs.stringify(params)
     })
   }
 

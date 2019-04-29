@@ -10,9 +10,9 @@
         <router-link tag="li" class="tab-item" to="/home">
           <a>我的首页</a>
         </router-link>
-        <router-link tag="li" class="tab-item" to="/knowledge" @click = 'servlesslogin("/rcdp/resoft/cloudView?tabId=workRoom#page&systemId=dispatchList")'>
+        <li class="tab-item"  @click = 'servlesslogin("/rcdp/resoft/cloudView?tabId=workRoom#page&systemId=dispatchList")'>
           <a href="javascript:void(0)">知识库</a>
-        </router-link>
+        </li>
         <router-link tag="li" class="tab-item" to="/projectManager">
           <a>项目管理</a>
         </router-link>
@@ -25,7 +25,7 @@
         <li class="tab-item" @click = 'servlesslogin("/rcdp/resoft/cloudView?tabId=workRoom#page&systemId=org")'>
           系统管理
         </li>
-         <router-link tag="li" class="tab-item" to="/partnerManager">
+         <router-link tag="li" class="tab-item" to="/partnerManager" exact>
           <a>合伙人管理</a>
         </router-link>
         <li class="tab-item" @click = 'servlesslogin("/rcdp/resoft/cloudView?tabId=workRoom#page&systemId=cloudEnv")'>
@@ -38,7 +38,7 @@
     </div>
     <div class="right-options">
       欢迎您 <span @click = 'toUserManagement' class="user-name">[{{userName}}]</span>
-      <span class="logout" @click="logout">登出</span>
+      <!-- <span class="logout" @click="logout">登出</span> -->
     </div>
   </div>
 </template>
@@ -83,7 +83,19 @@ export default {
       }).then(res => {
         let result = res.data
         console.log(result)
-        window.location.href = this.origin + link
+        if (result.login === 'expires') {
+          if (window.location.origin === 'http://cloud.chinaresoft.com') {
+            this.$router.push({ path: '/wxCodePage' })
+          } else {
+            this.$router.push({ path: '/login' })
+          } if (window.location.origin === 'http://cloud.chinaresoft.com') {
+            this.$router.push({ path: '/wxCodePage' })
+          } else {
+            this.$router.push({ path: '/login' })
+          }
+        } else {
+          window.location.href = this.origin + link
+        }
       })
     }
   }

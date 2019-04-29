@@ -25,13 +25,6 @@
           </el-row>
           <el-row type="flex" justify="space-between">
             <el-col :span="10">
-              <el-form-item label="客户全称">
-                <el-input v-model="form.customerFullName" placeholder="客户全称"></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row type="flex" justify="space-between">
-            <el-col :span="10">
               <el-form-item label="电话">
                 <el-input v-model="form.phone" placeholder="请输入电话"></el-input>
               </el-form-item>
@@ -95,6 +88,13 @@
               </el-form-item>
             </el-col>
           </el-row>
+          <el-row type="flex" justify="space-between">
+            <el-col :span="10">
+              <el-form-item label="客户全称">
+                <el-input v-model="form.customerFullName" placeholder="客户全称"></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
         </template>
       </box-wrap>
       <!-- 我曾经是融鑫人 -->
@@ -120,7 +120,7 @@
         </template>
       </box-wrap>
       <!-- 付款信息 -->
-      <box-wrap>
+      <!-- <box-wrap>
         <template slot="boxHeaderTitle">
           付款信息
         </template>
@@ -142,7 +142,7 @@
             </el-col>
           </el-row>
         </template>
-      </box-wrap>
+      </box-wrap> -->
       <!-- /.付款信息 -->
       <div class="btns-group">
         <el-button type="primary" round @click.native.prevent="submit('form')">确定</el-button>

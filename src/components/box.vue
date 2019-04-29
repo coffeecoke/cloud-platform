@@ -28,18 +28,20 @@ export default {
     .box-header__title {
       font-size:18px;
       position: relative;
+      padding-left:10px;
       &:before {
         content:'';
         position:absolute;
         width:4px;
         height:100%;
         border-radius: 2px;
-        left:-10px;
+        left:0px;
         background-color:#1a74ee;
       }
     }
     .box-body {
       padding:15px;
+      padding-top:0;
     }
   }
 
