@@ -250,6 +250,7 @@ export default {
     })
   },
   methods: {
+    // 根据字典码，渲染对应的名称
     formatIndustry (value) {
       let currObj = this.industry.filter(obj => {
         return obj.dictCode === value

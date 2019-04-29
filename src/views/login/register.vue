@@ -1,4 +1,5 @@
 <template>
+<!-- 微信扫码后的中转页面 -->
   <div class="login-wrapper" v-if="isShowRegister">
     <div class="login-content clearfix">
       <div class="wx-logo"></div>
@@ -85,14 +86,13 @@ export default {
   activated () {},
   mounted () {
     let wxCode = window.location.hash.split('&')[0].split('=')[1] // 从地址中截取到微信code
-    console.log(wxCode)
     localStorage.setItem('wxCode', wxCode)
     this.$api.userInfo.submitWxCode({wxCode: wxCode}).then(res => { // 把code传给后台获取token
       let result = res.data
       let { status, code } = result
       let { unionID } = result.data
       localStorage.setItem('unionID', unionID)
-      // 转到认证
+      // 新用户转到认证
       if (status === '1' && code === '1205') {
         this.isShowRegister = true // 显示认证页面div
         this.isShowForm = true // 显示表单
@@ -104,7 +104,7 @@ export default {
         this.isShowInCert = true // 显示提示正在审核中
         this.isShowError = false
 
-        // 直接登录成功
+        // 老用户扫码直接登录成功
       } else if (status === '1' && code === '200') {
         this.isShowRegister = false // 用户已存在，扫码成功后直接跳转到首页，不需要显示注册页div
         let { token, userName } = result
@@ -118,11 +118,10 @@ export default {
     handleSubmit2 () {
       this.$refs.ruleForm2.validate((valid) => {
         let unionID = localStorage.getItem('unionID')
-        console.log(valid, unionID)
         if (valid) {
           this.logining = true
           var userInfo = {
-            unionID: localStorage.getItem('unionID'),
+            unionID: unionID,
             userOrgNm: this.ruleForm2.userOrgNm,
             userName: this.ruleForm2.userName,
             userPhone: this.ruleForm2.userPhone,

@@ -1,6 +1,5 @@
 <template>
   <div class="box-table">
-
     <el-table :data="tableData" border style="width: 100%" v-loading="loading" :fit='true'>
       <el-table-column prop="date" label="开始日期">
         <template slot-scope="scope">
@@ -164,6 +163,7 @@ export default {
     let dictionaryObj = {
       dict_code: ['trainingMode']
     }
+    // 获取培训经历字典表
     this.$api.dictionary.getDictionaries(dictionaryObj).then(res => {
       let result = res.data
       let dictionary = {}
@@ -173,7 +173,7 @@ export default {
 
       this.trainingMode = dictionary.trainingMode
     })
-    // 技术能力字典表
+    // 技术能力字典表（树形结构）
     this.$api.dictionary.getDictionariesTree({
       dict_code: 'techSkill'
     }).then(res => {
@@ -228,8 +228,6 @@ export default {
           checkedLabels.push(item.label)
         }
       })
-      console.log()
-      console.log(checkedLabels.join(','))
       this.currTechSkillScope.row.formatTechSkill = checkedLabels.join(',')
     },
 
@@ -248,39 +246,39 @@ export default {
         return false
       }
     },
-    // 上传图片到服务器
-    submitUpload () {
-      let currRow = this.currUploadScope.row
-      let formData = new FormData()
-      formData.append('id', this.currUploadScope.row.id)
-      if (this.$refs.fileUpload && this.$refs.fileUpload.uploadFiles.length > 0) {
-        this.$refs.fileUpload.uploadFiles && this.$refs.fileUpload.uploadFiles.forEach(file => {
-          if (file.raw && !file.id) { // 只上传本次上传的附件，排除之前上传的
-            formData.append('files', file.raw)
-          } else {
-            return false
-          }
-        })
-      }
+    // // 上传图片到服务器
+    // submitUpload () {
+    //   let currRow = this.currUploadScope.row
+    //   let formData = new FormData()
+    //   formData.append('id', this.currUploadScope.row.id)
+    //   if (this.$refs.fileUpload && this.$refs.fileUpload.uploadFiles.length > 0) {
+    //     this.$refs.fileUpload.uploadFiles && this.$refs.fileUpload.uploadFiles.forEach(file => {
+    //       if (file.raw && !file.id) { // 只上传本次上传的附件，排除之前上传的
+    //         formData.append('files', file.raw)
+    //       } else {
+    //         return false
+    //       }
+    //     })
+    //   }
 
-      // 请求接口
-      this.$api.trainingExperience.saveEnclosure(formData).then(res => {
-        let result = res.data
-        if (result.status === '1') {
-          currRow.fileList = result.data // 根据后台更新fileList
-          console.log(currRow.fileList)
-          this.$message({
-            type: 'success',
-            message: '上传附件成功'
-          })
-        } else {
-          this.$message({
-            type: 'error',
-            message: '上传附件失败'
-          })
-        }
-      })
-    },
+    //   // 请求接口
+    //   this.$api.trainingExperience.saveEnclosure(formData).then(res => {
+    //     let result = res.data
+    //     if (result.status === '1') {
+    //       currRow.fileList = result.data // 根据后台更新fileList
+    //       console.log(currRow.fileList)
+    //       this.$message({
+    //         type: 'success',
+    //         message: '上传附件成功'
+    //       })
+    //     } else {
+    //       this.$message({
+    //         type: 'error',
+    //         message: '上传附件失败'
+    //       })
+    //     }
+    //   })
+    // },
     handleRemove (file, fileList) {
       console.log(file)
       console.log(fileList)
@@ -335,7 +333,7 @@ export default {
           row.edit = false
           this.isAddRow = true
           row = result.data
-          this.tableData.splice(index, 1, row)
+          this.tableData.splice(index, 1, row) // 注意vue监听数组变化的方式（百度）
           this.$message({
             type: 'success',
             message: '保存培训经历条目成功'

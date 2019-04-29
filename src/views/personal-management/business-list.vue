@@ -85,14 +85,14 @@ export default {
     getTableList () {
       this.loading = true
       let params = {
+        // 分页
         pageNum: this.pageNum, // 请求的页码
         pageSize: this.pageSize, // 每页显示条数
-        // customerNumber: '333333'
+        // 查询条件
         customerNumber: this.searchForm.customerNumber,
         customerFullName: this.searchForm.customerFullName,
         customerAbbreviation: this.searchForm.customerAbbreviation
       }
-      console.log(params)
       this.$api.partner.getEnterprise(params).then(res => {
         let result = res.data
         this.loading = false

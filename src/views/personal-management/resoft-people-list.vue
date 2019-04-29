@@ -344,12 +344,13 @@ export default {
   },
   methods: {
     onSubmit () {
-      this.getTableList()
+      this.getTableList() // 通过条件查询列表
     },
     // 获取人员列表表格数据
     getTableList () {
       this.loading = true
       let params = {
+        // 查询条件
         name: this.searchForm.name,
         // 分页
         pageNum: this.pageNum,

@@ -10,19 +10,21 @@ const userInfo = {
     })
   },
 
-  // 获取script
+  // 获取微信script
   getScript (params) {
     return axios({
       method: 'get',
       url: 'https://res.wx.qq.com/connect/zh_CN/htmledition/js/wxLogin.js'
     })
   },
+  // 获取后台生成的二维码
   loadQRCode () {
     return axios({
       method: 'post',
       url: '/resoft/wxopen/QRCodeLoad'
     })
   },
+  // 获取微信的code之后，提交给后台，获取token
   submitWxCode (params) {
     return axios({
       method: 'post',

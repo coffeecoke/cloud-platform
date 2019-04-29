@@ -161,29 +161,14 @@ export default {
   },
   data () {
     return {
+      // 后台获取字典表后，赋值
       education: [],
       major: [],
       D_SEX: [],
-      degree: [
-        {
-          dictCode: 1,
-          dictName: '硕士'
-        },
-        {
-          dictCode: 0,
-          dictName: 'MBA'
-        }
-      ],
-      fullTime: [
-        {
-          dictCode: '1',
-          dictName: '全日制'
-        },
-        {
-          dictCode: '2',
-          dictName: '非全日制'
-        }
-      ],
+      degree: [],
+      fullTime: [],
+
+      // 需要提交的字段
       form: {
         name: '',
         D_SEX: '',
@@ -204,7 +189,7 @@ export default {
     }
   },
   mounted () {
-    // 获取字典
+    // 获取字典表，渲染下拉框
     var dictionaryObj = {
       dict_code: [ 'major', 'education', 'degree', 'fullTime', 'D_SEX' ]
     }
@@ -219,6 +204,7 @@ export default {
       this.degree = dictionary.degree
       this.D_SEX = dictionary.D_SEX
     })
+    // 获取基本信息
     this.$api.baseInfo.getuserbyloginname().then(res => {
       var result = res.data
       if (result.status === '1') {
@@ -230,6 +216,7 @@ export default {
   },
   methods: {
     submit (formName) {
+      // 遍历字段，追加到formData,提交到后台
       var formData = new FormData()
       Object.keys(this.form).forEach(key => {
         formData.append(key, this.form[key])

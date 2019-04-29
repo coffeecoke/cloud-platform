@@ -21,6 +21,7 @@ export default {
   },
   activated () {},
   mounted () {
+    // 页面创建iframe把appid等传给微信，获取code码
     class WxLogin {
       constructor (a) {
         let c = 'default'
@@ -45,9 +46,9 @@ export default {
 
     const wxLoginObj = new WxLogin({
       self_redirect: false,
-      redirect_uri: 'http://cloud.chinaresoft.com/emp/%23/register',
-      id: 'wechat_container',
-      appid: 'wx369cd05ac05c6c1f',
+      redirect_uri: 'http://cloud.chinaresoft.com/emp/%23/register', // 需要重定向的地址，地址里包含code
+      id: 'wechat_container', // 需要嵌入iframe的id
+      appid: 'wx369cd05ac05c6c1f', // 公司自己申请的唯一的appid
       scope: 'snsapi_login',
       state: '',
       style: 'black'

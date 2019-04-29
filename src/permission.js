@@ -12,10 +12,10 @@ router.beforeEach((to, from, next) => {
   NProgress.start()
   if (localStorage.getItem('token')) {
     if (to.path === '/wxCodePage' || to.path === '/login') {
-      next({ path: '/' })
+      next({ path: '/' }) // 直接跳转到默认页面（如：首页）
       NProgress.done() //
     } else {
-      next()
+      next() // 正常路由跳转
       // if (store.getters.roles.length === 0) {
       //   store.dispatch('GetInfo').then(res => { // 拉取用户信息
       //     next()
@@ -30,7 +30,7 @@ router.beforeEach((to, from, next) => {
       // }
     }
   } else {
-    if (whiteList.indexOf(to.path) !== -1) {
+    if (whiteList.indexOf(to.path) !== -1) { // 直接跳转到白名单配置的路由
       next()
     } else {
       // next(`/login?redirect=${to.path}`) // 否则全部重定向到登录页
@@ -48,3 +48,10 @@ router.beforeEach((to, from, next) => {
 router.afterEach(() => {
   NProgress.done() // 结束Progress
 })
+// 在有token的情况下:
+// 1 如果要进去的路由是登录页，则直接调转到默认页面 path:'/'
+// 2 如果不是登录页，正常跳转 next()
+
+// 在没有token的情况下
+// 1 如果是白名单里配置的路由，直接跳转到白名单
+// 2 如果不是，直接重定向到登录页，并带上redirect,方便登录成功后直接调转到目标页面，用户体验好

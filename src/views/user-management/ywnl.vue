@@ -107,6 +107,7 @@ export default {
     let dictionaryObj = {
       dict_code: [ 'businessSkill', 'masteryLevel' ]
     }
+    // 获取字典表
     this.$api.dictionary.getDictionaries(dictionaryObj).then(res => {
       let result = res.data
       let dictionary = {}
@@ -131,6 +132,7 @@ export default {
     })
   },
   methods: {
+    // 根据字典码，渲染对应的名称
     formatCategory (value) {
       let currObj = this.businessSkill.filter(obj => {
         return obj.dictCode === value

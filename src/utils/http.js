@@ -22,18 +22,19 @@ const tip = msg => {
  * 携带当前页面路由，以期在登录页面完成登录后返回当前页面
  */
 const toLogin = () => {
+  // 判断域名 外网调到微信扫码页  其他的统一跳转到用户名密码登录
   if (window.location.origin === 'http://cloud.chinaresoft.com') {
     router.replace({
       path: '/wxCodePage',
       query: {
-        redirect: router.currentRoute.fullPath // 登录成功后跳转到当前页面
+        redirect: router.currentRoute.fullPath // 登录成功后跳转到之前的页面
       }
     })
   } else {
     router.replace({
       path: '/login',
       query: {
-        redirect: router.currentRoute.fullPath // 登录成功后跳转到当前页面
+        redirect: router.currentRoute.fullPath // 登录成功后跳转到之前的页面
       }
     })
   }
@@ -134,11 +135,11 @@ const errorHandle = (status, msg) => {
 }
 
 // 创建axios实例
-var instance = axios.create({timeout: 1000 * 60})
+var instance = axios.create({timeout: 1000 * 60}) // 设置请求超时时间
 // 设置post请求头
 instance.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8'
 // instance.defaults.headers.token = '6S2Ng1VO3ifU6fqGUmKNmRpJPEUSzIjI' // 临时设置cookie测试用
-instance.defaults.baseURL = '/api2'
+instance.defaults.baseURL = '/api'
 
 /**
  * 请求拦截器
