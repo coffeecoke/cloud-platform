@@ -38,7 +38,7 @@
     </div>
     <div class="right-options">
       欢迎您 <span @click = 'toUserManagement' class="user-name">[{{userName}}]</span>
-      <!-- <span class="logout" @click="logout">登出</span> -->
+      <span class="logout" @click="logout">登出</span>
     </div>
   </div>
 </template>

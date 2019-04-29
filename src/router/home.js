@@ -8,7 +8,7 @@ export default [{
   path: '/home',
   component: Home,
   name: '首页',
-  redirect: '/2-4',
+  redirect: '/2-6',
   children: [
     {
       path: '/2-4',

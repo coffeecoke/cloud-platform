@@ -41,7 +41,7 @@ const router = new Router({
   {
     path: '/',
     component: Layout,
-    redirect: '/userManagement',
+    redirect: '/home',
     children: [
       ...Home,
       // 用户管理路由模块
