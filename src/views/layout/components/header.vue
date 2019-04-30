@@ -1,6 +1,6 @@
 <template>
   <div class="header">
-    <div class="logo"></div>
+    <div class="logo">中软融鑫云交付平台</div>
     <div class="top-nav">
       <ul class="top-nav__list" ref="topNav">
         <!-- <li class="nav-item" v-for="(item, i) in topNavs" :key="item.id" :class="{selected:select == i}" @click="clickLi(i)">
@@ -10,35 +10,35 @@
         <router-link tag="li" class="tab-item" to="/home">
           <a>我的首页</a>
         </router-link>
-        <li class="tab-item"  @click = 'servlesslogin("/rcdp/resoft/cloudView?tabId=workRoom#page&systemId=dispatchList")'>
+        <li class="tab-item"  @click = 'servlesslogin("/resoft/cloudView?tabId=workRoom#page&systemId=dispatchList")'>
           <a href="javascript:void(0)">知识库</a>
         </li>
         <router-link tag="li" class="tab-item" to="/projectManager">
           <a>项目管理</a>
         </router-link>
-        <li class="tab-item" @click = 'servlesslogin("/rcdp/resoft/cloudView?tabId=workRoom#page&systemId=projectStart-projectInit")'>
+        <li class="tab-item" @click = 'servlesslogin("/resoft/cloudView?tabId=workRoom#page&systemId=projectStart-projectInit")'>
           <a href="javascript:void(0)">工作台</a>
         </li>
-        <li class="tab-item" @click = 'servlesslogin("/rcdp/resoft/cloudView?tabId=workRoom#page&systemId=productMaintain-productMaintain")'>
+        <li class="tab-item" @click = 'servlesslogin("/resoft/cloudView?tabId=workRoom#page&systemId=productMaintain-productMaintain")'>
           <a href="javascript:void(0)">产品资料</a>
         </li>
-        <li class="tab-item" @click = 'servlesslogin("/rcdp/resoft/cloudView?tabId=workRoom#page&systemId=org")'>
+        <li class="tab-item" @click = 'servlesslogin("/resoft/cloudView?tabId=workRoom#page&systemId=org")'>
           系统管理
         </li>
          <router-link tag="li" class="tab-item" to="/partnerManager" exact>
           <a>合伙人管理</a>
         </router-link>
-        <li class="tab-item" @click = 'servlesslogin("/rcdp/resoft/cloudView?tabId=workRoom#page&systemId=cloudEnv")'>
+        <li class="tab-item" @click = 'servlesslogin("/resoft/cloudView?tabId=workRoom#page&systemId=cloudEnv")'>
           <a href="javascript:void(0)">云环境</a>
         </li>
-         <router-link tag="li" class="tab-item" to="/qu-1">
+         <!-- <router-link tag="li" class="tab-item" to="/qu-1">
           <a>调查问卷</a>
-        </router-link>
+        </router-link> -->
       </ul>
     </div>
     <div class="right-options">
       欢迎您 <span @click = 'toUserManagement' class="user-name">[{{userName}}]</span>
-      <span class="logout" @click="logout">登出</span>
+      <!-- <span class="logout" @click="logout">登出</span> -->
     </div>
   </div>
 </template>
@@ -109,15 +109,18 @@ export default {
 
     .logo {
       float: left;
-      width: 240px;
+      width: 270px;
       height: 100%;
+      line-height: 60px;
+      text-align: right;
+      color:#fff;
+      font-size:20px;
       background: url('~@assets/imgs/logo.png') left center no-repeat; //~@assets 是在webpack.base.conf.配置的别名
-      background-size: 100% auto;
     }
 
     .top-nav {
       position: absolute;
-      width:80%;
+      width:90%;
       height: 100%;
       left: 50%;
       transform: translateX(-50%);
@@ -158,8 +161,10 @@ export default {
       float: right;
       color: #fff;
       line-height: $baseHeight;
+      font-size:14px;
       .user-name {
         cursor: pointer;
+        font-size:14px;
       }
   }
   .logout {

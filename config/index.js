@@ -11,7 +11,7 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/emp',
     proxyTable: {
-      '/api1': {
+      '/api': {
         target: 'http://cloud.chinaresoft.com:9005/',
         changeOrigin: true,
         pathRewrite: {

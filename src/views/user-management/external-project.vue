@@ -47,11 +47,11 @@
           </template>
           <template v-else>
             <span>{{ scope.row.projectName }}</span>
-            <el-popover trigger="hover" placement="top">
+            <!-- <el-popover trigger="hover" placement="top">
               <p>{{ scope.row.projectName }}</p>
               <p>{{ scope.row.content }}</p>
               <i slot="reference" class="project-notice-icon"></i>
-            </el-popover>
+            </el-popover> -->
           </template>
         </template>
       </el-table-column>

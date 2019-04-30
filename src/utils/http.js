@@ -140,7 +140,7 @@ var instance = axios.create({timeout: 1000 * 60}) // 设置请求超时时间
 // 设置post请求头
 instance.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8'
 // instance.defaults.headers.token = '6S2Ng1VO3ifU6fqGUmKNmRpJPEUSzIjI' // 临时设置cookie测试用
-instance.defaults.baseURL = '/api1'
+instance.defaults.baseURL = '/api'
 
 /**
  * 请求拦截器

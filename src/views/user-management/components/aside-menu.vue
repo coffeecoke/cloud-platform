@@ -8,7 +8,7 @@
     </el-submenu>
     <el-submenu index="2">
       <template slot="title">项目经验</template>
-      <el-menu-item index="1-4">任务承接</el-menu-item>
+      <!-- <el-menu-item index="1-4">任务承接</el-menu-item> -->
       <el-menu-item index="1-5">外部项目</el-menu-item>
       <el-menu-item index="1-6">融鑫项目</el-menu-item>
     </el-submenu>
