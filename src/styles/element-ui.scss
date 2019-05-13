@@ -23,9 +23,7 @@
     color:#1a74ee;
   }
 }
-.el-form {
-  margin-bottom:0 !important;
-}
+
 .el-form-item__label {
   // line-height: 20px;
 }
@@ -49,6 +47,10 @@
 }
 
 .el-table /deep/ .tableHeader {
+  background:#1a74ee;
+  color:#f9fafc;
+}
+.el-table /deep/ .el-table__header th {
   background:#1a74ee;
   color:#f9fafc;
 }

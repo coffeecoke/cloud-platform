@@ -17,7 +17,7 @@
   <el-col :span="4"><div class="grid-content bg-purple"><el-input placeholder="任务编号" class="input1" v-model="form.taskId"  clearable></el-input></div></el-col>
   <el-col :span="4"><div class="grid-content bg-purple"><el-input placeholder="任务名称" class="input1" v-model="form.taskName"  clearable></el-input></div></el-col>
   </el-row></el-form> -->
-      <el-table :data="tableData" border style="width: 100%" v-loading="loading">
+      <el-table :data="tableData" :border='true' style="width: 100%" v-loading="loading">
         <el-table-column prop="project" label="项目信息">
           <template slot-scope="scope2">
             <div>

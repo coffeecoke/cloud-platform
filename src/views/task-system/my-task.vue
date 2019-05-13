@@ -77,7 +77,6 @@
       </el-table-column>
     </el-table>
     <div class="pagination-wrap">
-
       <el-pagination background layout="prev, pager, next" :page-size="pageSize" :total="total"
         @current-change="handleCurrChange" @size-change="handleSizeChange">
       </el-pagination>
@@ -253,7 +252,6 @@ export default {
     this.data = this.$route.query.data
     this.$api.TaskCreate.getProject().then(res => {
       let result = res.data
-      console.log(result.data)
       this.projectid = result.data
     })
     let params = {
@@ -279,9 +277,6 @@ export default {
 </script>
 <style scoped lang="scss" scope>
   .el-row {
-    margin-bottom: 30px;
-    margin-top: 10px;
-
     &:last-child {
       margin-bottom: 0;
     }

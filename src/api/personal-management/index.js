@@ -51,6 +51,8 @@ const partner = {
     })
   }
 
+  // 融鑫合伙人能力列表
+
 }
 // 获取企业列表
 export default {
