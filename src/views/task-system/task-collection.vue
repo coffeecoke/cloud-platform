@@ -297,7 +297,7 @@ export default {
   }
 
   .el-form {
-    margin-bottom: 20px;
+    margin-bottom: 20px!important;
   }
 
   .el-col {
