@@ -1,6 +1,6 @@
 <template>
   <div class="base-info">
-    <el-form ref="form" :model="form" label-width="80px" label-position="top">
+    <el-form ref="form"  :rules="rules" :model="form" label-width="80px" label-position="top">
       <!-- 基本信息 -->
       <box-wrap>
         <template slot="boxHeaderTitle">
@@ -9,12 +9,12 @@
         <template slot="boxBodyInner">
           <el-row type="flex" justify="space-between">
             <el-col :span="10">
-              <el-form-item label="姓名">
+              <el-form-item label="姓名" prop="name">
                 <el-input v-model="form.name" placeholder="请输入姓名" :disabled="true"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="10">
-              <el-form-item label="性别">
+              <el-form-item label="性别" prop="D_SEX">
                 <el-radio-group v-model="form.D_SEX">
                   <el-radio v-for="item in D_SEX" :key="item.dictCode" :label="item.dictCode">
                     {{item.dictName}}
@@ -25,31 +25,31 @@
           </el-row>
           <el-row type="flex" justify="space-between">
             <el-col :span="10">
-              <el-form-item label="电话">
+              <el-form-item label="电话" prop="phone">
                 <el-input v-model="form.phone" placeholder="请输入电话"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="10">
-              <el-form-item label="邮箱">
+              <el-form-item label="邮箱" prop="email">
                 <el-input v-model="form.email" placeholder="请输入邮箱"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row type="flex" justify="space-between">
             <el-col :span="10">
-              <el-form-item label="紧急联系人">
+              <el-form-item label="紧急联系人" prop="contact">
                 <el-input v-model="form.contact" placeholder="请输入紧急联系人"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="10">
-              <el-form-item label="紧急联系方式">
+              <el-form-item label="紧急联系方式" prop="contactInfo">
                 <el-input v-model="form.contactInfo" placeholder="请输入紧急联系方式"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row type="flex" justify="space-between">
             <el-col :span="10">
-              <el-form-item label="学历">
+              <el-form-item label="学历" prop="education">
                 <el-select v-model="form.education" placeholder="请选择学历">
                   <el-option v-for="item in education" :key="item.dictCode" :label="item.dictName"
                     :value="item.dictCode" :disabled="item.disabled">
@@ -58,7 +58,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="10">
-              <el-form-item label="专业">
+              <el-form-item label="专业" prop="major">
                 <el-select v-model="form.major" multiple placeholder="请选择专业">
                   <el-option v-for="item in major" :key="item.dictCode" :label="item.dictName" :value="item.dictCode"
                     :disabled="item.diasbled">
@@ -70,7 +70,7 @@
 
           <el-row type="flex" justify="space-between">
             <el-col :span="10">
-              <el-form-item label="全日制">
+              <el-form-item label="全日制" prop="fullTime">
                 <el-select v-model="form.fullTime" placeholder="请选择">
                   <el-option v-for="item in fullTime" :key="item.dictCode" :label="item.dictName" :value="item.dictCode"
                     :disabled="item.disabled">
@@ -79,7 +79,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="10">
-              <el-form-item label="学位">
+              <el-form-item label="学位" prop="degree">
                 <el-select v-model="form.degree" multiple placeholder="请选择学位">
                   <el-option v-for="item in degree" :key="item.dictCode" :label="item.dictName" :value="item.dictCode"
                     :disabled="item.diasbled">
@@ -90,7 +90,7 @@
           </el-row>
           <el-row type="flex" justify="space-between">
             <el-col :span="10">
-              <el-form-item label="客户全称">
+              <el-form-item label="客户全称" prop="customerFullName">
                 <el-input v-model="form.customerFullName" placeholder="客户全称"></el-input>
               </el-form-item>
             </el-col>
@@ -185,6 +185,44 @@ export default {
         idCard: '',
         account: '',
         accountNum: ''
+      },
+      rules: {
+        name: [
+          { required: true, aaaaAAmessage: '请输入姓名', trigger: 'blur' }
+        ],
+        D_SEX: [
+          { required: true, message: '请选择性别', trigger: 'change' }
+        ],
+        phone: [
+          { type: 'date', required: true, message: '请输入手机号码', trigger: 'blur' }
+        ],
+        email: [
+          { type: 'date', required: true, message: '请输入email     ', trigger: 'blur' }
+        ],
+        contact: [
+          { type: 'array', required: true, message: '请输入联系人', trigger: 'blur' }
+        ],
+        contactInfo: [
+          { type: 'array', required: true, message: '请输入紧急联系人', trigger: 'blur' }
+        ],
+        education: [
+          { required: true, message: '请选择教育', trigger: 'change' }
+        ],
+        major: [
+          { required: true, message: '请输入专业', trigger: 'change' }
+        ],
+        fullTime: [
+          { required: true, message: '请选择是否全日志', trigger: 'change' }
+        ],
+        degree: [
+          { required: true, message: '请选择学位', trigger: 'change' }
+        ],
+        customerFullName: [
+          { required: true, message: '请填写活动形式', trigger: 'blur' }
+        ],
+        accountNum: [
+          { required: true, message: '请填写客户姓名', trigger: 'blur' }
+        ]
       }
     }
   },
@@ -216,6 +254,14 @@ export default {
   },
   methods: {
     submit (formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          alert('submit!')
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
       // 遍历字段，追加到formData,提交到后台
       var formData = new FormData()
       Object.keys(this.form).forEach(key => {
@@ -271,7 +317,7 @@ export default {
 
   .el-form-item--mini.el-form-item,
   .el-form-item--small.el-form-item {
-    margin-bottom: 6px;
+    margin-bottom: 15px;
   }
 
 </style>
