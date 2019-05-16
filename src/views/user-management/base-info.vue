@@ -155,6 +155,16 @@
 <script>
 // 自定义box组件，用到了*具名插槽*
 import BoxWrap from '@/components/box.vue'
+import {isvalidPhone} from '../../../config/validate.js'
+var validPhone = (rule, value, callback) => {
+  if (!value) {
+    callback(new Error('请输入电话号码'))
+  } else if (!isvalidPhone(value)) {
+    callback(new Error('请输入正确的11位手机号码'))
+  } else {
+    callback()
+  }
+}
 export default {
   components: {
     BoxWrap
@@ -194,10 +204,10 @@ export default {
           { required: true, message: '请选择性别', trigger: 'change' }
         ],
         phone: [
-          { type: 'date', required: true, message: '请输入手机号码', trigger: 'blur' }
+          {required: true, trigger: 'blur', validator: validPhone}
         ],
         email: [
-          { type: 'date', required: true, message: '请输入email     ', trigger: 'blur' }
+          { type: 'email', required: true, message: '请输入正确的email', trigger: 'blur' }
         ],
         contact: [
           { type: 'array', required: true, message: '请输入联系人', trigger: 'blur' }
