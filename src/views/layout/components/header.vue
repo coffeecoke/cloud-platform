@@ -43,6 +43,7 @@
   </div>
 </template>
 <script>
+import $ from 'jquery'
 export default {
   name: 'Header',
   data () {
@@ -75,6 +76,8 @@ export default {
     },
     toUserManagement () {
       this.$router.push({ path: '/userManagement' })
+      // 移除左侧下导航的下划横线
+      $('.top-nav__list li').removeClass('active')
     },
     servlesslogin (link) {
       this.$api.userInfo.servlesslogin({
@@ -82,7 +85,6 @@ export default {
         token: localStorage.getItem('token')
       }).then(res => {
         let result = res.data
-        console.log(result)
         if (result.login === 'expires') {
           if (window.location.origin === 'http://cloud.chinaresoft.com') {
             this.$router.push({ path: '/wxCodePage' })
@@ -94,6 +96,17 @@ export default {
         }
       })
     }
+  },
+  mounted () {
+    // 通过localstorage的方式解决多层路由嵌套 router-link-active失效的问题（解决方式不忍直视）
+    let headerNavCurrIndex = localStorage.getItem('headerNavCurrIndex')
+    if (headerNavCurrIndex) {
+      $('.top-nav__list li').eq(headerNavCurrIndex).addClass('active').siblings().removeClass('active')
+    }
+    $('.top-nav__list li').on('click', function () {
+      localStorage.setItem('headerNavCurrIndex', $(this).index())
+      $(this).addClass('active').siblings().removeClass('active')
+    })
   }
 }
 
@@ -141,7 +154,20 @@ export default {
           color:#fff;
           text-decoration: none;
         }
-        &.router-link-exact-active {
+        &.active {
+          color: #fff;
+
+          &:after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -10px;
+            width: 100%;
+            height: 2px;
+            background-color: #fff;
+          }
+        }
+        &.router-link-active {
           color: #fff;
 
           &:after {

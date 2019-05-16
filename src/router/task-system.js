@@ -1,6 +1,8 @@
 import TaskSystem from '@/views/task-system/index'
 // 任务列表
 import TaskList from '@/views/task-system/task-list'
+// 脉络图
+import ContextMap from '@/views/task-system/context-map'
 // 任务体系
 import TaskCreate from '@/views/task-system/task-create'
 // 任务发布
@@ -22,7 +24,7 @@ import QuestionPublic from '@/views/questionnaire/questionPublic'
 import PostProject from '@/views/questionnaire/postProject'
 
 export default [{
-  path: 'projectManager',
+  path: '/projectManager',
   component: TaskSystem,
   name: '项目管理',
   redirect: '/2-1',
@@ -31,6 +33,11 @@ export default [{
       path: '/2-1',
       name: '项目列表',
       component: TaskCreate
+    },
+    {
+      path: '/contextMap',
+      name: '脉络图',
+      component: ContextMap
     },
     {
       path: '/2-2',

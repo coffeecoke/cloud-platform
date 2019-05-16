@@ -3,7 +3,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import axios from 'axios' // http 框架
-import '@/permission' // 路由劫持
+// import '@/permission' // 路由劫持
 import api from './api' // 导入api接口
 import 'normalize.css/normalize.css' // css样式重置
 import '@/styles/font-awesome.css' // 奥森字体

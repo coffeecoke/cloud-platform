@@ -30,7 +30,7 @@
     </el-form>
 
     <el-table :data="tableData" style="height: 100%;margin-top:10px;" v-loading="loading1"
-      :header-cell-style="{background:'#1a74ee',color:'#f9fafc'}" :height = 'tableHeight'>
+      :header-cell-style="{background:'#1a74ee',color:'#f9fafc'}" :height='tableHeight'>
       <el-table-column width="250px" prop="projectId" label="项目" align="center">
         <template slot-scope="scope2">
           <div>
@@ -69,9 +69,7 @@
             </router-link>/<router-link class="tab-item"
               :to="{path: '/2-2', query: {data:scope1.row.projectId,taskStatus:'d'}}">
               <a>{{scope1.row.taskDistributed}}</a></router-link>
-            <!-- <el-link type="primary"><p>{{scope1.row.taskFinishedLabel}}</p></el-link> -->
-            <!-- <p>{{scope1.row.taskDistributedLabel}}</p>
-            <p>{{scope1.row.taskFinishedLabel}}</p> -->
+
           </div>
         </template>
       </el-table-column>
@@ -79,11 +77,11 @@
         <template slot-scope="scope">
           <el-button @click="taskissue(scope.row.projectId)" type="text" size="medium"><i class="el-icon-upload"
               title="跳转到任务发布"></i></el-button>
-          <!-- <el-button type="text" size="medium">
-            <router-link to="/#/1-2"><i class="el-icon-share" title="跳转到任务脉络"></i></router-link>
-          </el-button> -->
           <el-button @click="skipUndertake(scope.row)" type="text" size="medium"><i class="el-icon-goods"
               title="承接项目"></i></el-button>
+          <el-button @click="toContextMap(scope.row)" type="text" size="medium">
+            <i class="fa fa-bar-chart" title="脉络图"></i>
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -193,21 +191,23 @@
       </el-dialog>
     </div>
 
- <!--发布用户调查问卷 start-->
-    <el-dialog title="生成调查问卷" :visible.sync="createQuestPanl"   width="1000px">
-      <el-form  label-width="100px"  :model="questionnaire"  ref="questionnaire">
+    <!--发布用户调查问卷 start-->
+    <el-dialog title="生成调查问卷" :visible.sync="createQuestPanl" width="1000px">
+      <el-form label-width="100px" :model="questionnaire" ref="questionnaire">
         <el-form-item label="归属项目">
-          <el-input class="input2" v-model="questionnaire.projectName"  placeholder="" readonly></el-input>
-      </el-form-item>
-      <el-form-item label="选择问卷"  >
-        <el-autocomplete class="input2" v-model="questionnaire.quTitle" :fetch-suggestions="quTitleSearchAsync" :trigger-on-focus="false" @select="handleSelectTitle"  placeholder="选择问卷" ></el-autocomplete>
-      </el-form-item>
-      <el-form-item label="填报人员">
-        <el-autocomplete class="input2" v-model="questionnaire.answerUserName" :fetch-suggestions="quUserSearchAsync" :trigger-on-focus="false" @select="handleSelectUser" placeholder="填报人员" ></el-autocomplete>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click.native.prevent="saveQuestionnaire('questionnaire')"  round>保存</el-button>
-      </el-form-item>
+          <el-input class="input2" v-model="questionnaire.projectName" placeholder="" readonly></el-input>
+        </el-form-item>
+        <el-form-item label="选择问卷">
+          <el-autocomplete class="input2" v-model="questionnaire.quTitle" :fetch-suggestions="quTitleSearchAsync"
+            :trigger-on-focus="false" @select="handleSelectTitle" placeholder="选择问卷"></el-autocomplete>
+        </el-form-item>
+        <el-form-item label="填报人员">
+          <el-autocomplete class="input2" v-model="questionnaire.answerUserName" :fetch-suggestions="quUserSearchAsync"
+            :trigger-on-focus="false" @select="handleSelectUser" placeholder="填报人员"></el-autocomplete>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click.native.prevent="saveQuestionnaire('questionnaire')" round>保存</el-button>
+        </el-form-item>
       </el-form>
     </el-dialog>
     <!--发布用户调查问卷 end-->
@@ -250,7 +250,13 @@ export default {
       },
       projectid: [],
       tableHeight: null,
-      tableData: [],
+      tableData: [
+        {
+          projectId: '2018725-020B',
+          proTime: '2019-05-13',
+          proStatus: ''
+        }
+      ],
       Pro: null
     }
   },
@@ -488,11 +494,6 @@ export default {
         })
       }
     },
-    // 承接跳转
-    skipUndertake (row) {
-      this.dialogPersonalAndEnterprise = true
-      this.Pro = row.projectId
-    },
     // 查询
     confirm () {
       this.loading1 = true
@@ -513,17 +514,25 @@ export default {
         this.currPage = result.data.pageNum
       })
     },
+    // 跳转到任务发布
     taskissue (param) {
       this.$router.push({
         name: '任务发布',
         query: {
           data: param
         }
-
       })
     },
-    handleClick (row) {
-      console.log(row)
+    // 承接跳转
+    skipUndertake (row) {
+      this.dialogPersonalAndEnterprise = true
+      this.Pro = row.projectId
+    },
+    // 跳转到脉络图
+    toContextMap () {
+      this.$router.push({
+        name: '脉络图'
+      })
     },
     // 项目编号模糊查询
     querySearch (queryString, cb) {
@@ -547,7 +556,9 @@ export default {
     },
     quTitleSearchAsync (queryString, cb) {
       var restaurants = []
-      this.$api.questionPublic.loadQuestAsync({key: queryString}).then(res => {
+      this.$api.questionPublic.loadQuestAsync({
+        key: queryString
+      }).then(res => {
         let result = res.data
         restaurants = result.data
         var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants
@@ -556,7 +567,9 @@ export default {
     },
     quUserSearchAsync (queryString, cb) {
       var restaurants = []
-      this.$api.questionPublic.loadUserAsync({key: queryString}).then(res => {
+      this.$api.questionPublic.loadUserAsync({
+        key: queryString
+      }).then(res => {
         let result = res.data
         restaurants = result.data
         var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants
@@ -637,9 +650,11 @@ export default {
     padding: 10px 0;
     background-color: #f9fafc;
   }
-  .input2{
+
+  .input2 {
     width: 60%;
   }
+
   .input1 {
     .el-input__inner {
       background: #f9fafc;

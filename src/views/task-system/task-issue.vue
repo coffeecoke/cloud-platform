@@ -39,7 +39,7 @@
         </el-col>
       </el-row>
     </el-form>
-    <el-table :data="tableData" style="height: 100%"  v-loading="loading" :header-cell-style="{background:'#1a74ee',color:'#f9fafc'}">
+    <el-table :data="tableData" style="height: 100%"  v-loading="loading" :header-cell-style="{background:'#1a74ee',color:'#f9fafc'}" :height="tableHeight">
       <el-table-column prop="tid" label="任务/组编码" align="center"></el-table-column>
       <el-table-column prop="tname" label="任务/组名称" align="center"></el-table-column>
       <el-table-column prop="postTask" label="影响项" align="center"></el-table-column>
@@ -194,6 +194,7 @@ export default {
         label2: '五级（依赖项>12个）'
       }],
       tableData: [],
+      tableHeight: null,
       abilityTable: [],
       list: {
         // id: '',
@@ -248,7 +249,6 @@ export default {
         this.allData = Object.assign({tid: this.tid}, {taskClass: this.form.taskClass}, {projectId: this.form.projectId}, {taskBasePrice: this.forma.taskBasePrice}, {taskClaimPeriod: this.forma.taskClaimPeriod}, {abilityTable: this.abilityTable})
         this.$api.taskIssue.publishTask({allData: this.allData}).then(res => {
           var result = res.data
-          console.log(result.data)
           if (result.status === '1') {
             this.dialogTimeandCondition = false
             this.loading = true
@@ -264,7 +264,6 @@ export default {
             }
             this.$api.taskIssue.getPublishTaskList(params).then(res => {
               var result = res.data
-              console.log(result.data)
               this.loading = false
               // this.tableData = result.data
               this.tableData = result.data.list || []
@@ -315,18 +314,14 @@ export default {
       this.forma = {}
       this.abilityTable = []
       this.tid = row.tid
-      // console.log(this.taskId)
       this.dialogTimeandCondition = true
       this.$api.taskIssue.getTaskSkill().then(res => {
         var result1 = res.data
-        // console.log(result.data)
         this.options7 = result1.data
       })
       this.$api.taskIssue.getCapAbilityLevels().then(res => {
         var result = res.data
-        // console.log(result.data)
         this.options0 = result.data
-        console.log(this.options0)
       })
     },
     // // 获取技能级联
@@ -339,15 +334,6 @@ export default {
     //     this.options7 = result.data
     //   })
     // },
-    change (value) {
-      console.log(value)
-    },
-    taskTypeChage (val) {
-      console.log(val)
-    },
-    handleClick (row) {
-      console.log(row)
-    },
     // 项目编号查询
     querySearch (queryString, cb) {
       var taskBlurry = this.projectid
@@ -362,13 +348,11 @@ export default {
       }
     },
     handleSelect (item) {
-      console.log(item)
     },
     // 添加一行
     addRow () {
       // if (this.isAddRow) {
       this.abilityTable.push(Object.assign({}, this.list))
-      console.log(this.abilityTable)
       // this.isAddRow = false
       // } else {
       //   this.$notify({
@@ -382,7 +366,6 @@ export default {
     },
     // 点击保存
     saveClick (index, row) {
-      console.log(row)
       // let rowdata = this.Row
       // this.aaaa = row
       // var bbb = this.aaaa.ability
@@ -467,6 +450,12 @@ export default {
       console.log(result.data)
       this.projectid = result.data
     })
+
+    // 计算table的高度
+    this.tableHeight = document.body.clientHeight - 240 + 'px'
+    window.onresize = () => {
+      this.tableHeight = document.body.clientHeight - 240 + 'px'
+    }
   }
 }
 
