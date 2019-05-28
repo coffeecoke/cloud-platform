@@ -14,76 +14,48 @@
         <el-button>导出</el-button>
       </div>
     </div>
-    <el-table
-    :data="tableData"
-    style="width: 100%"
-    height="250">
-    <el-table-column
-      fixed
-      prop="number"
-      label=""
-      width="50">
-      <template slot-scope="scope">
-        <span>{{ scope.row.number}}</span>
-      </template>
-    </el-table-column>
-    <el-table-column
-      fixed
-      prop="name"
-      label="字段名称"
-      width="120">
-      <template slot-scope="scope">
-        <span>{{ scope.row.name }}</span>
-      </template>
-    </el-table-column>
-    <el-table-column
-      fixed
-      prop="type"
-      label="类型"
-      width="120">
-      <template slot-scope="scope">
-        <span>{{ scope.row.type }}</span>
-      </template>
-    </el-table-column>
-    <el-table-column
-      fixed
-      prop="text"
-      label="（主键，可空）"
-      width="120">
-      <template slot-scope="scope">
-        <span>{{ scope.row.text }}</span>
-      </template>
-    </el-table-column>
-    <el-table-column
-      prop="Cname"
-      label="中文名称"
-      width="120">
-       <template slot-scope="scope">
-        <span>{{ scope.row.Cname }}</span>
-      </template>
-    </el-table-column>
-    <el-table-column
-      prop="explain"
-      label="字段说明"
-      width="240">
-      <template slot-scope="scope">
-        <span>{{ scope.row.explain }}</span>
-      </template>
-    </el-table-column>
-    <el-table-column
-      prop="range"
-      label="值域"
-      width="120">
-      <template slot-scope="scope">
-        <span>{{ scope.row.range }}</span>
-      </template>
-    </el-table-column>
-    <el-table-column
-      width="600"
-      prop="logic">
-      <template slot="header" slot-scope="scope">
+    <el-table :data="tableData" style="width: 100%" height="250">
+      <el-table-column fixed prop="number" label="" width="50">
+        <template slot-scope="scope">
+          <span>{{ scope.row.number}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column fixed prop="name" :label="tableColumn[0].name" width="120">
+        <template slot-scope="scope">
+          <span>{{ scope.row.name }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column fixed prop="type" :label="tableColumn[1].name" width="120">
+        <template slot-scope="scope">
+          <span>{{ scope.row.type }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column fixed prop="text" :label="tableColumn[2].name" width="120">
+        <template slot-scope="scope">
+          <span>{{ scope.row.text }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="Cname" :label="tableColumn[3].name" width="120">
+        <template slot-scope="scope">
+          <span>{{ scope.row.Cname }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="explain" :label="tableColumn[4].name" width="240">
+        <template slot-scope="scope">
+          <span>{{ scope.row.explain }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="range" :label="tableColumn[5].name" width="120">
+        <template slot-scope="scope">
+          <span>{{ scope.row.range }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column width="600" prop="logic">
+        <template slot="header" slot-scope="scope">
           <el-row>
-            <el-col :span="6"><div class="grid-content">取数逻辑</div></el-col>
+            <el-col :span="6">
+              <div class="grid-content">{{tableColumn[6].name}}</div>
+            </el-col>
             <el-col :span="12">
               <div class="grid-content logic-grid-box">
                 dfgjnfkjgnfgj
@@ -93,78 +65,51 @@
               <div class="grid-content">
                 <span>全部></span>
                 <span>+新增</span>
-              </div></el-col>
+              </div>
+            </el-col>
           </el-row>
-      </template>
-      <template slot-scope="scope">
-        <span>{{ scope.row.logic }}</span>
-      </template>
-    </el-table-column>
-    <el-table-column
-      prop="summary"
-      label="访谈纪要"
-      width="120">
-      <template slot-scope="scope">
-        <span>{{ scope.row.summary }}</span>
-      </template>
-    </el-table-column>
-    <el-table-column
-      prop="operation"
-      label="操作"
-      width="120">
-      <template slot-scope="scope">
-        <i class="el-icon-delete"></i>
-        <i class="el-icon-check"></i>
-        <i class="el-icon-sort"></i>
-      </template>
-    </el-table-column>
-    <el-table-column
-      prop="question"
-      label="问题数"
-      width="80">
-      <template slot-scope="scope">
-        <span>{{ scope.row.question }}</span>
-      </template>
-    </el-table-column>
-    <el-table-column
-      prop="state"
-      label="状态"
-      width="120">
-      <template slot-scope="scope">
-      </template>
-    </el-table-column>
-    <el-table-column
-      prop="system"
-      label="系统.表.字段"
-      width="120">
-      <template slot-scope="scope">
-        <span>{{ scope.row.system }}</span>
-      </template>
-    </el-table-column>
-    <el-table-column
-      prop="spring"
-      label="业务逻辑"
-      width="120">
-      <template slot-scope="scope">
-        <span>{{ scope.row.spring }}</span>
-      </template>
-    </el-table-column>
-    <el-table-column
-      prop="processingLogic"
-      label="处理逻辑"
-      width="120">
-      <template slot-scope="scope">
-      </template>
-    </el-table-column>
-    <el-table-column
-      prop="remarks"
-      label="备注"
-      width="120">
-      <template slot-scope="scope">
-        <span>{{ scope.row.remarks}}</span>
-      </template>
-    </el-table-column>
-  </el-table>
+        </template>
+        <template slot-scope="scope">
+          <span>{{ scope.row.logic }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="summary" :label="tableColumn[7].name" width="120">
+        <template slot-scope="scope">
+          <span>{{ scope.row.summary }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="operation" :label="tableColumn[8].name" width="120">
+        <template slot-scope="scope">
+          <i class="el-icon-delete"></i>
+          <i class="el-icon-check"></i>
+          <i class="el-icon-sort"></i>
+        </template>
+      </el-table-column>
+      <el-table-column prop="question" :label="tableColumn[9].name" width="80">
+        <template slot-scope="scope">
+          <span>{{ scope.row.question }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="state" :label="tableColumn[10].name" width="120">
+        <template slot-scope="scope">
+        </template>
+      </el-table-column>
+      <el-table-column prop="system" :label="tableColumn[11].name" width="120">
+        <template slot-scope="scope">
+          <span>{{ scope.row.system }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="spring" :label="tableColumn[12].name" width="120">
+        <template slot-scope="scope">
+          <span>{{ scope.row.spring }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="remarks" :label="tableColumn[13].name" width="120">
+        <template slot-scope="scope">
+          <span>{{ scope.row.remarks}}</span>
+        </template>
+      </el-table-column>
+    </el-table>
   </div>
 
 </template>
@@ -175,8 +120,8 @@ export default {
       // 默认选中的字段
       checkboxGroup: ['新增字段', '类型'],
       // 表格中的key数组
-      tableListKeys: ['新增字段', '类型', '(主键,可空)', '中文名称', '字段', '值域', '取数逻辑', '访谈纪要', '操作', '问题数', '状态'
-      ],
+      tableListKeys: ['新增字段', '类型', '(主键,可空)', '中文名称', '字段', '值域', '取数逻辑', '访谈纪要', '操作', '问题数', '状态'],
+      // table 列
       tableColumn: [{
         name: '新增字段',
         show: true
@@ -338,27 +283,32 @@ export default {
     .field-screening {
       display: flex;
       align-items: center;
+
       h3 {
-        width:120px;
+        width: 120px;
       }
     }
+
     .operation-btns {
-      width:300px;
+      width: 300px;
     }
 
     .el-checkbox {
       margin-right: 0px;
     }
+
     .el-button+.el-button {
       margin-left: 0px;
     }
   }
-  .el-table{
-  th{
-    div{
-      line-height: 22px!important;
-      display: block;
+
+  .el-table {
+    th {
+      div {
+        line-height: 22px !important;
+        display: block;
+      }
     }
   }
-}
+
 </style>
