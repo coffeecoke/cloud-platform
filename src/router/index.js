@@ -15,6 +15,8 @@ import Quest from './questionnaire'
 import PersonalManagement from './personal-management'
 // 项目管理
 import TaskSystem from './task-system'
+// 取数逻辑表
+import TableLogic from '@/views/table-logic/tableLogic'
 Vue.use(Router)
 // let routes = new Set([...UserRouter]) // 合并多个路由模块
 // const router = new Router({
@@ -37,6 +39,10 @@ const router = new Router({
   {
     path: '/register',
     component: Register
+  },
+  {
+    path: '/tableLogic',
+    component: TableLogic
   },
   {
     path: '/',
