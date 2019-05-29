@@ -261,7 +261,7 @@ export default {
   },
   methods: {
     toggleColumn () {
-      // 隐藏列之前先把每列显示出来
+      // 隐藏列之前先把每列隐藏
       this.tableColumn.forEach((item, index) => {
         item.show = false
       })
