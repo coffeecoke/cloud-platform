@@ -52,25 +52,21 @@
       </el-table-column>
       <el-table-column width="600" prop="logic" v-if="tableColumn[6].show">
         <template slot="header" slot-scope="scope">
-          <el-row>
-            <el-col :span="6">
-              <div class="grid-content">{{tableColumn[6].name}}</div>
-            </el-col>
-            <el-col :span="12">
-              <div class="grid-content logic-grid-box">
-                dfgjnfkjgnfgj
-              </div>
-            </el-col>
-            <el-col :span="6">
-              <div class="grid-content">
-                <span>全部({{0}})</span>
-                <span>+新增</span>
-              </div>
-            </el-col>
-          </el-row>
+          <div class="fetch-logic">
+            <span>{{tableColumn[6].name}}</span>
+            <div class="fetch-logic-tabs">
+
+            </div>
+            <div class="fetch-logic-btns">
+              <span>全部({{0}})</span>
+              <span>+新增</span>
+            </div>
+          </div>
         </template>
         <template slot-scope="scope">
-          <div class="form-design-wrap">表单设计</div>
+          <div class="form-design-wrap">
+            <form-design></form-design>
+          </div>
         </template>
       </el-table-column>
       <el-table-column prop="summary" :label="tableColumn[7].name" v-if="tableColumn[7].show" width="120">
@@ -132,8 +128,12 @@
 
 </template>
 <script>
+import FormDesign from './components/form-design'
 import $ from 'jquery'
 export default {
+  components: {
+    FormDesign
+  },
   data () {
     return {
       // 表格高度
@@ -372,12 +372,7 @@ export default {
       this.toggleColumn()
     },
     // 合并列
-    arraySpanMethod ({
-      row,
-      column,
-      rowIndex,
-      columnIndex
-    }) {
+    arraySpanMethod ({row, column, rowIndex, columnIndex}) {
       if (column.property === 'logic') { // 合并prop为logic那一列
         if (rowIndex % this.talbeTotleNum === 0) { // 合并多少行
           return {
@@ -486,6 +481,9 @@ export default {
     right:0;
     top:0;
     bottom:0;
-    background-color:#fffbea;
+    background-color:#fff;
+  }
+  .fetch-logic {
+
   }
 </style>
