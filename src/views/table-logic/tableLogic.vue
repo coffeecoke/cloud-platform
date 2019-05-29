@@ -22,7 +22,7 @@
       </el-table-column>
       <el-table-column fixed prop="name" :label="tableColumn[0].name" v-if="tableColumn[0].show" width="120">
         <template slot-scope="scope">
-          <span>{{ scope.row.name }}</span>
+          <span class="text-color">{{ scope.row.name }}</span>
         </template>
       </el-table-column>
       <el-table-column fixed prop="type" :label="tableColumn[1].name" v-if="tableColumn[1].show" width="120">
@@ -37,7 +37,7 @@
       </el-table-column>
       <el-table-column prop="Cname" :label="tableColumn[3].name" v-if="tableColumn[3].show" width="120">
         <template slot-scope="scope">
-          <span>{{ scope.row.Cname }}</span>
+          <span class="text-color">{{ scope.row.Cname }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="explain" :label="tableColumn[4].name" v-if="tableColumn[4].show" width="240">
@@ -92,6 +92,10 @@
       </el-table-column>
       <el-table-column prop="state" :label="tableColumn[10].name" v-if="tableColumn[10].show" width="120">
         <template slot-scope="scope">
+          <el-select placeholder="请选择">
+            <el-option>
+            </el-option>
+          </el-select>
         </template>
       </el-table-column>
       <el-table-column prop="system" :label="tableColumn[11].name" v-if="tableColumn[11].show" width="120">
@@ -101,7 +105,11 @@
       </el-table-column>
       <el-table-column prop="spring" :label="tableColumn[12].name" v-if="tableColumn[12].show" width="120">
         <template slot-scope="scope">
-          <span>{{ scope.row.spring }}</span>
+          <el-select placeholder="请选择">
+            <el-option>
+            </el-option>
+          </el-select>
+          <!-- <span>{{ scope.row.spring }}</span> -->
         </template>
       </el-table-column>
       <el-table-column prop="remarks" :label="tableColumn[13].name" v-if="tableColumn[13].show" width="120">
@@ -340,6 +348,9 @@ export default {
       }
     }
   }
+.text-color{
+  color:#afcffb;
+}
   .el-table /deep/ .el-table__header {
     min-width:100%
   }
