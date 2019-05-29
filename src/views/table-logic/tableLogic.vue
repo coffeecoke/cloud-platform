@@ -92,10 +92,13 @@
       </el-table-column>
       <el-table-column prop="state" :label="tableColumn[10].name" v-if="tableColumn[10].show" width="120">
         <template slot-scope="scope">
-          <el-select placeholder="请选择">
-            <el-option>
-            </el-option>
-          </el-select>
+           <template v-if="scope.row.edit">
+            <el-select v-model="scope.row.state">
+              <el-option v-for="item in state" :key="item.dictCode" :label="item.dictName"
+                :value="item.dictCode" :disabled="item.disabled">
+              </el-option>
+            </el-select>
+          </template>
         </template>
       </el-table-column>
       <el-table-column prop="system" :label="tableColumn[11].name" v-if="tableColumn[11].show" width="120">
@@ -110,11 +113,13 @@
       </el-table-column>
       <el-table-column prop="processLogic" :label="tableColumn[13].name" v-if="tableColumn[13].show" width="120">
         <template slot-scope="scope">
-          <el-select placeholder="请选择">
-            <el-option>
-            </el-option>
-          </el-select>
-          <!-- <span>{{ scope.row.processLogic }}</span> -->
+           <template v-if="scope.row.edit">
+            <el-select v-model="scope.row.processLogic">
+              <el-option v-for="item in processLogic" :key="item.dictCode" :label="item.dictName"
+                :value="item.dictCode" :disabled="item.disabled">
+              </el-option>
+            </el-select>
+          </template>
         </template>
       </el-table-column>
       <el-table-column prop="remarks" :label="tableColumn[14].name" v-if="tableColumn[14].show" width="120">
@@ -207,80 +212,146 @@ export default {
         name: 'DATA_DATE',
         type: 'CHA',
         text: '(a)',
+        processLogic: '1',
+        state: '3',
         Cname: '数据日期',
         explain: '字段说明字段说明字段说明字段说明字段说明字段说',
         range: '数据日期',
         summary: '访谈纪要访谈纪要访谈纪要访谈纪要',
-        question: '1'
+        question: '1',
+        edit: true
       }, {
         id: 2,
         number: '2',
         name: 'CUST_NAM_EN',
         type: 'CHAR(6)',
         text: '(a)',
+        processLogic: '1',
+        state: '1',
         Cname: '客户英文名称',
         explain: '字段说明字段说明字段说明字段说明字段说明字段说',
         range: '客户英文名称',
         summary: '访谈纪要访谈纪要访谈纪要访谈纪要',
-        question: '1'
+        question: '1',
+        edit: true
       }, {
         id: 3,
         number: '3',
         name: 'LALALLA',
         type: 'CHAR(2)',
         text: '(a)',
+        processLogic: '1',
+        state: '1',
         Cname: '境内境外标志',
         explain: '字段说明字段说明字段说明字段说明字段说明字段说',
         range: '境内境外标志',
         summary: '访谈纪要访谈纪要访谈纪要访谈纪要',
-        question: '3'
+        question: '3',
+        edit: true
       }, {
         id: 4,
         number: '4',
         name: 'HEHASI',
         type: 'INT',
         text: '(a)',
+        processLogic: '1',
+        state: '1',
         Cname: '客户大类',
         explain: '字段说明字段说明字段说明字段说明字段说明字段说',
         range: '客户大类',
         summary: '访谈纪要访谈纪要访谈纪要访谈纪要',
-        question: '1'
+        question: '1',
+        edit: true
       }, {
         id: 5,
         number: '5',
         name: 'FDEII',
         type: 'VARCHAR2(200)',
         text: '(a)',
+        processLogic: '1',
+        state: '1',
         Cname: '行政代码',
         explain: '字段说明字段说明字段说明字段说明字段说明字段说',
         range: '行政代码',
         summary: '访谈纪要访谈纪要访谈纪要访谈纪要',
-        question: '7'
+        question: '7',
+        edit: true
       }, {
         id: 6,
         number: '6',
         name: 'DATA',
         type: 'CHAR(1)',
         text: '(a)',
+        processLogic: '1',
+        state: '1',
         Cname: '数据日期',
         explain: '字段说明字段说明字段说明字段说明字段说明字段说',
         range: '数据日期',
         summary: '访谈纪要访谈纪要访谈纪要访谈纪要',
-        question: '4'
+        question: '4',
+        edit: true
       }, {
         id: 7,
         number: '7',
         name: 'DATA_DATE',
         type: 'CHAR(2)',
         text: '(a)',
+        processLogic: '3',
+        state: '1',
         Cname: '境内境外标志',
         explain: '字段说明字段说明字段说明字段说明字段说明字段说',
         range: '境内境外标志',
         summary: '访谈纪要访谈纪要访谈纪要访谈纪要',
-        question: '1'
+        question: '1',
+        edit: true
+      }],
+      processLogic: [{
+        dictCode: '1',
+        dictName: '未提交'
+      },
+      {
+        dictCode: '2',
+        dictName: '已提交'
+      },
+      {
+        dictCode: '3',
+        dictName: '未确认'
+      },
+      {
+        dictCode: '4',
+        dictName: '已确认'
+      }],
+      state: [{
+        dictCode: '1',
+        dictName: '未提交'
+      },
+      {
+        dictCode: '2',
+        dictName: '已提交'
+      },
+      {
+        dictCode: '3',
+        dictName: '未确认'
+      },
+      {
+        dictCode: '4',
+        dictName: '已确认'
       }]
     }
   },
+  // created () {
+  //   let dictionaryObj = {
+  //     dict_code: ['processLogic']
+  //   }
+  //   this.$api.dictionary.getDictionaries(dictionaryObj).then(res => {
+  //     let result = res.data
+  //     let dictionary = {}
+  //     result.data.forEach(item => {
+  //       Object.assign(dictionary, item)
+  //     })
+  //     this.processLogic = dictionary.processLogic
+  //   })
+  // },
   methods: {
     toggleColumn () {
       // 隐藏列之前先把每列隐藏
