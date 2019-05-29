@@ -14,7 +14,7 @@
         <el-button>导出</el-button>
       </div>
     </div>
-    <el-table :data="tableData" style="width: 100%" height="250">
+    <el-table :data="tableData" style="width: 100%" :height="tableHeight" border :span-method="arraySpanMethod">
       <el-table-column fixed prop="number" label="" width="50">
         <template slot-scope="scope">
           <span>{{ scope.row.number}}</span>
@@ -63,14 +63,14 @@
             </el-col>
             <el-col :span="6">
               <div class="grid-content">
-                <span>全部></span>
+                <span>全部({{0}})</span>
                 <span>+新增</span>
               </div>
             </el-col>
           </el-row>
         </template>
         <template slot-scope="scope">
-          <span>{{ scope.row.logic }}</span>
+          <div class="form-design-wrap">表单设计</div>
         </template>
       </el-table-column>
       <el-table-column prop="summary" :label="tableColumn[7].name" v-if="tableColumn[7].show" width="120">
@@ -110,7 +110,7 @@
       </el-table-column>
       <el-table-column prop="processLogic" :label="tableColumn[13].name" v-if="tableColumn[13].show" width="120">
         <template slot-scope="scope">
-           <el-select placeholder="请选择">
+          <el-select placeholder="请选择">
             <el-option>
             </el-option>
           </el-select>
@@ -127,9 +127,14 @@
 
 </template>
 <script>
+import $ from 'jquery'
 export default {
   data () {
     return {
+      // 表格高度
+      tableHeight: null,
+      // 合并的行数
+      num: 0,
       // 默认选中的字段
       checkboxGroup: [],
       // table 列
@@ -294,6 +299,28 @@ export default {
     secletChange (selectedArr) {
       this.checkboxGroup = selectedArr
       this.toggleColumn()
+    },
+    // 合并列
+    arraySpanMethod ({
+      row,
+      column,
+      rowIndex,
+      columnIndex
+    }) {
+      if (column.property === 'logic') { // 合并prop为logic那一列
+        if (rowIndex % this.talbeTotleNum === 0) { // 合并多少行
+          return {
+            rowspan: this.talbeTotleNum, // 要合并的行数
+            colspan: 1
+          }
+        } else {
+          // console.log(rowIndex)
+          return {
+            rowspan: 0,
+            colspan: 0
+          }
+        }
+      }
     }
   },
   computed: {
@@ -305,6 +332,10 @@ export default {
         tableListKeysArr.push(item.name)
       })
       return tableListKeysArr
+    },
+    // 表格数据条数
+    talbeTotleNum () {
+      return this.tableData.length
     }
   },
   mounted () {
@@ -313,6 +344,12 @@ export default {
       this.checkboxGroup.push(item.name)
     })
     this.toggleColumn()
+
+    // 根据屏幕计算屏幕的高度
+    this.tableHeight = $('body').height() - $('.table-top').height() + 'px'
+    window.onresize = () => {
+      this.tableHeight = $('body').height() - $('.table-top').height() + 'px'
+    }
   },
   activated () {}
 
@@ -357,14 +394,27 @@ export default {
       }
     }
   }
-.text-color{
-  color:#afcffb;
-}
-  .el-table /deep/ .el-table__header {
-    min-width:100%
-  }
-  .el-table /deep/ .el-table__body {
-    min-width:100%
+
+  .text-color {
+    color: #afcffb;
   }
 
+  .el-table /deep/ .el-table__header {
+    min-width: 100%
+  }
+
+  .el-table /deep/ .el-table__body {
+    min-width: 100%
+  }
+  .el-table /deep/ td {
+    position:relative;
+  }
+  .form-design-wrap {
+    position:absolute;
+    left:0;
+    right:0;
+    top:0;
+    bottom:0;
+    background-color:#fffbea;
+  }
 </style>
