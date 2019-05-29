@@ -105,14 +105,19 @@
       </el-table-column>
       <el-table-column prop="spring" :label="tableColumn[12].name" v-if="tableColumn[12].show" width="120">
         <template slot-scope="scope">
-          <el-select placeholder="请选择">
+          <span>{{ scope.row.spring }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="processLogic" :label="tableColumn[13].name" v-if="tableColumn[13].show" width="120">
+        <template slot-scope="scope">
+           <el-select placeholder="请选择">
             <el-option>
             </el-option>
           </el-select>
-          <!-- <span>{{ scope.row.spring }}</span> -->
+          <!-- <span>{{ scope.row.processLogic }}</span> -->
         </template>
       </el-table-column>
-      <el-table-column prop="remarks" :label="tableColumn[13].name" v-if="tableColumn[13].show" width="120">
+      <el-table-column prop="remarks" :label="tableColumn[14].name" v-if="tableColumn[14].show" width="120">
         <template slot-scope="scope">
           <span>{{ scope.row.remarks}}</span>
         </template>
@@ -154,6 +159,10 @@ export default {
       },
       {
         name: '取数逻辑',
+        show: true
+      },
+      {
+        name: '访谈纪要',
         show: true
       },
       {
