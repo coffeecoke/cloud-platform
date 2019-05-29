@@ -20,37 +20,37 @@
           <span>{{ scope.row.number}}</span>
         </template>
       </el-table-column>
-      <el-table-column fixed prop="name" :label="tableColumn[0].name" width="120">
+      <el-table-column fixed prop="name" :label="tableColumn[0].name" v-if="tableColumn[0].show" width="120">
         <template slot-scope="scope">
           <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
-      <el-table-column fixed prop="type" :label="tableColumn[1].name" width="120">
+      <el-table-column fixed prop="type" :label="tableColumn[1].name" v-if="tableColumn[1].show" width="120">
         <template slot-scope="scope">
           <span>{{ scope.row.type }}</span>
         </template>
       </el-table-column>
-      <el-table-column fixed prop="text" :label="tableColumn[2].name" width="120">
+      <el-table-column fixed prop="text" :label="tableColumn[2].name" v-if="tableColumn[2].show" width="120">
         <template slot-scope="scope">
           <span>{{ scope.row.text }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="Cname" :label="tableColumn[3].name" width="120">
+      <el-table-column prop="Cname" :label="tableColumn[3].name" v-if="tableColumn[3].show" width="120">
         <template slot-scope="scope">
           <span>{{ scope.row.Cname }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="explain" :label="tableColumn[4].name" width="240">
+      <el-table-column prop="explain" :label="tableColumn[4].name" v-if="tableColumn[4].show" width="240">
         <template slot-scope="scope">
           <span>{{ scope.row.explain }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="range" :label="tableColumn[5].name" width="120">
+      <el-table-column prop="range" :label="tableColumn[5].name" v-if="tableColumn[5].show" width="120">
         <template slot-scope="scope">
           <span>{{ scope.row.range }}</span>
         </template>
       </el-table-column>
-      <el-table-column width="600" prop="logic">
+      <el-table-column width="600" prop="logic" v-if="tableColumn[6].show">
         <template slot="header" slot-scope="scope">
           <el-row>
             <el-col :span="6">
@@ -73,38 +73,38 @@
           <span>{{ scope.row.logic }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="summary" :label="tableColumn[7].name" width="120">
+      <el-table-column prop="summary" :label="tableColumn[7].name" v-if="tableColumn[7].show" width="120">
         <template slot-scope="scope">
           <span>{{ scope.row.summary }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="operation" :label="tableColumn[8].name" width="120">
+      <el-table-column prop="operation" :label="tableColumn[8].name" v-if="tableColumn[8].show" width="120">
         <template slot-scope="scope">
           <i class="el-icon-delete"></i>
           <i class="el-icon-check"></i>
           <i class="el-icon-sort"></i>
         </template>
       </el-table-column>
-      <el-table-column prop="question" :label="tableColumn[9].name" width="80">
+      <el-table-column prop="question" :label="tableColumn[9].name" v-if="tableColumn[9].show" width="80">
         <template slot-scope="scope">
           <span>{{ scope.row.question }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="state" :label="tableColumn[10].name" width="120">
+      <el-table-column prop="state" :label="tableColumn[10].name" v-if="tableColumn[10].show" width="120">
         <template slot-scope="scope">
         </template>
       </el-table-column>
-      <el-table-column prop="system" :label="tableColumn[11].name" width="120">
+      <el-table-column prop="system" :label="tableColumn[11].name" v-if="tableColumn[11].show" width="120">
         <template slot-scope="scope">
           <span>{{ scope.row.system }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="spring" :label="tableColumn[12].name" width="120">
+      <el-table-column prop="spring" :label="tableColumn[12].name" v-if="tableColumn[12].show" width="120">
         <template slot-scope="scope">
           <span>{{ scope.row.spring }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="remarks" :label="tableColumn[13].name" width="120">
+      <el-table-column prop="remarks" :label="tableColumn[13].name" v-if="tableColumn[13].show" width="120">
         <template slot-scope="scope">
           <span>{{ scope.row.remarks}}</span>
         </template>
@@ -118,13 +118,11 @@ export default {
   data () {
     return {
       // 默认选中的字段
-      checkboxGroup: ['新增字段', '类型'],
-      // 表格中的key数组
-      tableListKeys: ['新增字段', '类型', '(主键,可空)', '中文名称', '字段', '值域', '取数逻辑', '访谈纪要', '操作', '问题数', '状态'],
+      checkboxGroup: [],
       // table 列
       tableColumn: [{
         name: '新增字段',
-        show: true
+        show: false
       },
       {
         name: '类型',
@@ -262,10 +260,42 @@ export default {
     }
   },
   methods: {
+    toggleColumn () {
+      // 隐藏列之前先把每列显示出来
+      this.tableColumn.forEach((item, index) => {
+        item.show = false
+      })
+      // 根据复选框选中的数组，显示列
+      this.checkboxGroup.forEach((item, index) => {
+        let currArr = this.tableColumn.filter(obj => {
+          return obj.name === item
+        })
+        currArr[0].show = true
+      })
+    },
     // 字段变更后的回调
     secletChange (selectedArr) {
       this.checkboxGroup = selectedArr
+      this.toggleColumn()
     }
+  },
+  computed: {
+    // 根据table表头的数组对象，计算出字段名称的数组
+
+    tableListKeys () {
+      let tableListKeysArr = []
+      this.tableColumn.forEach((item, index) => {
+        tableListKeysArr.push(item.name)
+      })
+      return tableListKeysArr
+    }
+  },
+  mounted () {
+    // 默认显示全部列
+    this.tableColumn.forEach((item, index) => {
+      this.checkboxGroup.push(item.name)
+    })
+    this.toggleColumn()
   },
   activated () {}
 
@@ -309,6 +339,12 @@ export default {
         display: block;
       }
     }
+  }
+  .el-table /deep/ .el-table__header {
+    min-width:100%
+  }
+  .el-table /deep/ .el-table__body {
+    min-width:100%
   }
 
 </style>
