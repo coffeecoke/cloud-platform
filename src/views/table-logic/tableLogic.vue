@@ -99,7 +99,6 @@
               </el-option>
             </el-select>
           </template>
-          <span v-else>{{ formatState(scope.row.processLogic) }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="system" :label="tableColumn[11].name" v-if="tableColumn[11].show" width="120">
@@ -121,7 +120,6 @@
               </el-option>
             </el-select>
           </template>
-          <span v-else>{{ formatInvolvingBusiness(scope.row.processLogic) }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="remarks" :label="tableColumn[14].name" v-if="tableColumn[14].show" width="120">
@@ -350,18 +348,6 @@ export default {
   //   })
   // },
   methods: {
-    formatInvolvingBusiness (value) {
-      let currObj = this.processLogic.filter(obj => {
-        return obj.dictCode === value
-      })
-      return currObj.length > 0 ? currObj[0].dictName : ''
-    },
-    formatState (value) {
-      let currObj = this.state.filter(obj => {
-        return obj.dictCode === value
-      })
-      return currObj.length > 0 ? currObj[0].dictName : ''
-    },
     toggleColumn () {
       // 隐藏列之前先把每列显示出来
       this.tableColumn.forEach((item, index) => {
