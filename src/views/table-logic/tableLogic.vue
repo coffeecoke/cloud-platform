@@ -53,7 +53,7 @@
       <el-table-column width="600" prop="logic" v-if="tableColumn[6].show">
         <template slot="header" slot-scope="scope">
           <div class="fetch-logic">
-            <span>{{tableColumn[6].name}}</span>
+            <span class="fetch-logic-name">{{tableColumn[6].name}}</span>
             <div class="fetch-logic-tabs">
 
             </div>
@@ -484,6 +484,19 @@ export default {
     background-color:#fff;
   }
   .fetch-logic {
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    .fetch-logic-name {
+      width:50px;
+      display:block;
+    }
+    .fetch-logic-tabs {
+      flex:1;
+    }
+    .fetch-logic-btns {
+      width:100px;
+    }
 
   }
 </style>
