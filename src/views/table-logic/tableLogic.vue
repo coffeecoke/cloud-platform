@@ -55,17 +55,21 @@
           <div class="fetch-logic">
             <span class="fetch-logic-name">{{tableColumn[6].name}}</span>
             <div class="fetch-logic-tabs">
+              <el-tag :key="tag.name" v-for="(tag,index) in frontTags" closable :disable-transitions="false"
+                 effect="dark" :type="tag.type" @close="handleClose(tag)" @click.native="highlight(index,tag)">
+                {{tag.name}}
+              </el-tag>
 
             </div>
             <div class="fetch-logic-btns">
-              <span>全部({{0}})</span>
+              <span @click="showAlltags"><i class="arrow-icon fa fa-angle-down"></i>全部({{dynamicTags.length}})</span>
               <span>+新增</span>
             </div>
           </div>
         </template>
         <template slot-scope="scope">
           <div class="form-design-wrap">
-            <form-design></form-design>
+            <form-design :dynamicTags = "dynamicTags" :isShowAllTags="isShowAllTags"></form-design>
           </div>
         </template>
       </el-table-column>
@@ -88,10 +92,10 @@
       </el-table-column>
       <el-table-column prop="state" :label="tableColumn[10].name" v-if="tableColumn[10].show" width="120">
         <template slot-scope="scope">
-           <template v-if="scope.row.edit">
+          <template v-if="scope.row.edit">
             <el-select v-model="scope.row.state">
-              <el-option v-for="item in state" :key="item.dictCode" :label="item.dictName"
-                :value="item.dictCode" :disabled="item.disabled">
+              <el-option v-for="item in state" :key="item.dictCode" :label="item.dictName" :value="item.dictCode"
+                :disabled="item.disabled">
               </el-option>
             </el-select>
           </template>
@@ -109,10 +113,10 @@
       </el-table-column>
       <el-table-column prop="processLogic" :label="tableColumn[13].name" v-if="tableColumn[13].show" width="120">
         <template slot-scope="scope">
-           <template v-if="scope.row.edit">
+          <template v-if="scope.row.edit">
             <el-select v-model="scope.row.processLogic">
-              <el-option v-for="item in processLogic" :key="item.dictCode" :label="item.dictName"
-                :value="item.dictCode" :disabled="item.disabled">
+              <el-option v-for="item in processLogic" :key="item.dictCode" :label="item.dictName" :value="item.dictCode"
+                :disabled="item.disabled">
               </el-option>
             </el-select>
           </template>
@@ -142,6 +146,8 @@ export default {
       num: 0,
       // 默认选中的字段
       checkboxGroup: [],
+      // 是否显示更多标签
+      isShowAllTags: false,
       // table 列
       tableColumn: [{
         name: '新增字段',
@@ -320,7 +326,8 @@ export default {
       {
         dictCode: '4',
         dictName: '已确认'
-      }],
+      }
+      ],
       state: [{
         dictCode: '1',
         dictName: '未提交'
@@ -336,7 +343,16 @@ export default {
       {
         dictCode: '4',
         dictName: '已确认'
-      }]
+      }
+      ],
+      dynamicTags: [
+        { name: '标签一', type: 'primary' },
+        { name: '标签二', type: 'primary' },
+        { name: '标签三', type: 'primary' },
+        { name: '标签四', type: 'primary' },
+        { name: '标签五', type: 'primary' }
+      ]
+
     }
   },
   // created () {
@@ -372,7 +388,12 @@ export default {
       this.toggleColumn()
     },
     // 合并列
-    arraySpanMethod ({row, column, rowIndex, columnIndex}) {
+    arraySpanMethod ({
+      row,
+      column,
+      rowIndex,
+      columnIndex
+    }) {
       if (column.property === 'logic') { // 合并prop为logic那一列
         if (rowIndex % this.talbeTotleNum === 0) { // 合并多少行
           return {
@@ -387,6 +408,19 @@ export default {
           }
         }
       }
+    },
+    // 切换全部标签的显示隐藏
+    showAlltags () {
+      this.isShowAllTags = !this.isShowAllTags
+    },
+    // 高亮当前选中的标签(注意为什么click要加修饰符native)
+    highlight (index, tag) {
+      this.dynamicTags.forEach((item, index) => {
+        item.type = 'primary'
+      })
+      tag.type = 'warning'
+      this.dynamicTags.splice(index, 1, tag) // 为什么要用splice
+      console.log(this.dynamicTags)
     }
   },
   computed: {
@@ -402,6 +436,10 @@ export default {
     // 表格数据条数
     talbeTotleNum () {
       return this.tableData.length
+    },
+    // 所有便签的前三个
+    frontTags () {
+      return this.dynamicTags.slice(0, 3)
     }
   },
   mounted () {
@@ -452,15 +490,6 @@ export default {
     }
   }
 
-  .el-table {
-    th {
-      div {
-        line-height: 22px !important;
-        display: block;
-      }
-    }
-  }
-
   .text-color {
     color: #afcffb;
   }
@@ -472,31 +501,57 @@ export default {
   .el-table /deep/ .el-table__body {
     min-width: 100%
   }
+
   .el-table /deep/ td {
-    position:relative;
+    position: relative;
   }
+
   .form-design-wrap {
-    position:absolute;
-    left:0;
-    right:0;
-    top:0;
-    bottom:0;
-    background-color:#fff;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: #fff;
   }
+
   .fetch-logic {
-    display:flex;
+    display: flex;
     justify-content: space-between;
     align-items: center;
+    padding-right: 0px;
+
     .fetch-logic-name {
-      width:50px;
-      display:block;
-    }
-    .fetch-logic-tabs {
-      flex:1;
-    }
-    .fetch-logic-btns {
-      width:100px;
+      width: 60px;
+      display: block;
     }
 
+    .fetch-logic-tabs {
+      flex: 1;
+      position:relative;
+
+    }
+
+    .fetch-logic-btns {
+      width: 110px;
+    }
+    .fetch-logic-tabs /deep/ .el-tag {
+        margin-right:5px;
+        border:1px solid #fff;
+        color:#fff;
+        cursor: pointer;
+    }
+    .fetch-logic-tabs /deep/ .el-tag--warning {
+      color:#fff;
+      border:1px solid #E6A23C;
+      background-color:#E6A23C
+    }
+    .fetch-logic-tabs /deep/ .el-tag__close {
+      color:#fff;
+    }
+    .arrow-icon {
+      margin-right: 5px;
+    }
   }
+
 </style>
