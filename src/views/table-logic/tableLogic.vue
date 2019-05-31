@@ -9,7 +9,7 @@
       </div>
       <div class="operation-btns">
         <el-button>新增字段</el-button>
-        <el-button type="primary">保存</el-button>
+        <el-button type="primary" @click="saveClick()">保存</el-button>
         <el-button>导入</el-button>
         <el-button>导出</el-button>
       </div>
@@ -56,7 +56,7 @@
             <span class="fetch-logic-name">{{tableColumn[6].name}}</span>
             <div class="fetch-logic-tabs">
               <el-tag :key="tag.name" v-for="(tag,index) in frontTags" closable :disable-transitions="false"
-                 effect="dark" :type="tag.type" @close="handleClose(tag)" @click.native="highlight(index,tag)">
+                effect="dark" :type="tag.type" @close="handleClose(tag)" @click.native="highlight(index,tag)">
                 {{tag.name}}
               </el-tag>
 
@@ -99,6 +99,7 @@
               </el-option>
             </el-select>
           </template>
+          <span v-else>{{scope.row.state}}</span>
         </template>
       </el-table-column>
       <el-table-column prop="system" :label="tableColumn[11].name" v-if="tableColumn[11].show" width="120">
@@ -111,15 +112,18 @@
           <span>{{ scope.row.spring }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="processLogic" :label="tableColumn[13].name" v-if="tableColumn[13].show" width="120">
+      <el-table-column prop="processLogic" :label="tableColumn[13].name" v-if="tableColumn[13].show" width="400">
         <template slot-scope="scope">
-          <template v-if="scope.row.edit">
-            <el-select v-model="scope.row.processLogic">
-              <el-option v-for="item in processLogic" :key="item.dictCode" :label="item.dictName" :value="item.dictCode"
-                :disabled="item.disabled">
-              </el-option>
-            </el-select>
+          <template v-if="scope.row.editList">
+            <el-autocomplete class="inline-input" v-model="state1" :fetch-suggestions="querySearch" placeholder="请输入内容"
+              @select="handleSelect"></el-autocomplete>
           </template>
+          <div v-else>
+            <!-- <el-autocomplete class="inline-input" v-model="state1" :fetch-suggestions="querySearch" placeholder="请输入内容"
+              @select="handleSelect"></el-autocomplete> -->
+            <div class="ipt-box">{{scope.row.processLogic}}</div>
+            <i class="el-input__icon el-icon-caret-bottom icon-select" @click="handleIconClick"></i>
+          </div>
         </template>
       </el-table-column>
       <el-table-column prop="remarks" :label="tableColumn[14].name" v-if="tableColumn[14].show" width="120">
@@ -146,6 +150,8 @@ export default {
       num: 0,
       // 默认选中的字段
       checkboxGroup: [],
+      restaurants: [],
+      state1: '',
       // 是否显示更多标签
       isShowAllTags: false,
       // table 列
@@ -218,98 +224,105 @@ export default {
         name: 'DATA_DATE',
         type: 'CHA',
         text: '(a)',
-        processLogic: '1',
+        processLogic: 'aaa',
         state: '3',
         Cname: '数据日期',
         explain: '字段说明字段说明字段说明字段说明字段说明字段说',
         range: '数据日期',
         summary: '访谈纪要访谈纪要访谈纪要访谈纪要',
         question: '1',
-        edit: true
+        edit: true,
+        editList: true
       }, {
         id: 2,
         number: '2',
         name: 'CUST_NAM_EN',
         type: 'CHAR(6)',
         text: '(a)',
-        processLogic: '1',
+        processLogic: '',
         state: '1',
         Cname: '客户英文名称',
         explain: '字段说明字段说明字段说明字段说明字段说明字段说',
         range: '客户英文名称',
         summary: '访谈纪要访谈纪要访谈纪要访谈纪要',
         question: '1',
-        edit: true
+        edit: true,
+        editList: true
       }, {
         id: 3,
         number: '3',
         name: 'LALALLA',
         type: 'CHAR(2)',
         text: '(a)',
-        processLogic: '1',
+        processLogic: '',
         state: '1',
         Cname: '境内境外标志',
         explain: '字段说明字段说明字段说明字段说明字段说明字段说',
         range: '境内境外标志',
         summary: '访谈纪要访谈纪要访谈纪要访谈纪要',
         question: '3',
-        edit: true
+        edit: true,
+        editList: true
       }, {
         id: 4,
         number: '4',
         name: 'HEHASI',
         type: 'INT',
         text: '(a)',
-        processLogic: '1',
+        processLogic: '',
         state: '1',
         Cname: '客户大类',
         explain: '字段说明字段说明字段说明字段说明字段说明字段说',
         range: '客户大类',
         summary: '访谈纪要访谈纪要访谈纪要访谈纪要',
         question: '1',
-        edit: true
+        edit: true,
+        editList: true
       }, {
         id: 5,
         number: '5',
         name: 'FDEII',
         type: 'VARCHAR2(200)',
         text: '(a)',
-        processLogic: '1',
+        processLogic: '',
         state: '1',
         Cname: '行政代码',
         explain: '字段说明字段说明字段说明字段说明字段说明字段说',
         range: '行政代码',
         summary: '访谈纪要访谈纪要访谈纪要访谈纪要',
         question: '7',
-        edit: true
+        edit: true,
+        editList: true
       }, {
         id: 6,
         number: '6',
         name: 'DATA',
         type: 'CHAR(1)',
         text: '(a)',
-        processLogic: '1',
+        processLogic: '',
         state: '1',
         Cname: '数据日期',
         explain: '字段说明字段说明字段说明字段说明字段说明字段说',
         range: '数据日期',
         summary: '访谈纪要访谈纪要访谈纪要访谈纪要',
         question: '4',
-        edit: true
+        edit: true,
+        editList: true
       }, {
         id: 7,
         number: '7',
         name: 'DATA_DATE',
         type: 'CHAR(2)',
         text: '(a)',
-        processLogic: '3',
+        processLogic: '',
         state: '1',
         Cname: '境内境外标志',
         explain: '字段说明字段说明字段说明字段说明字段说明字段说',
         range: '境内境外标志',
         summary: '访谈纪要访谈纪要访谈纪要访谈纪要',
         question: '1',
-        edit: true
+        edit: true,
+        editList: true
       }],
       processLogic: [{
         dictCode: '1',
@@ -345,12 +358,26 @@ export default {
         dictName: '已确认'
       }
       ],
-      dynamicTags: [
-        { name: '标签一', type: 'primary' },
-        { name: '标签二', type: 'primary' },
-        { name: '标签三', type: 'primary' },
-        { name: '标签四', type: 'primary' },
-        { name: '标签五', type: 'primary' }
+      dynamicTags: [{
+        name: '标签一',
+        type: 'primary'
+      },
+      {
+        name: '标签二',
+        type: 'primary'
+      },
+      {
+        name: '标签三',
+        type: 'primary'
+      },
+      {
+        name: '标签四',
+        type: 'primary'
+      },
+      {
+        name: '标签五',
+        type: 'primary'
+      }
       ]
 
     }
@@ -369,6 +396,18 @@ export default {
   //   })
   // },
   methods: {
+    formatProcessLogic (value) {
+      let currObj = this.processLogic.filter(obj => {
+        return obj.dictCode === value
+      })
+      return currObj.length > 0 ? currObj[0].dictName : ''
+    },
+    formatState (value) {
+      let currObj = this.state.filter(obj => {
+        return obj.dictCode === value
+      })
+      return currObj.length > 0 ? currObj[0].dictName : ''
+    },
     toggleColumn () {
       // 隐藏列之前先把每列隐藏
       this.tableColumn.forEach((item, index) => {
@@ -386,6 +425,63 @@ export default {
     secletChange (selectedArr) {
       this.checkboxGroup = selectedArr
       this.toggleColumn()
+    },
+    // 模糊搜索
+    remoteMethod (query) {
+      if (query !== '') {
+        this.loading = true
+        setTimeout(() => {
+          this.loading = false
+          this.options = this.list.filter(item => {
+            return item.label.toLowerCase()
+              .indexOf(query.toLowerCase()) > -1
+          })
+        }, 200)
+      } else {
+        this.options = []
+      }
+    },
+    saveClick () {
+      this.tableData.forEach((item, index) => {
+        console.log(item)
+        item.editList = false
+        item.edit = false
+      })
+    },
+    querySearch (queryString, cb) {
+      var restaurants = this.restaurants
+      var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants
+      // 调用 callback 返回建议列表的数据
+      cb(results)
+    },
+    createFilter (queryString) {
+      return (restaurant) => {
+        return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
+      }
+    },
+    loadAll () {
+      return [{
+        value: 'aaaaa'
+      },
+      {
+        value: 'abccbcbcb'
+      },
+      {
+        value: 'sssss'
+      },
+      {
+        value: 'dddccc'
+      },
+      {
+        value: 'qqqqq'
+      }
+      ]
+    },
+    handleSelect (item) {
+      console.log(item)
+    },
+    handleIconClick (ev) {
+      console.log(ev)
     },
     // 合并列
     arraySpanMethod ({
@@ -456,6 +552,13 @@ export default {
     }
   },
   mounted () {
+    this.restaurants = this.loadAll()
+    this.list = this.states.map(item => {
+      return {
+        value: item,
+        label: item
+      }
+    })
     // 默认显示全部列
     this.tableColumn.forEach((item, index) => {
       this.checkboxGroup.push(item.name)
@@ -515,6 +618,25 @@ export default {
     min-width: 100%
   }
 
+  .ipt-box {
+    width: 50%;
+    height: 30px;
+    line-height: 30px;
+    padding-left: 10px;
+    display: inline-block;
+    border: solid 1px #ccc;
+    vertical-align: middle;
+  }
+
+  .icon-select {
+    border: solid 1px #ccc;
+    height: 28px;
+    line-height: 28px;
+    display: inline-block;
+    margin-left: -4px;
+    vertical-align: middle;
+  }
+
   .el-table /deep/ td {
     position: relative;
   }
@@ -541,27 +663,31 @@ export default {
 
     .fetch-logic-tabs {
       flex: 1;
-      position:relative;
+      position: relative;
 
     }
 
     .fetch-logic-btns {
       width: 110px;
     }
+
     .fetch-logic-tabs /deep/ .el-tag {
-        margin-right:5px;
-        border:1px solid #fff;
-        color:#fff;
-        cursor: pointer;
+      margin-right: 5px;
+      border: 1px solid #fff;
+      color: #fff;
+      cursor: pointer;
     }
+
     .fetch-logic-tabs /deep/ .el-tag--warning {
-      color:#fff;
-      border:1px solid #E6A23C;
-      background-color:#E6A23C
+      color: #fff;
+      border: 1px solid #E6A23C;
+      background-color: #E6A23C
     }
+
     .fetch-logic-tabs /deep/ .el-tag__close {
-      color:#fff;
+      color: #fff;
     }
+
     .arrow-icon {
       margin-right: 5px;
     }
