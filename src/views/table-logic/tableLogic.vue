@@ -52,25 +52,25 @@
       </el-table-column>
       <el-table-column width="600" prop="logic" v-if="tableColumn[6].show">
         <template slot="header" slot-scope="scope">
-          <el-row>
-            <el-col :span="6">
-              <div class="grid-content">{{tableColumn[6].name}}</div>
-            </el-col>
-            <el-col :span="12">
-              <div class="grid-content logic-grid-box">
-                dfgjnfkjgnfgj
-              </div>
-            </el-col>
-            <el-col :span="6">
-              <div class="grid-content">
-                <span>全部({{0}})</span>
-                <span>+新增</span>
-              </div>
-            </el-col>
-          </el-row>
+          <div class="fetch-logic">
+            <span class="fetch-logic-name">{{tableColumn[6].name}}</span>
+            <div class="fetch-logic-tabs">
+              <el-tag :key="tag.name" v-for="(tag,index) in frontTags" closable :disable-transitions="false"
+                effect="dark" :type="tag.type" @close="handleClose(tag)" @click.native="highlight(index,tag)">
+                {{tag.name}}
+              </el-tag>
+
+            </div>
+            <div class="fetch-logic-btns">
+              <span @click="showAlltags"><i class="arrow-icon fa fa-angle-down"></i>全部({{dynamicTags.length}})</span>
+              <span>+新增</span>
+            </div>
+          </div>
         </template>
         <template slot-scope="scope">
-          <div class="form-design-wrap">表单设计</div>
+          <div class="form-design-wrap">
+            <form-design :dynamicTags="dynamicTags" :isShowAllTags="isShowAllTags"></form-design>
+          </div>
         </template>
       </el-table-column>
       <el-table-column prop="summary" :label="tableColumn[7].name" v-if="tableColumn[7].show" width="120">
@@ -136,8 +136,12 @@
 
 </template>
 <script>
+import FormDesign from './components/form-design'
 import $ from 'jquery'
 export default {
+  components: {
+    FormDesign
+  },
   data () {
     return {
       // 表格高度
@@ -148,6 +152,8 @@ export default {
       checkboxGroup: [],
       restaurants: [],
       state1: '',
+      // 是否显示更多标签
+      isShowAllTags: false,
       // table 列
       tableColumn: [{
         name: '新增字段',
@@ -351,7 +357,29 @@ export default {
         dictCode: '4',
         dictName: '已确认'
       }
+      ],
+      dynamicTags: [{
+        name: '标签一',
+        type: 'primary'
+      },
+      {
+        name: '标签二',
+        type: 'primary'
+      },
+      {
+        name: '标签三',
+        type: 'primary'
+      },
+      {
+        name: '标签四',
+        type: 'primary'
+      },
+      {
+        name: '标签五',
+        type: 'primary'
+      }
       ]
+
     }
   },
   // created () {
@@ -476,6 +504,19 @@ export default {
           }
         }
       }
+    },
+    // 切换全部标签的显示隐藏
+    showAlltags () {
+      this.isShowAllTags = !this.isShowAllTags
+    },
+    // 高亮当前选中的标签(注意为什么click要加修饰符native)
+    highlight (index, tag) {
+      this.dynamicTags.forEach((item, index) => {
+        item.type = 'primary'
+      })
+      tag.type = 'warning'
+      this.dynamicTags.splice(index, 1, tag) // 为什么要用splice
+      console.log(this.dynamicTags)
     }
   },
   computed: {
@@ -491,6 +532,10 @@ export default {
     // 表格数据条数
     talbeTotleNum () {
       return this.tableData.length
+    },
+    // 所有便签的前三个
+    frontTags () {
+      return this.dynamicTags.slice(0, 3)
     }
   },
   mounted () {
@@ -548,15 +593,6 @@ export default {
     }
   }
 
-  .el-table {
-    th {
-      div {
-        line-height: 22px !important;
-        display: block;
-      }
-    }
-  }
-
   .text-color {
     color: #afcffb;
   }
@@ -568,21 +604,80 @@ export default {
   .el-table /deep/ .el-table__body {
     min-width: 100%
   }
-  .ipt-box{
-    width:50%;
-    height:30px;
+
+  .ipt-box {
+    width: 50%;
+    height: 30px;
     line-height: 30px;
     padding-left: 10px;
     display: inline-block;
-    border:solid 1px #ccc;
+    border: solid 1px #ccc;
     vertical-align: middle;
   }
-.icon-select{
-  border:solid 1px #ccc;
-  height:28px;
-  line-height: 28px;
-  display: inline-block;
-  margin-left:-4px;
-  vertical-align: middle;
-}
+
+  .icon-select {
+    border: solid 1px #ccc;
+    height: 28px;
+    line-height: 28px;
+    display: inline-block;
+    margin-left: -4px;
+    vertical-align: middle;
+  }
+
+  .el-table /deep/ td {
+    position: relative;
+  }
+
+  .form-design-wrap {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: #fff;
+  }
+
+  .fetch-logic {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-right: 0px;
+
+    .fetch-logic-name {
+      width: 60px;
+      display: block;
+    }
+
+    .fetch-logic-tabs {
+      flex: 1;
+      position: relative;
+
+    }
+
+    .fetch-logic-btns {
+      width: 110px;
+    }
+
+    .fetch-logic-tabs /deep/ .el-tag {
+      margin-right: 5px;
+      border: 1px solid #fff;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    .fetch-logic-tabs /deep/ .el-tag--warning {
+      color: #fff;
+      border: 1px solid #E6A23C;
+      background-color: #E6A23C
+    }
+
+    .fetch-logic-tabs /deep/ .el-tag__close {
+      color: #fff;
+    }
+
+    .arrow-icon {
+      margin-right: 5px;
+    }
+  }
+
 </style>
