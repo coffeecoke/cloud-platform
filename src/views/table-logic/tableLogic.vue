@@ -117,20 +117,12 @@
           <template v-if="scope.row.editList">
             <el-autocomplete class="inline-input" v-model="state1" :fetch-suggestions="querySearch" placeholder="请输入内容"
               @select="handleSelect"></el-autocomplete>
-            <!-- <el-select v-model="scope.row.processLogic" multiple filterable remote reserve-keyword placeholder="请输入关键词"
-              :remote-method="remoteMethod" :loading="loading">
-              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-              </el-option>
-            </el-select> -->
-            <!-- <el-input type="text" v-model="scope.row.processLogic" ><i class="el-icon-edit"></i></el-input> -->
-            <!-- <el-select v-model="scope.row.processLogic">
-              <el-option v-for="item in processLogic" :key="item.dictCode" :label="item.dictName"
-                :value="item.dictCode" :disabled="item.disabled">
-              </el-option>
-            </el-select> -->
           </template>
           <div v-else>
-            {{scope.row.processLogic}}
+            <!-- <el-autocomplete class="inline-input" v-model="state1" :fetch-suggestions="querySearch" placeholder="请输入内容"
+              @select="handleSelect"></el-autocomplete> -->
+            <div class="ipt-box">{{scope.row.processLogic}}</div>
+            <i class="el-input__icon el-icon-caret-bottom icon-select" @click="handleIconClick"></i>
           </div>
         </template>
       </el-table-column>
@@ -460,6 +452,9 @@ export default {
     handleSelect (item) {
       console.log(item)
     },
+    handleIconClick (ev) {
+      console.log(ev)
+    },
     // 合并列
     arraySpanMethod ({
       row,
@@ -573,5 +568,21 @@ export default {
   .el-table /deep/ .el-table__body {
     min-width: 100%
   }
-
+  .ipt-box{
+    width:50%;
+    height:30px;
+    line-height: 30px;
+    padding-left: 10px;
+    display: inline-block;
+    border:solid 1px #ccc;
+    vertical-align: middle;
+  }
+.icon-select{
+  border:solid 1px #ccc;
+  height:28px;
+  line-height: 28px;
+  display: inline-block;
+  margin-left:-4px;
+  vertical-align: middle;
+}
 </style>
