@@ -36,9 +36,9 @@ export default {
   data () {
     return {}
   },
-  
+
   methods: {
-    highlight(index,tag) {
+    highlight (index, tag) {
       this.$emit('highlight', index, tag)
     }
   },

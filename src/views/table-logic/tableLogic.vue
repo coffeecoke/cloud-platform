@@ -69,7 +69,7 @@
         </template>
         <template slot-scope="scope">
           <div class="form-design-wrap">
-            <form-design :dynamicTags = "dynamicTags" :isShowAllTags="isShowAllTags"></form-design>
+            <form-design :dynamicTags = "dynamicTags" :isShowAllTags="isShowAllTags" @highlight = "allTagsHighlight"></form-design>
           </div>
         </template>
       </el-table-column>
@@ -420,7 +420,20 @@ export default {
       })
       tag.type = 'warning'
       this.dynamicTags.splice(index, 1, tag) // 为什么要用splice
-      console.log(this.dynamicTags)
+    },
+
+    // 点击全部里面的tag
+    allTagsHighlight (index, tag) {
+      this.dynamicTags.forEach((item, index) => {
+        item.type = 'primary'
+      })
+      if (index < 3) {
+        tag.type = 'warning'
+      } else {
+        tag.type = 'warning'
+        this.dynamicTags.splice(index, 1)
+        this.dynamicTags.unshift(tag)
+      }
     }
   },
   computed: {
