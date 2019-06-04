@@ -547,6 +547,7 @@ export default {
       this.dialogFormVisible = false
       this.dynamicTags.unshift({name: this.form.name, type: 'warning'})
       console.log(this.form.name)
+    },
     // 编辑状态按钮
     editStatus (row) {
       row.edit = true
