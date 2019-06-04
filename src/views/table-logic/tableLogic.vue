@@ -506,16 +506,16 @@ export default {
       }
     },
     // 切换全部标签的显示隐藏
-    // showAlltags (event) {
-    //   this.isShowAllTags = !this.isShowAllTags
-    // },
-    // 高亮当前选中的标签(注意为什么click要加修饰符native)
+    showAlltags () {
+      this.isShowAllTags = !this.isShowAllTags
+    },
+    // 高亮当前选中的标签
     highlight (index, tag) {
       this.dynamicTags.forEach((item, index) => {
         item.type = 'primary'
       })
       tag.type = 'warning'
-      this.dynamicTags.splice(index, 1, tag) // 为什么要用splice
+      this.dynamicTags.splice(index, 1, tag)
     },
     handleClose (index, tag) {
       this.dynamicTags.splice(index, 1)
@@ -558,17 +558,18 @@ export default {
   },
   mounted () {
     this.restaurants = this.loadAll()
-    this.list = this.states.map(item => {
-      return {
-        value: item,
-        label: item
-      }
-    })
+    // this.list = this.states.map(item => {
+    //   return {
+    //     value: item,
+    //     label: item
+    //   }
+    // })
     // 默认显示全部列
     this.tableColumn.forEach((item, index) => {
       this.checkboxGroup.push(item.name)
+      console.log(this.checkboxGroup)
     })
-    this.toggleColumn()
+    // this.toggleColumn()
 
     // 根据屏幕计算屏幕的高度
     this.tableHeight = $('body').height() - $('.table-top').height() + 'px'
