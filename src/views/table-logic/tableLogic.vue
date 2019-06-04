@@ -59,11 +59,29 @@
                 effect="dark" :type="tag.type" @close="handleClose(tag)" @click.native="highlight(index,tag)">
                 {{tag.name}}
               </el-tag>
-
             </div>
             <div class="fetch-logic-btns">
-              <span @click.stop="isShowAllTags=!isShowAllTags"><i class="arrow-icon fa fa-angle-down"></i>全部({{dynamicTags.length}})</span>
-              <span>+新增</span>
+              <!-- <span @click.stop="isShowAllTags=!isShowAllTags"><i class="arrow-icon fa fa-angle-down"></i>全部({{dynamicTags.length}})</span> -->
+              <!-- <span @click="dialogFormVisible = true">+新增</span> -->
+              <el-button @click.stop="isShowAllTags=!isShowAllTags" type="text"><i class="arrow-icon fa fa-angle-down"></i>新增({{dynamicTags.length}})</el-button>
+              <el-button type="text" @click="dialogFormVisible = true">+新增</el-button>
+              <el-dialog :visible.sync="dialogFormVisible" class="contral-form" >
+                <el-form :model="form" :label-width="formLabelWidth">
+                  <el-form-item label="活动名称">
+                    <el-input v-model="form.name" autocomplete="off"></el-input>
+                  </el-form-item>
+                  <el-form-item label="活动区域" :label-width="formLabelWidth">
+                    <el-select v-model="form.region" placeholder="请选择活动区域">
+                      <el-option label="区域一" value="shanghai"></el-option>
+                      <el-option label="区域二" value="beijing"></el-option>
+                    </el-select>
+                  </el-form-item>
+                </el-form>
+                <div slot="footer" class="dialog-footer">
+                  <el-button @click="dialogFormVisible = false">取 消</el-button>
+                  <el-button type="primary" @click.native="submit">确 定</el-button>
+                </div>
+              </el-dialog>
             </div>
           </div>
         </template>
@@ -144,6 +162,18 @@ export default {
   },
   data () {
     return {
+      form: {
+        name: '',
+        region: '',
+        date1: '',
+        date2: '',
+        delivery: false,
+        type: [],
+        resource: '',
+        desc: ''
+      },
+      dialogFormVisible: false,
+      formLabelWidth: '120px',
       // 表格高度
       tableHeight: null,
       // 合并的行数
@@ -379,7 +409,6 @@ export default {
   //   })
   // },
   methods: {
-
     formatStatus (value) {
       let currObj = this.states.filter(obj => {
         return obj.dictCode === value
@@ -421,7 +450,7 @@ export default {
     },
     saveClick () {
       this.tableData.forEach((item, index) => {
-        console.log(item)
+        // console.log(item)
         item.editList = false
         item.edit = false
       })
@@ -484,9 +513,9 @@ export default {
       }
     },
     // 切换全部标签的显示隐藏
-    showAlltags () {
-      this.isShowAllTags = !this.isShowAllTags
-    },
+    // showAlltags () {
+    //   this.isShowAllTags = !this.isShowAllTags
+    // },
     // 高亮当前选中的标签
     highlight (index, tag) {
       this.dynamicTags.forEach((item, index) => {
@@ -513,6 +542,11 @@ export default {
     },
     allHandleClose (index, tag) {
       this.dynamicTags.splice(index, 1)
+    },
+    submit () {
+      this.dialogFormVisible = false
+      this.dynamicTags.unshift({name: this.form.name, type: 'warning'})
+      console.log(this.form.name)
     }
   },
   computed: {
@@ -545,7 +579,6 @@ export default {
     // 默认显示全部列
     this.tableColumn.forEach((item, index) => {
       this.checkboxGroup.push(item.name)
-      console.log(this.checkboxGroup)
     })
     // this.toggleColumn()
 
@@ -561,6 +594,9 @@ export default {
 </script>
 <style scoped lang="scss">
   /* css */
+ .el-table th div{
+    display: block;
+  }
   .table-top {
     display: flex;
     justify-content: space-between;
@@ -641,17 +677,18 @@ export default {
 
     .fetch-logic-name {
       width: 60px;
-      display: block;
+      display:inline-block;
     }
 
     .fetch-logic-tabs {
       flex: 1;
       position: relative;
-
+      display: inline-block;
     }
 
     .fetch-logic-btns {
       width: 110px;
+      display: inline-block;
     }
 
     .fetch-logic-tabs /deep/ .el-tag {
