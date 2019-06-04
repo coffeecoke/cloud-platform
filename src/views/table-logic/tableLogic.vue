@@ -111,13 +111,13 @@
       <el-table-column prop="state" :label="tableColumn[10].name" v-if="tableColumn[10].show" width="120">
         <template slot-scope="scope">
           <template v-if="scope.row.edit">
-            <el-select v-model="scope.row.states">
+            <el-select v-model="scope.row.state">
               <el-option v-for="item in states" :key="item.dictCode" :label="item.dictName" :value="item.dictCode"
                 :disabled="item.disabled">
               </el-option>
             </el-select>
           </template>
-          <span v-else>{{formatStatus(scope.row.state)}}</span>
+          <span v-else>{{formatStatus(scope.row.state)}}<i class="edit-icon fa fa-edit" @click="editStatus(scope.row)"></i></span>
         </template>
       </el-table-column>
       <el-table-column prop="system" :label="tableColumn[11].name" v-if="tableColumn[11].show" width="120">
@@ -133,14 +133,14 @@
       <el-table-column prop="processLogic" :label="tableColumn[13].name" v-if="tableColumn[13].show" width="400">
         <template slot-scope="scope">
           <template v-if="scope.row.editList">
-            <el-autocomplete class="inline-input" v-model="state1" :fetch-suggestions="querySearch" placeholder="请输入内容"
+            <el-autocomplete class="inline-input" v-model="scope.row.processLogic" :fetch-suggestions="querySearch" placeholder="请输入内容"
               @select="handleSelect"></el-autocomplete>
           </template>
           <div v-else>
             <!-- <el-autocomplete class="inline-input" v-model="state1" :fetch-suggestions="querySearch" placeholder="请输入内容"
               @select="handleSelect"></el-autocomplete> -->
-            <div class="ipt-box">{{scope.row.processLogic}}</div>
-            <i class="el-input__icon el-icon-caret-bottom icon-select" @click="handleIconClick"></i>
+            <div class="ipt-box">{{scope.row.processLogic}}</div><i class="fa fa-edit" @click="editProcessLogic(scope.row)"></i>
+            <!-- <i class="el-input__icon el-icon-caret-bottom icon-select" @click="handleIconClick"></i> -->
           </div>
         </template>
       </el-table-column>
@@ -261,8 +261,8 @@ export default {
         range: '数据日期',
         summary: '访谈纪要访谈纪要访谈纪要访谈纪要',
         question: '1',
-        edit: true,
-        editList: true
+        edit: false,
+        editList: false
       }, {
         id: 2,
         number: '2',
@@ -276,8 +276,8 @@ export default {
         range: '客户英文名称',
         summary: '访谈纪要访谈纪要访谈纪要访谈纪要',
         question: '1',
-        edit: true,
-        editList: true
+        edit: false,
+        editList: false
       }, {
         id: 3,
         number: '3',
@@ -291,8 +291,8 @@ export default {
         range: '境内境外标志',
         summary: '访谈纪要访谈纪要访谈纪要访谈纪要',
         question: '3',
-        edit: true,
-        editList: true
+        edit: false,
+        editList: false
       }, {
         id: 4,
         number: '4',
@@ -306,8 +306,8 @@ export default {
         range: '客户大类',
         summary: '访谈纪要访谈纪要访谈纪要访谈纪要',
         question: '1',
-        edit: true,
-        editList: true
+        edit: false,
+        editList: false
       }, {
         id: 5,
         number: '5',
@@ -321,8 +321,8 @@ export default {
         range: '行政代码',
         summary: '访谈纪要访谈纪要访谈纪要访谈纪要',
         question: '7',
-        edit: true,
-        editList: true
+        edit: false,
+        editList: false
       }, {
         id: 6,
         number: '6',
@@ -336,8 +336,8 @@ export default {
         range: '数据日期',
         summary: '访谈纪要访谈纪要访谈纪要访谈纪要',
         question: '4',
-        edit: true,
-        editList: true
+        edit: false,
+        editList: false
       }, {
         id: 7,
         number: '7',
@@ -351,8 +351,8 @@ export default {
         range: '境内境外标志',
         summary: '访谈纪要访谈纪要访谈纪要访谈纪要',
         question: '1',
-        edit: true,
-        editList: true
+        edit: false,
+        editList: false
       }],
       states: [{
         dictCode: '1',
@@ -547,6 +547,13 @@ export default {
       this.dialogFormVisible = false
       this.dynamicTags.unshift({name: this.form.name, type: 'warning'})
       console.log(this.form.name)
+    // 编辑状态按钮
+    editStatus (row) {
+      row.edit = true
+    },
+    // 编辑处理逻辑按钮
+    editProcessLogic (row) {
+      row.editList = true
     }
   },
   computed: {
@@ -638,12 +645,12 @@ export default {
   }
 
   .ipt-box {
-    width: 50%;
+    width: 80%;
     height: 30px;
     line-height: 30px;
     padding-left: 10px;
     display: inline-block;
-    border: solid 1px #ccc;
+    // border: solid 1px #ccc;
     vertical-align: middle;
   }
 
@@ -712,5 +719,8 @@ export default {
       margin-right: 5px;
     }
   }
-
+  .edit-icon {
+    margin-left:40px;
+    cursor: pointer;
+  }
 </style>
