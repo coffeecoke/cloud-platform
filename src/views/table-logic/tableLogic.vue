@@ -93,13 +93,13 @@
       <el-table-column prop="state" :label="tableColumn[10].name" v-if="tableColumn[10].show" width="120">
         <template slot-scope="scope">
           <template v-if="scope.row.edit">
-            <el-select v-model="scope.row.state">
-              <el-option v-for="item in state" :key="item.dictCode" :label="item.dictName" :value="item.dictCode"
+            <el-select v-model="scope.row.states">
+              <el-option v-for="item in states" :key="item.dictCode" :label="item.dictName" :value="item.dictCode"
                 :disabled="item.disabled">
               </el-option>
             </el-select>
           </template>
-          <span v-else>{{scope.row.state}}</span>
+          <span v-else>{{formatStatus(scope.row.state)}}</span>
         </template>
       </el-table-column>
       <el-table-column prop="system" :label="tableColumn[11].name" v-if="tableColumn[11].show" width="120">
@@ -157,7 +157,7 @@ export default {
       // table 列
       tableColumn: [{
         name: '新增字段',
-        show: false
+        show: true
       },
       {
         name: '类型',
@@ -324,24 +324,7 @@ export default {
         edit: true,
         editList: true
       }],
-      processLogic: [{
-        dictCode: '1',
-        dictName: '未提交'
-      },
-      {
-        dictCode: '2',
-        dictName: '已提交'
-      },
-      {
-        dictCode: '3',
-        dictName: '未确认'
-      },
-      {
-        dictCode: '4',
-        dictName: '已确认'
-      }
-      ],
-      state: [{
+      states: [{
         dictCode: '1',
         dictName: '未提交'
       },
@@ -396,14 +379,9 @@ export default {
   //   })
   // },
   methods: {
-    formatProcessLogic (value) {
-      let currObj = this.processLogic.filter(obj => {
-        return obj.dictCode === value
-      })
-      return currObj.length > 0 ? currObj[0].dictName : ''
-    },
-    formatState (value) {
-      let currObj = this.state.filter(obj => {
+
+    formatStatus (value) {
+      let currObj = this.states.filter(obj => {
         return obj.dictCode === value
       })
       return currObj.length > 0 ? currObj[0].dictName : ''
