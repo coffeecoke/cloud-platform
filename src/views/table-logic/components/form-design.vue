@@ -40,6 +40,9 @@ export default {
   methods: {
     highlight (index, tag) {
       this.$emit('highlight', index, tag)
+    },
+    handleClose (index, tag) {
+      this.$emit('handleClose', index, tag)
     }
   },
   activated () {}

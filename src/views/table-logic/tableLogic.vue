@@ -1,5 +1,5 @@
 <template>
-  <div class="" id="">
+  <div class="" id="" @click="isShowAllTags=false">
     <div class="table-top">
       <div class="field-screening">
         <h3>字段筛选：</h3>
@@ -62,14 +62,14 @@
 
             </div>
             <div class="fetch-logic-btns">
-              <span @click="showAlltags"><i class="arrow-icon fa fa-angle-down"></i>全部({{dynamicTags.length}})</span>
+              <span @click.stop="isShowAllTags=!isShowAllTags"><i class="arrow-icon fa fa-angle-down"></i>全部({{dynamicTags.length}})</span>
               <span>+新增</span>
             </div>
           </div>
         </template>
         <template slot-scope="scope">
           <div class="form-design-wrap">
-            <form-design :dynamicTags = "dynamicTags" :isShowAllTags="isShowAllTags" @highlight = "allTagsHighlight"></form-design>
+            <form-design :dynamicTags = "dynamicTags" :isShowAllTags="isShowAllTags" @highlight = "allTagsHighlight" @handleClose="allHandleClose"></form-design>
           </div>
         </template>
       </el-table-column>
@@ -511,13 +511,16 @@ export default {
     },
     // 高亮当前选中的标签
     highlight (index, tag) {
+      console.log(index)
       this.dynamicTags.forEach((item, index) => {
         item.type = 'primary'
       })
       tag.type = 'warning'
       this.dynamicTags.splice(index, 1, tag)
     },
-
+    handleClose (index, tag) {
+      this.dynamicTags.splice(index, 1)
+    },
     // 点击全部里面的tag
     allTagsHighlight (index, tag) {
       this.dynamicTags.forEach((item, index) => {
@@ -530,6 +533,9 @@ export default {
         this.dynamicTags.splice(index, 1)
         this.dynamicTags.unshift(tag)
       }
+    },
+    allHandleClose (index, tag) {
+      this.dynamicTags.splice(index, 1)
     }
   },
   computed: {
@@ -575,7 +581,6 @@ export default {
   activated () {}
 
 }
-
 </script>
 <style scoped lang="scss">
   /* css */
