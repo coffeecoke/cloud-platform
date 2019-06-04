@@ -489,7 +489,6 @@ export default {
     },
     // 高亮当前选中的标签
     highlight (index, tag) {
-      console.log(index)
       this.dynamicTags.forEach((item, index) => {
         item.type = 'primary'
       })
