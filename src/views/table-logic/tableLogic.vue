@@ -511,7 +511,6 @@ export default {
     // },
     // 高亮当前选中的标签(注意为什么click要加修饰符native)
     highlight (index, tag) {
-      console.log(index)
       this.dynamicTags.forEach((item, index) => {
         item.type = 'primary'
       })
