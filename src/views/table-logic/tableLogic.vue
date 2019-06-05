@@ -37,7 +37,7 @@
       </el-table-column>
       <el-table-column prop="Cname" :label="tableColumn[3].name" v-if="tableColumn[3].show" width="120">
         <template slot-scope="scope">
-          <span class="text-color" @click="showFieldDescription(scope.row)">{{ scope.row.Cname }}</span>
+          <span class="text-color" @click="handleShow">{{ scope.row.Cname }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="explain" :label="tableColumn[4].name" v-if="tableColumn[4].show" width="240">
@@ -65,23 +65,6 @@
               <!-- <span @click="dialogFormVisible = true">+新增</span> -->
               <el-button @click.stop="isShowAllTags=!isShowAllTags" type="text"><i class="arrow-icon fa fa-angle-down"></i>新增({{dynamicTags.length}})</el-button>
               <el-button type="text" @click="dialogFormVisible = true">+新增</el-button>
-              <el-dialog :visible.sync="dialogFormVisible" class="contral-form" >
-                <el-form :model="form" :label-width="formLabelWidth">
-                  <el-form-item label="活动名称">
-                    <el-input v-model="form.name" autocomplete="off"></el-input>
-                  </el-form-item>
-                  <el-form-item label="活动区域" :label-width="formLabelWidth">
-                    <el-select v-model="form.region" placeholder="请选择活动区域">
-                      <el-option label="区域一" value="shanghai"></el-option>
-                      <el-option label="区域二" value="beijing"></el-option>
-                    </el-select>
-                  </el-form-item>
-                </el-form>
-                <div slot="footer" class="dialog-footer">
-                  <el-button @click="dialogFormVisible = false">取 消</el-button>
-                  <el-button type="primary" @click.native="submit">确 定</el-button>
-                </div>
-              </el-dialog>
             </div>
           </div>
         </template>
@@ -150,6 +133,24 @@
         </template>
       </el-table-column>
     </el-table>
+    <template>
+      <el-dialog title="新增逻辑" :visible.sync="dialogFormVisible" class="contral-form" width="30%">
+        <el-form :model="form" :label-width="formLabelWidth">
+          <el-form-item label="逻辑名称:">
+            <el-input v-model="form.name" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="逻辑类型:" :label-width="formLabelWidth">
+            <el-select v-model="form.region" placeholder="请选择活动区域">
+              <el-option v-for="item in selectState" :key="item.dictCode" :label="item.dictName" :value="item.dictCode"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogFormVisible = false">取 消</el-button>
+          <el-button type="primary" @click.native="submit">确 定</el-button>
+        </div>
+      </el-dialog>
+    </template>
     <name-box :items = "items" :isShowAllPages="isShowAllPages" @boxHide = "boxHandleHide"></name-box>
   </div>
 </template>
@@ -174,6 +175,14 @@ export default {
         resource: '',
         desc: ''
       },
+      selectState: [{
+        dictCode: '1',
+        dictName: '未提交'
+      },
+      {
+        dictCode: '2',
+        dictName: '已提交'
+      }],
       dialogFormVisible: false,
       formLabelWidth: '120px',
       // 表格高度

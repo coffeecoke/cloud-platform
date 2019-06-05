@@ -3,7 +3,7 @@
         <div class="mask">
             <div class="mask-right">
                 <div class="mask-right-icon">
-                    <i class="fa el-icon-arrow-right" @click="boxHide(index, tag)"></i>
+                    <i class="fa el-icon-arrow-right" @click="boxHide"></i>
                 </div>
                 <div class="mask-right-content">
                     <div class="title-box">
