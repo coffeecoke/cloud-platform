@@ -37,7 +37,7 @@
       </el-table-column>
       <el-table-column prop="Cname" :label="tableColumn[3].name" v-if="tableColumn[3].show" width="120">
         <template slot-scope="scope">
-          <span class="text-color" @click="handleShow">{{ scope.row.Cname }}</span>
+          <span class="text-color" @click="showFieldDescription(scope.row)">{{ scope.row.Cname }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="explain" :label="tableColumn[4].name" v-if="tableColumn[4].show" width="240">
@@ -625,9 +625,6 @@ export default {
 </script>
 <style scoped lang="scss">
   /* css */
- .el-table th div{
-    display: block;
-  }
   .table-top {
     display: flex;
     justify-content: space-between;
@@ -721,7 +718,9 @@ export default {
       width: 110px;
       display: inline-block;
     }
-
+    .fetch-logic-btns /deep/ .el-button {
+      color:#fff;
+    }
     .fetch-logic-tabs /deep/ .el-tag {
       margin-right: 5px;
       border: 1px solid #fff;
