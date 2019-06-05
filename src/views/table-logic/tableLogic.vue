@@ -37,7 +37,7 @@
       </el-table-column>
       <el-table-column prop="Cname" :label="tableColumn[3].name" v-if="tableColumn[3].show" width="120">
         <template slot-scope="scope">
-          <span class="text-color">{{ scope.row.Cname }}</span>
+          <span class="text-color" @click="handleShow">{{ scope.row.Cname }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="explain" :label="tableColumn[4].name" v-if="tableColumn[4].show" width="240">
@@ -150,15 +150,17 @@
         </template>
       </el-table-column>
     </el-table>
+    <name-box :items = "items" :isShowAllPages="isShowAllPages" @boxHide = "boxHandleHide"></name-box>
   </div>
-
 </template>
 <script>
 import FormDesign from './components/form-design'
+import NameBox from './components/name-box'
 import $ from 'jquery'
 export default {
   components: {
-    FormDesign
+    FormDesign,
+    NameBox
   },
   data () {
     return {
@@ -184,6 +186,7 @@ export default {
       state1: '',
       // 是否显示更多标签
       isShowAllTags: false,
+      isShowAllPages: false,
       // table 列
       tableColumn: [{
         name: '新增字段',
@@ -391,6 +394,20 @@ export default {
         name: '标签五',
         type: 'primary'
       }
+      ],
+      items: [
+        {
+          title: '字段说明:',
+          text: '客户使用的中文简称'
+        },
+        {
+          title: '涉及模块:',
+          text: 'BOP'
+        },
+        {
+          title: '使用单位:',
+          text: 'BOP'
+        }
       ]
 
     }
@@ -555,6 +572,12 @@ export default {
     // 编辑处理逻辑按钮
     editProcessLogic (row) {
       row.editList = true
+    },
+    handleShow () {
+      this.isShowAllPages = true
+    },
+    boxHandleHide () {
+      this.isShowAllPages = false
     }
   },
   computed: {
@@ -723,5 +746,14 @@ export default {
   .edit-icon {
     margin-left:40px;
     cursor: pointer;
+  }
+  .name-box-wrap {
+    width:100%;
+    height:100%;
+    background-color: #fff;
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
   }
 </style>
