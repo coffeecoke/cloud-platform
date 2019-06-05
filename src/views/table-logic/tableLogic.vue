@@ -547,6 +547,7 @@ export default {
       this.dialogFormVisible = false
       this.dynamicTags.unshift({name: this.form.name, type: 'warning'})
       console.log(this.form.name)
+    },
     // 编辑状态按钮
     editStatus (row) {
       row.edit = true
@@ -601,9 +602,6 @@ export default {
 </script>
 <style scoped lang="scss">
   /* css */
- .el-table th div{
-    display: block;
-  }
   .table-top {
     display: flex;
     justify-content: space-between;
@@ -697,7 +695,9 @@ export default {
       width: 110px;
       display: inline-block;
     }
-
+    .fetch-logic-btns /deep/ .el-button {
+      color:#fff;
+    }
     .fetch-logic-tabs /deep/ .el-tag {
       margin-right: 5px;
       border: 1px solid #fff;
