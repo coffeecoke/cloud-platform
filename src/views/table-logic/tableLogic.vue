@@ -139,24 +139,25 @@
     </el-table>
     <template>
       <el-dialog title="新增逻辑" :visible.sync="dialogFormVisible" class="contral-form" width="30%">
-        <el-form :model="form" :rules="rules" ref="form"  :label-width="formLabelWidth">
-          <el-form-item label="逻辑名称:">
+        <el-form :model="form" :rules="rules" ref="form" :label-width="formLabelWidth">
+          <el-form-item label="逻辑名称:" prop="name">
             <el-input v-model="form.name" autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="逻辑类型:" :label-width="formLabelWidth">
+          <el-form-item label="逻辑类型:" prop="region" :label-width="formLabelWidth">
             <el-select v-model="form.region" placeholder="请选择逻辑类型">
-              <el-option v-for="item in selectState" :key="item.dictCode" :label="item.dictName" :value="item.dictCode"></el-option>
+              <el-option v-for="item in selectState" :key="item.dictCode" :label="item.dictName" :value="item.dictCode">
+              </el-option>
             </el-select>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click.native="submit" :loading="logining">确 定</el-button>
+          <el-button type="primary" @click.native.prevent="handleSubmit" :loading="logining">确 定</el-button>
         </div>
       </el-dialog>
     </template>
     <!-- 点击中文名称显示右侧弹出框 -->
-    <name-box :items = "items" :isShowAllPages="isShowAllPages" @boxHide = "boxHandleHide"></name-box>
+    <name-box :items="items" :isShowAllPages="isShowAllPages" @boxHide="boxHandleHide"></name-box>
   </div>
 </template>
 <script>
@@ -173,16 +174,20 @@ export default {
       logining: false,
       // 新增处理逻辑表单
       form: {
-        name: '',
+        name: null,
         region: '1'
       },
       rules: {
-        name: [
-          { required: true, message: '请输入逻辑名称', trigger: 'blur' }
-        ],
-        region: [
-          { required: true, message: '请选择逻辑类型', trigger: 'blur' }
-        ]
+        name: [{
+          required: true,
+          message: '请输入逻辑名称',
+          trigger: 'blur'
+        }],
+        region: [{
+          required: true,
+          message: '请选择逻辑类型',
+          trigger: 'blur'
+        }]
       },
       selectState: [{
         dictCode: '1',
@@ -191,7 +196,8 @@ export default {
       {
         dictCode: '2',
         dictName: '处理逻辑'
-      }],
+      }
+      ],
       dialogFormVisible: false,
       formLabelWidth: '120px',
       // 表格高度
@@ -413,19 +419,18 @@ export default {
         type: 'primary'
       }
       ],
-      items: [
-        {
-          title: '字段说明:',
-          text: '客户使用的中文简称'
-        },
-        {
-          title: '涉及模块:',
-          text: 'BOP'
-        },
-        {
-          title: '使用单位:',
-          text: 'BOP'
-        }
+      items: [{
+        title: '字段说明:',
+        text: '客户使用的中文简称'
+      },
+      {
+        title: '涉及模块:',
+        text: 'BOP'
+      },
+      {
+        title: '使用单位:',
+        text: 'BOP'
+      }
       ]
 
     }
@@ -579,15 +584,19 @@ export default {
       this.dynamicTags.splice(index, 1)
     },
     // 新增表单逻辑提交
-    submit () {
+    handleSubmit () {
       this.$refs.form.validate((valid) => {
         this.logining = true
         if (valid) {
-          this.logining = false
           this.$api.tableLogic.newLogic(this.form).then(res => {
-            this.form.name = ''
             this.dialogFormVisible = false
-            this.dynamicTags.unshift({name: this.form.name, type: 'warning'})
+            this.dynamicTags.forEach((item, index) => {
+              item.type = 'primary'
+            })
+            this.dynamicTags.unshift({
+              name: this.form.name,
+              type: 'warning'
+            })
           })
         }
       })
@@ -777,13 +786,15 @@ export default {
     margin-left: 40px;
     cursor: pointer;
   }
+
   .name-box-wrap {
-    width:100%;
-    height:100%;
+    width: 100%;
+    height: 100%;
     background-color: #fff;
     position: absolute;
     right: 0;
     top: 0;
     bottom: 0;
   }
+
 </style>
