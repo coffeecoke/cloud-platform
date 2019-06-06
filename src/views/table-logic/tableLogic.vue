@@ -37,7 +37,7 @@
       </el-table-column>
       <el-table-column prop="Cname" :label="tableColumn[3].name" v-if="tableColumn[3].show" width="120">
         <template slot-scope="scope">
-          <span class="text-color" @click="showFieldDescription(scope.row)">{{ scope.row.Cname }}</span>
+          <span class="text-color" @click="handleShow">{{ scope.row.Cname }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="explain" :label="tableColumn[4].name" v-if="tableColumn[4].show" width="240">
@@ -66,7 +66,6 @@
               <el-button @click.stop="isShowAllTags=!isShowAllTags" type="text"><i
                   class="arrow-icon fa fa-angle-down"></i>新增({{dynamicTags.length}})</el-button>
               <el-button type="text" @click="dialogFormVisible = true">+新增</el-button>
-
             </div>
           </div>
         </template>
@@ -138,35 +137,35 @@
         </template>
       </el-table-column>
     </el-table>
-
-    <!-- 新增弹出框 -->
-    <el-dialog :visible.sync="dialogFormVisible" class="contral-form" size="medium">
-      <el-form :model="NewLogicForm" :label-width="formLabelWidth">
-        <el-form-item label="逻辑名称">
-          <el-input v-model="NewLogicForm.name" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="逻辑类型" :label-width="formLabelWidth">
-          <el-select v-model="NewLogicForm.type" placeholder="请选择逻辑类型">
-            <el-option label="访谈逻辑" value="1"></el-option>
-            <el-option label="处理逻辑" value="2"></el-option>
-          </el-select>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click.native="submit">确 定</el-button>
-      </div>
-    </el-dialog>
-    <!-- /.新增弹出框 -->
+    <template>
+      <el-dialog title="新增逻辑" :visible.sync="dialogFormVisible" class="contral-form" width="30%">
+        <el-form :model="form" :label-width="formLabelWidth">
+          <el-form-item label="逻辑名称:">
+            <el-input v-model="form.name" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="逻辑类型:" :label-width="formLabelWidth">
+            <el-select v-model="form.region" placeholder="请选择活动区域">
+              <el-option v-for="item in selectState" :key="item.dictCode" :label="item.dictName" :value="item.dictCode"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogFormVisible = false">取 消</el-button>
+          <el-button type="primary" @click.native="submit">确 定</el-button>
+        </div>
+      </el-dialog>
+    </template>
+    <name-box :items = "items" :isShowAllPages="isShowAllPages" @boxHide = "boxHandleHide"></name-box>
   </div>
-
 </template>
 <script>
 import FormDesign from './components/form-design'
+import NameBox from './components/name-box'
 import $ from 'jquery'
 export default {
   components: {
-    FormDesign
+    FormDesign,
+    NameBox
   },
   data () {
     return {
@@ -175,6 +174,14 @@ export default {
         name: '',
         type: '1'
       },
+      selectState: [{
+        dictCode: '1',
+        dictName: '未提交'
+      },
+      {
+        dictCode: '2',
+        dictName: '已提交'
+      }],
       dialogFormVisible: false,
       formLabelWidth: '120px',
       // 表格高度
@@ -187,6 +194,7 @@ export default {
       state1: '',
       // 是否显示更多标签
       isShowAllTags: false,
+      isShowAllPages: false,
       // table 列
       tableColumn: [{
         name: '新增字段',
@@ -394,6 +402,20 @@ export default {
         name: '标签五',
         type: 'primary'
       }
+      ],
+      items: [
+        {
+          title: '字段说明:',
+          text: '客户使用的中文简称'
+        },
+        {
+          title: '涉及模块:',
+          text: 'BOP'
+        },
+        {
+          title: '使用单位:',
+          text: 'BOP'
+        }
       ]
 
     }
@@ -547,12 +569,9 @@ export default {
       this.dynamicTags.splice(index, 1)
     },
     submit () {
+      this.form.name = ''
       this.dialogFormVisible = false
-      this.dynamicTags.unshift({
-        name: this.form.name,
-        type: 'warning'
-      })
-      console.log(this.form.name)
+      this.dynamicTags.unshift({name: this.form.name, type: 'warning'})
     },
     // 编辑状态按钮
     editStatus (row) {
@@ -561,6 +580,12 @@ export default {
     // 编辑处理逻辑按钮
     editProcessLogic (row) {
       row.editList = true
+    },
+    handleShow () {
+      this.isShowAllPages = true
+    },
+    boxHandleHide () {
+      this.isShowAllPages = false
     }
   },
   computed: {
@@ -733,12 +758,13 @@ export default {
     margin-left: 40px;
     cursor: pointer;
   }
-
-  .el-dialog .el-input {
-    width:200px;
+  .name-box-wrap {
+    width:100%;
+    height:100%;
+    background-color: #fff;
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
   }
-  .el-dialog .el-select {
-    width:200px;
-  }
-
 </style>
