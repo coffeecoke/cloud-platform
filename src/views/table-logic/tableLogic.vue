@@ -139,16 +139,7 @@
     </el-table>
     <template>
       <el-dialog title="新增逻辑" :visible.sync="dialogFormVisible" class="contral-form" width="30%">
-<<<<<<< HEAD
-        <el-form :model="form" :label-width="formLabelWidth">
-          <el-form-item label="逻辑名称:">
-            <el-input v-model="form.name" autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="逻辑类型:" :label-width="formLabelWidth">
-            <el-select v-model="form.region" placeholder="请选择活动区域">
-              <el-option v-for="item in selectState" :key="item.dictCode" :label="item.dictName" :value="item.dictCode"></el-option>
-=======
-        <el-form :model="form" :rules="rules" ref="form" :label-width="formLabelWidth">
+        <el-form :model="form" ref="form" :rules="rules" :label-width="formLabelWidth">
           <el-form-item label="逻辑名称:" prop="name">
             <el-input v-model="form.name" autocomplete="off"></el-input>
           </el-form-item>
@@ -156,17 +147,12 @@
             <el-select v-model="form.region" placeholder="请选择逻辑类型">
               <el-option v-for="item in selectState" :key="item.dictCode" :label="item.dictName" :value="item.dictCode">
               </el-option>
->>>>>>> 4c133379bac9933abc2a7988787454416c16ae85
             </el-select>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
-<<<<<<< HEAD
-          <el-button type="primary" @click.native="submit">确 定</el-button>
-=======
           <el-button type="primary" @click.native.prevent="handleSubmit" :loading="logining">确 定</el-button>
->>>>>>> 4c133379bac9933abc2a7988787454416c16ae85
         </div>
       </el-dialog>
     </template>
@@ -194,8 +180,6 @@ export default {
         name: null,
         region: '1'
       },
-<<<<<<< HEAD
-=======
       rules: {
         name: [{
           required: true,
@@ -208,7 +192,6 @@ export default {
           trigger: 'blur'
         }]
       },
->>>>>>> 4c133379bac9933abc2a7988787454416c16ae85
       selectState: [{
         dictCode: '1',
         dictName: '未提交'
