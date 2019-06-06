@@ -139,19 +139,19 @@
     </el-table>
     <template>
       <el-dialog title="新增逻辑" :visible.sync="dialogFormVisible" class="contral-form" width="30%">
-        <el-form :model="form" :label-width="formLabelWidth">
+        <el-form :model="form" :rules="rules" ref="form"  :label-width="formLabelWidth">
           <el-form-item label="逻辑名称:">
             <el-input v-model="form.name" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="逻辑类型:" :label-width="formLabelWidth">
-            <el-select v-model="form.region" placeholder="请选择活动区域">
+            <el-select v-model="form.region" placeholder="请选择逻辑类型">
               <el-option v-for="item in selectState" :key="item.dictCode" :label="item.dictName" :value="item.dictCode"></el-option>
             </el-select>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click.native="submit">确 定</el-button>
+          <el-button type="primary" @click.native="submit" :loading="logining">确 定</el-button>
         </div>
       </el-dialog>
     </template>
@@ -174,18 +174,27 @@ export default {
   },
   data () {
     return {
+      logining: false,
       // 新增处理逻辑表单
       form: {
         name: '',
         region: ''
       },
+      rules: {
+        name: [
+          { required: true, message: '请输入逻辑名称', trigger: 'blur' }
+        ],
+        region: [
+          { required: true, message: '请选择逻辑类型', trigger: 'blur' }
+        ]
+      },
       selectState: [{
         dictCode: '1',
-        dictName: '未提交'
+        dictName: '访谈逻辑'
       },
       {
         dictCode: '2',
-        dictName: '已提交'
+        dictName: '处理逻辑'
       }],
       ruleForm: {
         name: '',
@@ -586,10 +595,19 @@ export default {
     allHandleClose (index, tag) {
       this.dynamicTags.splice(index, 1)
     },
+    // 新增表单逻辑提交
     submit () {
-      this.form.name = ''
-      this.dialogFormVisible = false
-      this.dynamicTags.unshift({name: this.form.name, type: 'warning'})
+      this.$refs.form.validate((valid) => {
+        this.logining = true
+        if (valid) {
+          this.logining = false
+          this.$api.tableLogic.newLogic(this.form).then(res => {
+            this.form.name = ''
+            this.dialogFormVisible = false
+            this.dynamicTags.unshift({name: this.form.name, type: 'warning'})
+          })
+        }
+      })
     },
     // 编辑状态按钮
     editStatus (row) {
