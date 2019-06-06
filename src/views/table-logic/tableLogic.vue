@@ -63,31 +63,17 @@
             <div class="fetch-logic-btns">
               <!-- <span @click.stop="isShowAllTags=!isShowAllTags"><i class="arrow-icon fa fa-angle-down"></i>全部({{dynamicTags.length}})</span> -->
               <!-- <span @click="dialogFormVisible = true">+新增</span> -->
-              <el-button @click.stop="isShowAllTags=!isShowAllTags" type="text"><i class="arrow-icon fa fa-angle-down"></i>新增({{dynamicTags.length}})</el-button>
+              <el-button @click.stop="isShowAllTags=!isShowAllTags" type="text"><i
+                  class="arrow-icon fa fa-angle-down"></i>新增({{dynamicTags.length}})</el-button>
               <el-button type="text" @click="dialogFormVisible = true">+新增</el-button>
-              <el-dialog :visible.sync="dialogFormVisible" class="contral-form" >
-                <el-form :model="form" :label-width="formLabelWidth">
-                  <el-form-item label="活动名称">
-                    <el-input v-model="form.name" autocomplete="off"></el-input>
-                  </el-form-item>
-                  <el-form-item label="活动区域" :label-width="formLabelWidth">
-                    <el-select v-model="form.region" placeholder="请选择活动区域">
-                      <el-option label="区域一" value="shanghai"></el-option>
-                      <el-option label="区域二" value="beijing"></el-option>
-                    </el-select>
-                  </el-form-item>
-                </el-form>
-                <div slot="footer" class="dialog-footer">
-                  <el-button @click="dialogFormVisible = false">取 消</el-button>
-                  <el-button type="primary" @click.native="submit">确 定</el-button>
-                </div>
-              </el-dialog>
+
             </div>
           </div>
         </template>
         <template slot-scope="scope">
           <div class="form-design-wrap">
-            <form-design :dynamicTags = "dynamicTags" :isShowAllTags="isShowAllTags" @highlight = "allTagsHighlight" @handleClose="allHandleClose"></form-design>
+            <form-design :dynamicTags="dynamicTags" :isShowAllTags="isShowAllTags" @highlight="allTagsHighlight"
+              @handleClose="allHandleClose"></form-design>
           </div>
         </template>
       </el-table-column>
@@ -117,7 +103,8 @@
               </el-option>
             </el-select>
           </template>
-          <span v-else>{{formatStatus(scope.row.state)}}<i class="edit-icon fa fa-edit" @click="editStatus(scope.row)"></i></span>
+          <span v-else>{{formatStatus(scope.row.state)}}<i class="edit-icon fa fa-edit"
+              @click="editStatus(scope.row)"></i></span>
         </template>
       </el-table-column>
       <el-table-column prop="system" :label="tableColumn[11].name" v-if="tableColumn[11].show" width="120">
@@ -133,13 +120,14 @@
       <el-table-column prop="processLogic" :label="tableColumn[13].name" v-if="tableColumn[13].show" width="400">
         <template slot-scope="scope">
           <template v-if="scope.row.editList">
-            <el-autocomplete class="inline-input" v-model="scope.row.processLogic" :fetch-suggestions="querySearch" placeholder="请输入内容"
-              @select="handleSelect"></el-autocomplete>
+            <el-autocomplete class="inline-input" v-model="scope.row.processLogic" :fetch-suggestions="querySearch"
+              placeholder="请输入内容" @select="handleSelect"></el-autocomplete>
           </template>
           <div v-else>
             <!-- <el-autocomplete class="inline-input" v-model="state1" :fetch-suggestions="querySearch" placeholder="请输入内容"
               @select="handleSelect"></el-autocomplete> -->
-            <div class="ipt-box">{{scope.row.processLogic}}</div><i class="fa fa-edit" @click="editProcessLogic(scope.row)"></i>
+            <div class="ipt-box">{{scope.row.processLogic}}</div><i class="fa fa-edit"
+              @click="editProcessLogic(scope.row)"></i>
             <!-- <i class="el-input__icon el-icon-caret-bottom icon-select" @click="handleIconClick"></i> -->
           </div>
         </template>
@@ -150,6 +138,26 @@
         </template>
       </el-table-column>
     </el-table>
+
+    <!-- 新增弹出框 -->
+    <el-dialog :visible.sync="dialogFormVisible" class="contral-form" size="medium">
+      <el-form :model="NewLogicForm" :label-width="formLabelWidth">
+        <el-form-item label="逻辑名称">
+          <el-input v-model="NewLogicForm.name" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="逻辑类型" :label-width="formLabelWidth">
+          <el-select v-model="NewLogicForm.type" placeholder="请选择逻辑类型">
+            <el-option label="访谈逻辑" value="1"></el-option>
+            <el-option label="处理逻辑" value="2"></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click.native="submit">确 定</el-button>
+      </div>
+    </el-dialog>
+    <!-- /.新增弹出框 -->
   </div>
 
 </template>
@@ -162,15 +170,10 @@ export default {
   },
   data () {
     return {
-      form: {
+      // 新增处理逻辑表单
+      NewLogicForm: {
         name: '',
-        region: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
+        type: '1'
       },
       dialogFormVisible: false,
       formLabelWidth: '120px',
@@ -545,7 +548,10 @@ export default {
     },
     submit () {
       this.dialogFormVisible = false
-      this.dynamicTags.unshift({name: this.form.name, type: 'warning'})
+      this.dynamicTags.unshift({
+        name: this.form.name,
+        type: 'warning'
+      })
       console.log(this.form.name)
     },
     // 编辑状态按钮
@@ -599,6 +605,7 @@ export default {
   activated () {}
 
 }
+
 </script>
 <style scoped lang="scss">
   /* css */
@@ -682,7 +689,7 @@ export default {
 
     .fetch-logic-name {
       width: 60px;
-      display:inline-block;
+      display: inline-block;
     }
 
     .fetch-logic-tabs {
@@ -695,9 +702,11 @@ export default {
       width: 110px;
       display: inline-block;
     }
+
     .fetch-logic-btns /deep/ .el-button {
-      color:#fff;
+      color: #fff;
     }
+
     .fetch-logic-tabs /deep/ .el-tag {
       margin-right: 5px;
       border: 1px solid #fff;
@@ -719,8 +728,17 @@ export default {
       margin-right: 5px;
     }
   }
+
   .edit-icon {
-    margin-left:40px;
+    margin-left: 40px;
     cursor: pointer;
   }
+
+  .el-dialog .el-input {
+    width:200px;
+  }
+  .el-dialog .el-select {
+    width:200px;
+  }
+
 </style>
