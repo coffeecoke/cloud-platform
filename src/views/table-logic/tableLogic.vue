@@ -22,7 +22,7 @@
       </el-table-column>
       <el-table-column fixed prop="name" :label="tableColumn[0].name" v-if="tableColumn[0].show" width="120">
         <template slot-scope="scope">
-          <span class="text-color">{{ scope.row.name }}</span>
+          <span class="text-color" @click="FieldHandleShow">{{ scope.row.name }}</span>
         </template>
       </el-table-column>
       <el-table-column fixed prop="type" :label="tableColumn[1].name" v-if="tableColumn[1].show" width="120">
@@ -157,17 +157,21 @@
       </el-dialog>
     </template>
     <!-- 点击中文名称显示右侧弹出框 -->
-    <name-box :items="items" :isShowAllPages="isShowAllPages" @boxHide="boxHandleHide"></name-box>
+    <name-box :items = "items" :isShowAllPages="isShowAllPages" @boxHide = "boxHandleHide"></name-box>
+    <!-- 点击新增字段显示右侧弹出框 -->
+    <add-field :ruleForm='ruleForm' :rules="rules" :isShowAllField="isShowAllField" @submitForm='submitFormAll(formName)' @AddBoxHide = "FieldHandleHide"></add-field>
   </div>
 </template>
 <script>
 import FormDesign from './components/form-design'
 import NameBox from './components/name-box'
+import AddField from './components/add-field'
 import $ from 'jquery'
 export default {
   components: {
     FormDesign,
-    NameBox
+    NameBox,
+    AddField
   },
   data () {
     return {
@@ -196,8 +200,12 @@ export default {
       {
         dictCode: '2',
         dictName: '处理逻辑'
-      }
-      ],
+      }],
+      ruleForm: {
+        name: '',
+        names: ''
+      },
+
       dialogFormVisible: false,
       formLabelWidth: '120px',
       // 表格高度
@@ -211,6 +219,7 @@ export default {
       // 是否显示更多标签
       isShowAllTags: false,
       isShowAllPages: false,
+      isShowAllField: false,
       // table 列
       tableColumn: [{
         name: '新增字段',
@@ -614,6 +623,21 @@ export default {
     },
     boxHandleHide () {
       this.isShowAllPages = false
+    },
+    FieldHandleShow () {
+      this.isShowAllField = true
+    },
+    FieldHandleHide () {
+      this.isShowAllField = false
+    },
+    submitFormAll (formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          alert('submit!')
+        } else {
+          return false
+        }
+      })
     }
   },
   computed: {
