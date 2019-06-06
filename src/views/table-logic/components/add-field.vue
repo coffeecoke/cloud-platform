@@ -23,25 +23,34 @@
                                     <el-input v-model="ruleForm.length"></el-input>
                                 </el-form-item>
                                 <el-form-item label="主键:" prop="majorKey">
-                                    <el-input v-model="ruleForm.majorKey"></el-input>
+                                    <el-select v-model="ruleForm.majorKey" placeholder="请选择活动区域">
+                                        <el-option label="区域一" value="shanghai"></el-option>
+                                        <el-option label="区域二" value="beijing"></el-option>
+                                    </el-select>
                                 </el-form-item>
                                 <el-form-item label="是否可空:" prop="null">
-                                    <el-input v-model="ruleForm.null"></el-input>
+                                    <el-select v-model="ruleForm.null" placeholder="请选择活动区域">
+                                        <el-option label="区域一" value="shanghai"></el-option>
+                                        <el-option label="区域二" value="beijing"></el-option>
+                                    </el-select>
                                 </el-form-item>
                                 <el-form-item label="中文名称:" prop="Cname">
                                     <el-input v-model="ruleForm.Cname"></el-input>
                                 </el-form-item>
                                 <el-form-item label="字段说明:" prop="explain">
-                                    <el-input v-model="ruleForm.explain"></el-input>
+                                    <el-input type="textarea" v-model="ruleForm.explain"></el-input>
                                 </el-form-item>
                                 <el-form-item label="是否有码值:" prop="code">
-                                    <el-input v-model="ruleForm.code"></el-input>
+                                    <el-select v-model="ruleForm.code" placeholder="请选择活动区域">
+                                        <el-option label="区域一" value="shanghai"></el-option>
+                                        <el-option label="区域二" value="beijing"></el-option>
+                                    </el-select>
                                 </el-form-item>
                                 <el-form-item label="使用模块:" prop="templ">
-                                    <el-input v-model="ruleForm.templ"></el-input>
+                                    <el-input type="textarea" v-model="ruleForm.templ"></el-input>
                                 </el-form-item>
                                 <el-form-item label="使用位置:" prop="position">
-                                    <el-input v-model="ruleForm.position"></el-input>
+                                    <el-input type="textarea" v-model="ruleForm.position"></el-input>
                                 </el-form-item>
                                 <el-form-item label="访谈纪要:" prop="summary">
                                     <el-input v-model="ruleForm.summary"></el-input>
@@ -54,6 +63,29 @@
                                 </el-form-item>
 
                             </el-form>
+                        </div>
+                        <div class="table-box">
+                            <el-table
+                            :data="tableData"
+                            style="width: 100%">
+                            <el-table-column
+                                prop="date"
+                                label="系统"
+                                sortable
+                                width="180">
+                            </el-table-column>
+                            <el-table-column
+                                prop="name"
+                                label="表"
+                                sortable
+                                width="180">
+                            </el-table-column>
+                            <el-table-column
+                                prop="address"
+                                sortable
+                                label="字段">
+                            </el-table-column>
+                            </el-table>
                         </div>
                     </div>
                 </div>
@@ -86,9 +118,32 @@ export default {
           { required: true, message: '请选择活动区域', trigger: 'blur' }
         ],
         majorKey: [
+          { required: true, message: '请选择活动区域', trigger: 'change' }
+        ],
+        null: [
+          { required: true, message: '请选择活动区域', trigger: 'change' }
+        ],
+        Cname: [
           { required: true, message: '请选择活动区域', trigger: 'blur' }
         ]
-      }
+      },
+      tableData: [{
+        date: '2016-05-02',
+        name: '王小虎',
+        address: '上海'
+      }, {
+        date: '2016-05-04',
+        name: '王小虎',
+        address: '上海'
+      }, {
+        date: '2016-05-01',
+        name: '王小虎',
+        address: '上海市'
+      }, {
+        date: '2016-05-03',
+        name: '王小虎',
+        address: '上海市'
+      }]
     }
   },
   methods: {
@@ -171,7 +226,7 @@ export default {
     padding:8px 20px;
     .el-form{
         .el-form-item{
-            height:24px;
+            height:22px;
         }
     }
 }
