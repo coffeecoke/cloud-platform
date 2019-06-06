@@ -16,41 +16,41 @@
                                 <el-form-item label="字段名称:" prop="name">
                                     <el-input v-model="ruleForm.name"></el-input>
                                 </el-form-item>
-                                <el-form-item label="类型:" prop="names">
-                                    <el-input v-model="ruleForm.names"></el-input>
+                                <el-form-item label="类型:" prop="type">
+                                    <el-input v-model="ruleForm.type"></el-input>
                                 </el-form-item>
-                                <el-form-item label="长度:" prop="names">
-                                    <el-input v-model="ruleForm.names"></el-input>
+                                <el-form-item label="长度:" prop="length">
+                                    <el-input v-model="ruleForm.length"></el-input>
                                 </el-form-item>
-                                <el-form-item label="主键:" prop="names">
-                                    <el-input v-model="ruleForm.names"></el-input>
+                                <el-form-item label="主键:" prop="majorKey">
+                                    <el-input v-model="ruleForm.majorKey"></el-input>
                                 </el-form-item>
-                                <el-form-item label="是否可空:" prop="names">
-                                    <el-input v-model="ruleForm.names"></el-input>
+                                <el-form-item label="是否可空:" prop="null">
+                                    <el-input v-model="ruleForm.null"></el-input>
                                 </el-form-item>
-                                <el-form-item label="中文名称:" prop="names">
-                                    <el-input v-model="ruleForm.names"></el-input>
+                                <el-form-item label="中文名称:" prop="Cname">
+                                    <el-input v-model="ruleForm.Cname"></el-input>
                                 </el-form-item>
-                                <el-form-item label="字段说明:" prop="names">
-                                    <el-input v-model="ruleForm.names"></el-input>
+                                <el-form-item label="字段说明:" prop="explain">
+                                    <el-input v-model="ruleForm.explain"></el-input>
                                 </el-form-item>
-                                <el-form-item label="是否有码值:" prop="names">
-                                    <el-input v-model="ruleForm.names"></el-input>
+                                <el-form-item label="是否有码值:" prop="code">
+                                    <el-input v-model="ruleForm.code"></el-input>
                                 </el-form-item>
-                                <el-form-item label="使用模块:" prop="names">
-                                    <el-input v-model="ruleForm.names"></el-input>
+                                <el-form-item label="使用模块:" prop="templ">
+                                    <el-input v-model="ruleForm.templ"></el-input>
                                 </el-form-item>
-                                <el-form-item label="使用位置:" prop="names">
-                                    <el-input v-model="ruleForm.names"></el-input>
+                                <el-form-item label="使用位置:" prop="position">
+                                    <el-input v-model="ruleForm.position"></el-input>
                                 </el-form-item>
-                                <el-form-item label="访谈纪要:" prop="names">
-                                    <el-input v-model="ruleForm.names"></el-input>
+                                <el-form-item label="访谈纪要:" prop="summary">
+                                    <el-input v-model="ruleForm.summary"></el-input>
                                 </el-form-item>
-                                <el-form-item label="业务逻辑:" prop="names">
-                                    <el-input v-model="ruleForm.names"></el-input>
+                                <el-form-item label="业务逻辑:" prop="logic">
+                                    <el-input v-model="ruleForm.logic"></el-input>
                                 </el-form-item>
-                                <el-form-item label="备注:" prop="names">
-                                    <el-input v-model="ruleForm.names"></el-input>
+                                <el-form-item label="备注:" prop="remarks">
+                                    <el-input v-model="ruleForm.remarks"></el-input>
                                 </el-form-item>
 
                             </el-form>
@@ -63,18 +63,46 @@
 </template>
 <script>
 export default {
-  props: ['isShowAllField', 'ruleForm', 'rules'],
+  props: ['isShowAllField'],
   data () {
     return {
-
+      ruleForm: {
+        name: '',
+        type: '',
+        length: '',
+        majorKey: '',
+        null: '',
+        Cname: '',
+        explain: '',
+        code: '',
+        templ: '',
+        position: '',
+        summary: '',
+        logic: '',
+        remarks: ''
+      },
+      rules: {
+        type: [
+          { required: true, message: '请选择活动区域', trigger: 'blur' }
+        ],
+        majorKey: [
+          { required: true, message: '请选择活动区域', trigger: 'blur' }
+        ]
+      }
     }
   },
   methods: {
     AddBoxHide (index, tag) {
       this.$emit('AddBoxHide', index, tag)
     },
-    submitForm (index, tag) {
-      this.$emit('submitForm', index, tag)
+    submitForm (formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          alert('submit!')
+        } else {
+          return false
+        }
+      })
     }
   }
 }

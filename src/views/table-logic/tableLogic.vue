@@ -139,26 +139,26 @@
     </el-table>
     <template>
       <el-dialog title="新增逻辑" :visible.sync="dialogFormVisible" class="contral-form" width="30%">
-        <el-form :model="form" :rules="rules" ref="form"  :label-width="formLabelWidth">
+        <el-form :model="form" :label-width="formLabelWidth">
           <el-form-item label="逻辑名称:">
             <el-input v-model="form.name" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="逻辑类型:" :label-width="formLabelWidth">
-            <el-select v-model="form.region" placeholder="请选择逻辑类型">
+            <el-select v-model="form.region" placeholder="请选择活动区域">
               <el-option v-for="item in selectState" :key="item.dictCode" :label="item.dictName" :value="item.dictCode"></el-option>
             </el-select>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click.native="submit" :loading="logining">确 定</el-button>
+          <el-button type="primary" @click.native="submit">确 定</el-button>
         </div>
       </el-dialog>
     </template>
     <!-- 点击中文名称显示右侧弹出框 -->
     <name-box :items = "items" :isShowAllPages="isShowAllPages" @boxHide = "boxHandleHide"></name-box>
     <!-- 点击新增字段显示右侧弹出框 -->
-    <add-field :ruleForm='ruleForm' :rules="rules" :isShowAllField="isShowAllField" @submitForm='submitFormAll(formName)' @AddBoxHide = "FieldHandleHide"></add-field>
+    <add-field :isShowAllField="isShowAllField" @AddBoxHide = "FieldHandleHide"></add-field>
   </div>
 </template>
 <script>
@@ -174,40 +174,19 @@ export default {
   },
   data () {
     return {
-      logining: false,
       // 新增处理逻辑表单
       form: {
         name: '',
         region: ''
       },
-      rules: {
-        name: [
-          { required: true, message: '请输入逻辑名称', trigger: 'blur' }
-        ],
-        region: [
-          { required: true, message: '请选择逻辑类型', trigger: 'blur' }
-        ]
-      },
       selectState: [{
         dictCode: '1',
-        dictName: '访谈逻辑'
+        dictName: '未提交'
       },
       {
         dictCode: '2',
-        dictName: '处理逻辑'
+        dictName: '已提交'
       }],
-      ruleForm: {
-        name: '',
-        names: ''
-      },
-      rules: {
-        name: [
-          { required: true, message: '请输入活动名称', trigger: 'blur' }
-        ],
-        names: [
-          { required: true, message: '请选择活动区域', trigger: 'blur' }
-        ]
-      },
       dialogFormVisible: false,
       formLabelWidth: '120px',
       // 表格高度
@@ -595,19 +574,10 @@ export default {
     allHandleClose (index, tag) {
       this.dynamicTags.splice(index, 1)
     },
-    // 新增表单逻辑提交
     submit () {
-      this.$refs.form.validate((valid) => {
-        this.logining = true
-        if (valid) {
-          this.logining = false
-          this.$api.tableLogic.newLogic(this.form).then(res => {
-            this.form.name = ''
-            this.dialogFormVisible = false
-            this.dynamicTags.unshift({name: this.form.name, type: 'warning'})
-          })
-        }
-      })
+      this.form.name = ''
+      this.dialogFormVisible = false
+      this.dynamicTags.unshift({name: this.form.name, type: 'warning'})
     },
     // 编辑状态按钮
     editStatus (row) {
@@ -628,15 +598,6 @@ export default {
     },
     FieldHandleHide () {
       this.isShowAllField = false
-    },
-    submitFormAll (formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          alert('submit!')
-        } else {
-          return false
-        }
-      })
     }
   },
   computed: {
