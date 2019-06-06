@@ -176,6 +176,7 @@ export default {
   data () {
     return {
       // 新增处理逻辑表单
+      logining: false,
       form: {
         name: null,
         region: '1'
@@ -200,6 +201,11 @@ export default {
         dictCode: '2',
         dictName: '已提交'
       }],
+      ruleForm: {
+        name: '',
+        names: ''
+      },
+
       dialogFormVisible: false,
       formLabelWidth: '120px',
       // 表格高度
@@ -589,8 +595,8 @@ export default {
     // 新增表单逻辑提交
     handleSubmit () {
       this.$refs.form.validate((valid) => {
-        this.logining = true
         if (valid) {
+          this.logining = true
           this.$api.tableLogic.newLogic(this.form).then(res => {
             this.dialogFormVisible = false
             this.dynamicTags.forEach((item, index) => {
