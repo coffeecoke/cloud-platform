@@ -62,6 +62,9 @@ export default {
                 color:#3080ee;
                 font-weight:bolder;
             }
+            &:hover{
+                background: #ddd;
+            }
         }
     }
     .mask-right-content{
