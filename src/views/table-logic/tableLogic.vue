@@ -139,7 +139,7 @@
     </el-table>
     <template>
       <el-dialog title="新增逻辑" :visible.sync="dialogFormVisible" class="contral-form" width="30%">
-        <el-form :model="form" :rules="rules" ref="form" :label-width="formLabelWidth">
+        <el-form :model="form" ref="form" :rules="rules" :label-width="formLabelWidth">
           <el-form-item label="逻辑名称:" prop="name">
             <el-input v-model="form.name" autocomplete="off"></el-input>
           </el-form-item>
@@ -159,7 +159,7 @@
     <!-- 点击中文名称显示右侧弹出框 -->
     <name-box :items = "items" :isShowAllPages="isShowAllPages" @boxHide = "boxHandleHide"></name-box>
     <!-- 点击新增字段显示右侧弹出框 -->
-    <add-field :ruleForm='ruleForm' :rules="rules" :isShowAllField="isShowAllField" @submitForm='submitFormAll' @AddBoxHide = "FieldHandleHide"></add-field>
+    <add-field :isShowAllField="isShowAllField" @AddBoxHide = "FieldHandleHide"></add-field>
   </div>
 </template>
 <script>
@@ -175,7 +175,6 @@ export default {
   },
   data () {
     return {
-      logining: false,
       // 新增处理逻辑表单
       form: {
         name: null,
@@ -195,11 +194,11 @@ export default {
       },
       selectState: [{
         dictCode: '1',
-        dictName: '访谈逻辑'
+        dictName: '未提交'
       },
       {
         dictCode: '2',
-        dictName: '处理逻辑'
+        dictName: '已提交'
       }],
       ruleForm: {
         name: '',
@@ -629,15 +628,6 @@ export default {
     },
     FieldHandleHide () {
       this.isShowAllField = false
-    },
-    submitFormAll (formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          alert('submit!')
-        } else {
-          return false
-        }
-      })
     }
   },
   computed: {
