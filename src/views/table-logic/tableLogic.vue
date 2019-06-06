@@ -159,7 +159,7 @@
     <!-- 点击中文名称显示右侧弹出框 -->
     <name-box :items = "items" :isShowAllPages="isShowAllPages" @boxHide = "boxHandleHide"></name-box>
     <!-- 点击新增字段显示右侧弹出框 -->
-    <add-field :ruleForm='ruleForm' :rules="rules" :isShowAllField="isShowAllField" @submitForm='submitFormAll(formName)' @AddBoxHide = "FieldHandleHide"></add-field>
+    <add-field :ruleForm='ruleForm' :rules="rules" :isShowAllField="isShowAllField" @submitForm='submitFormAll' @AddBoxHide = "FieldHandleHide"></add-field>
   </div>
 </template>
 <script>
