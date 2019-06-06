@@ -171,9 +171,9 @@ export default {
   data () {
     return {
       // 新增处理逻辑表单
-      NewLogicForm: {
+      form: {
         name: '',
-        type: '1'
+        region: '1'
       },
       selectState: [{
         dictCode: '1',

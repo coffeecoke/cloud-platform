@@ -2,8 +2,8 @@
     <div class="name-box" v-show="isShowAllPages">
         <div class="mask">
             <div class="mask-right">
-                <div class="mask-right-icon">
-                    <i class="fa el-icon-arrow-right" @click="boxHide"></i>
+                <div class="mask-right-icon" @click="boxHide">
+                    <i class="fa el-icon-arrow-right"></i>
                 </div>
                 <div class="mask-right-content">
                     <div class="title-box">
