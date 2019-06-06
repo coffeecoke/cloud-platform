@@ -200,14 +200,6 @@ export default {
         dictCode: '2',
         dictName: '已提交'
       }],
-<<<<<<< HEAD
-=======
-      ruleForm: {
-        name: '',
-        names: ''
-      },
-
->>>>>>> 4c133379bac9933abc2a7988787454416c16ae85
       dialogFormVisible: false,
       formLabelWidth: '120px',
       // 表格高度
@@ -594,12 +586,6 @@ export default {
     allHandleClose (index, tag) {
       this.dynamicTags.splice(index, 1)
     },
-<<<<<<< HEAD
-    submit () {
-      this.form.name = ''
-      this.dialogFormVisible = false
-      this.dynamicTags.unshift({name: this.form.name, type: 'warning'})
-=======
     // 新增表单逻辑提交
     handleSubmit () {
       this.$refs.form.validate((valid) => {
@@ -617,7 +603,6 @@ export default {
           })
         }
       })
->>>>>>> 4c133379bac9933abc2a7988787454416c16ae85
     },
     // 编辑状态按钮
     editStatus (row) {
