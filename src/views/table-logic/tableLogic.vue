@@ -155,6 +155,7 @@
         </div>
       </el-dialog>
     </template>
+    <!-- 点击中文名称显示右侧弹出框 -->
     <name-box :items = "items" :isShowAllPages="isShowAllPages" @boxHide = "boxHandleHide"></name-box>
   </div>
 </template>
