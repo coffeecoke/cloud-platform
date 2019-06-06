@@ -139,6 +139,7 @@
     </el-table>
     <template>
       <el-dialog title="新增逻辑" :visible.sync="dialogFormVisible" class="contral-form" width="30%">
+<<<<<<< HEAD
         <el-form :model="form" :label-width="formLabelWidth">
           <el-form-item label="逻辑名称:">
             <el-input v-model="form.name" autocomplete="off"></el-input>
@@ -146,12 +147,26 @@
           <el-form-item label="逻辑类型:" :label-width="formLabelWidth">
             <el-select v-model="form.region" placeholder="请选择活动区域">
               <el-option v-for="item in selectState" :key="item.dictCode" :label="item.dictName" :value="item.dictCode"></el-option>
+=======
+        <el-form :model="form" :rules="rules" ref="form" :label-width="formLabelWidth">
+          <el-form-item label="逻辑名称:" prop="name">
+            <el-input v-model="form.name" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="逻辑类型:" prop="region" :label-width="formLabelWidth">
+            <el-select v-model="form.region" placeholder="请选择逻辑类型">
+              <el-option v-for="item in selectState" :key="item.dictCode" :label="item.dictName" :value="item.dictCode">
+              </el-option>
+>>>>>>> 4c133379bac9933abc2a7988787454416c16ae85
             </el-select>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
+<<<<<<< HEAD
           <el-button type="primary" @click.native="submit">确 定</el-button>
+=======
+          <el-button type="primary" @click.native.prevent="handleSubmit" :loading="logining">确 定</el-button>
+>>>>>>> 4c133379bac9933abc2a7988787454416c16ae85
         </div>
       </el-dialog>
     </template>
@@ -176,9 +191,24 @@ export default {
     return {
       // 新增处理逻辑表单
       form: {
-        name: '',
-        region: ''
+        name: null,
+        region: '1'
       },
+<<<<<<< HEAD
+=======
+      rules: {
+        name: [{
+          required: true,
+          message: '请输入逻辑名称',
+          trigger: 'blur'
+        }],
+        region: [{
+          required: true,
+          message: '请选择逻辑类型',
+          trigger: 'blur'
+        }]
+      },
+>>>>>>> 4c133379bac9933abc2a7988787454416c16ae85
       selectState: [{
         dictCode: '1',
         dictName: '未提交'
@@ -187,6 +217,14 @@ export default {
         dictCode: '2',
         dictName: '已提交'
       }],
+<<<<<<< HEAD
+=======
+      ruleForm: {
+        name: '',
+        names: ''
+      },
+
+>>>>>>> 4c133379bac9933abc2a7988787454416c16ae85
       dialogFormVisible: false,
       formLabelWidth: '120px',
       // 表格高度
@@ -409,19 +447,18 @@ export default {
         type: 'primary'
       }
       ],
-      items: [
-        {
-          title: '字段说明:',
-          text: '客户使用的中文简称'
-        },
-        {
-          title: '涉及模块:',
-          text: 'BOP'
-        },
-        {
-          title: '使用单位:',
-          text: 'BOP'
-        }
+      items: [{
+        title: '字段说明:',
+        text: '客户使用的中文简称'
+      },
+      {
+        title: '涉及模块:',
+        text: 'BOP'
+      },
+      {
+        title: '使用单位:',
+        text: 'BOP'
+      }
       ]
 
     }
@@ -574,10 +611,30 @@ export default {
     allHandleClose (index, tag) {
       this.dynamicTags.splice(index, 1)
     },
+<<<<<<< HEAD
     submit () {
       this.form.name = ''
       this.dialogFormVisible = false
       this.dynamicTags.unshift({name: this.form.name, type: 'warning'})
+=======
+    // 新增表单逻辑提交
+    handleSubmit () {
+      this.$refs.form.validate((valid) => {
+        this.logining = true
+        if (valid) {
+          this.$api.tableLogic.newLogic(this.form).then(res => {
+            this.dialogFormVisible = false
+            this.dynamicTags.forEach((item, index) => {
+              item.type = 'primary'
+            })
+            this.dynamicTags.unshift({
+              name: this.form.name,
+              type: 'warning'
+            })
+          })
+        }
+      })
+>>>>>>> 4c133379bac9933abc2a7988787454416c16ae85
     },
     // 编辑状态按钮
     editStatus (row) {
@@ -770,13 +827,15 @@ export default {
     margin-left: 40px;
     cursor: pointer;
   }
+
   .name-box-wrap {
-    width:100%;
-    height:100%;
+    width: 100%;
+    height: 100%;
     background-color: #fff;
     position: absolute;
     right: 0;
     top: 0;
     bottom: 0;
   }
+
 </style>
