@@ -27,7 +27,7 @@
       </el-table-column>
       <el-table-column fixed prop="type" :label="tableColumn[1].name" v-if="tableColumn[1].show" width="120">
         <template slot-scope="scope">
-          <span>{{ scope.row.type }}</span>
+          <span @click="DesignHandleShow">{{ scope.row.type }}</span>
         </template>
       </el-table-column>
       <el-table-column fixed prop="text" :label="tableColumn[2].name" v-if="tableColumn[2].show" width="120">
@@ -160,18 +160,21 @@
     <name-box :items = "items" :isShowAllPages="isShowAllPages" @boxHide = "boxHandleHide"></name-box>
     <!-- 点击新增字段显示右侧弹出框 -->
     <add-field :isShowAllField="isShowAllField" @AddBoxHide = "FieldHandleHide"></add-field>
+    <table-logic-design :isShowAllDesign="isShowAllDesign"></table-logic-design>
   </div>
 </template>
 <script>
 import FormDesign from './components/form-design'
 import NameBox from './components/name-box'
 import AddField from './components/add-field'
+import TableLogicDesign from './components/table-logic-design'
 import $ from 'jquery'
 export default {
   components: {
     FormDesign,
     NameBox,
-    AddField
+    AddField,
+    TableLogicDesign
   },
   data () {
     return {
@@ -220,6 +223,7 @@ export default {
       isShowAllTags: false,
       isShowAllPages: false,
       isShowAllField: false,
+      isShowAllDesign: false,
       // table 列
       tableColumn: [{
         name: '新增字段',
@@ -629,6 +633,9 @@ export default {
     },
     FieldHandleHide () {
       this.isShowAllField = false
+    },
+    DesignHandleShow () {
+      this.isShowAllDesign = true
     }
   },
   computed: {
