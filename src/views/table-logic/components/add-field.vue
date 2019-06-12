@@ -54,7 +54,7 @@
                   <el-input type="textarea" v-model="ruleForm.position"></el-input>
                 </el-form-item>
                 <el-form-item label="访谈纪要:" prop="summary">
-                  <el-input v-model="ruleForm.summary"></el-input>
+                  <el-input v-model="ruleForm.summary" @focus="handleFocus"></el-input>
                 </el-form-item>
                 <el-form-item label="业务逻辑:" prop="logic">
                   <el-input v-model="ruleForm.logic"></el-input>
@@ -79,11 +79,25 @@
         </div>
       </div>
     </div>
+    <el-dialog title="提示" :visible.sync="dialogVisible" width="800px">
+      <div class="editor-container">
+        <UE :defaultMsg=defaultMsg :config=config :id=ue1 ref="ue"></UE>
+        <!-- <UE :defaultMsg=defaultMsg :config=config :id=ue2 ref="ue2"></UE> -->
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
+import UE from '@/components/ue/ue'
 export default {
   props: ['isShowAllField'],
+  components: {
+    UE
+  },
   data () {
     return {
       ruleForm: {
@@ -139,7 +153,14 @@ export default {
         date: '2016-05-03',
         name: '王小虎',
         address: '上海市'
-      }]
+      }],
+      defaultMsg: '<span style="orphans: 2; widows: 2; font-size: 22px; font-family: KaiTi_GB2312; background-color: rgb(229, 51, 51);"><strong>夏钧姗：成功的投资需具备哪些心态和掌握哪些重要止损位</strong></span>',
+      config: {
+        initialFrameWidth: null,
+        initialFrameHeight: 350
+      },
+      ue1: 'ue1', // 不同编辑器必须不同的id
+      dialogVisible: false
     }
   },
   methods: {
@@ -154,6 +175,29 @@ export default {
           return false
         }
       })
+    },
+
+    // 富文本编辑器
+    getUEContent () {
+      let content = this.$refs.ue.getUEContent() // 调用子组件方法
+      this.$notify({
+        title: '获取成功，可在控制台查看！',
+        message: content,
+        type: 'success'
+      })
+      console.log(content)
+    },
+    getUEContentTxt () {
+      let content = this.$refs.ue.getUEContentTxt() // 调用子组件方法
+      this.$notify({
+        title: '获取成功，可在控制台查看！',
+        message: content,
+        type: 'success'
+      })
+      console.log(content)
+    },
+    handleFocus () {
+      this.dialogVisible = true
     }
   }
 }

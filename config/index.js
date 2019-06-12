@@ -6,10 +6,9 @@ const path = require('path')
 
 module.exports = {
   dev: {
-
     // Paths
     assetsSubDirectory: 'static',
-    assetsPublicPath: '/emp',
+    assetsPublicPath: '/',
     proxyTable: {
       '/api': {
         target: 'http://cloud.chinaresoft.com:9005/',
