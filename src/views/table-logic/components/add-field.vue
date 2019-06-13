@@ -1,79 +1,84 @@
 <template>
-  <div class="name-box" v-show="isShowAllField">
-    <div class="mask">
-      <div class="mask-right">
-        <div class="mask-right-icon" @click="AddBoxHide">
-          <i class="fa el-icon-arrow-right"></i>
-        </div>
-        <div class="mask-right-content">
-          <div class="title-box">
-            <h4><i class="fa fa-file-text"></i><span>字段信息</span></h4>
-            <el-button class="button" @click="submitForm('ruleForm')"><i class="fa fa-save"></i><span>保存</span>
-            </el-button>
+  <div>
+    <div class="name-box" v-show="isShowAllField">
+      <div class="mask">
+        <div class="mask-right">
+          <div class="mask-right-icon" @click="AddBoxHide">
+            <i class="fa el-icon-arrow-right"></i>
           </div>
-          <div class="content-box">
-            <div class="form-box">
-              <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-                <el-form-item label="字段名称:" prop="name">
-                  <el-input v-model="ruleForm.name"></el-input>
-                </el-form-item>
-                <el-form-item label="类型:" prop="type">
-                  <el-input v-model="ruleForm.type"></el-input>
-                </el-form-item>
-                <el-form-item label="长度:" prop="length">
-                  <el-input v-model="ruleForm.length"></el-input>
-                </el-form-item>
-                <el-form-item label="主键:" prop="majorKey">
-                  <el-select v-model="ruleForm.majorKey" placeholder="请选择活动区域">
-                    <el-option label="区域一" value="shanghai"></el-option>
-                    <el-option label="区域二" value="beijing"></el-option>
-                  </el-select>
-                </el-form-item>
-                <el-form-item label="是否可空:" prop="null">
-                  <el-select v-model="ruleForm.null" placeholder="请选择活动区域">
-                    <el-option label="区域一" value="shanghai"></el-option>
-                    <el-option label="区域二" value="beijing"></el-option>
-                  </el-select>
-                </el-form-item>
-                <el-form-item label="中文名称:" prop="Cname">
-                  <el-input v-model="ruleForm.Cname"></el-input>
-                </el-form-item>
-                <el-form-item label="字段说明:" prop="explain">
-                  <el-input type="textarea" v-model="ruleForm.explain"></el-input>
-                </el-form-item>
-                <el-form-item label="是否有码值:" prop="code">
-                  <el-select v-model="ruleForm.code" placeholder="请选择活动区域">
-                    <el-option label="区域一" value="shanghai"></el-option>
-                    <el-option label="区域二" value="beijing"></el-option>
-                  </el-select>
-                </el-form-item>
-                <el-form-item label="使用模块:" prop="templ">
-                  <el-input type="textarea" v-model="ruleForm.templ"></el-input>
-                </el-form-item>
-                <el-form-item label="使用位置:" prop="position">
-                  <el-input type="textarea" v-model="ruleForm.position"></el-input>
-                </el-form-item>
-                <el-form-item label="访谈纪要:" prop="summary">
-                  <el-input v-model="ruleForm.summary" @focus="handleFocus('summary','summaryRichText','访谈纪要')"></el-input>
-                </el-form-item>
-                <el-form-item label="业务逻辑:" prop="logic">
-                  <el-input v-model="ruleForm.logic" @focus="handleFocus('logic','summaryRichText','业务逻辑')"></el-input>
-                </el-form-item>
-                <el-form-item label="备注:" prop="remarks">
-                  <el-input v-model="ruleForm.remarks" @focus="handleFocus('remarks','summaryRichText','备注')"></el-input>
-                </el-form-item>
-
-              </el-form>
+          <div class="mask-right-content">
+            <div class="title-box">
+              <h4><i class="fa fa-file-text"></i><span>字段信息</span></h4>
+              <el-button class="button" @click="submitForm('ruleForm')"><i class="fa fa-save"></i><span>保存</span>
+              </el-button>
             </div>
-            <div class="table-box">
-              <el-table :data="tableData" style="width: 100%">
-                <el-table-column prop="date" label="系统" sortable width="180">
-                </el-table-column>
-                <el-table-column prop="name" label="表" sortable width="180">
-                </el-table-column>
-                <el-table-column prop="address" sortable label="字段">
-                </el-table-column>
-              </el-table>
+            <div class="content-box">
+              <div class="form-box">
+                <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+                  <el-form-item label="字段名称:" prop="name">
+                    <el-input v-model="ruleForm.name"></el-input>
+                  </el-form-item>
+                  <el-form-item label="类型:" prop="type">
+                    <el-input v-model="ruleForm.type"></el-input>
+                  </el-form-item>
+                  <el-form-item label="长度:" prop="length">
+                    <el-input v-model="ruleForm.length"></el-input>
+                  </el-form-item>
+                  <el-form-item label="主键:" prop="majorKey">
+                    <el-select v-model="ruleForm.majorKey" placeholder="请选择活动区域">
+                      <el-option label="区域一" value="shanghai"></el-option>
+                      <el-option label="区域二" value="beijing"></el-option>
+                    </el-select>
+                  </el-form-item>
+                  <el-form-item label="是否可空:" prop="null">
+                    <el-select v-model="ruleForm.null" placeholder="请选择活动区域">
+                      <el-option label="区域一" value="shanghai"></el-option>
+                      <el-option label="区域二" value="beijing"></el-option>
+                    </el-select>
+                  </el-form-item>
+                  <el-form-item label="中文名称:" prop="Cname">
+                    <el-input v-model="ruleForm.Cname"></el-input>
+                  </el-form-item>
+                  <el-form-item label="字段说明:" prop="explain">
+                    <el-input type="textarea" v-model="ruleForm.explain"></el-input>
+                  </el-form-item>
+                  <el-form-item label="是否有码值:" prop="code">
+                    <el-select v-model="ruleForm.code" placeholder="请选择活动区域">
+                      <el-option label="区域一" value="shanghai"></el-option>
+                      <el-option label="区域二" value="beijing"></el-option>
+                    </el-select>
+                  </el-form-item>
+                  <el-form-item label="使用模块:" prop="templ">
+                    <el-input type="textarea" v-model="ruleForm.templ"></el-input>
+                  </el-form-item>
+                  <el-form-item label="使用位置:" prop="position">
+                    <el-input type="textarea" v-model="ruleForm.position"></el-input>
+                  </el-form-item>
+                  <el-form-item label="访谈纪要:" prop="summary">
+                    <el-input v-model="ruleForm.summary" @focus="handleFocus('summary','summaryRichText','访谈纪要')">
+                    </el-input>
+                  </el-form-item>
+                  <el-form-item label="业务逻辑:" prop="logic">
+                    <el-input v-model="ruleForm.logic" @focus="handleFocus('logic','logicRichText','业务逻辑')">
+                    </el-input>
+                  </el-form-item>
+                  <el-form-item label="备注:" prop="remarks">
+                    <el-input v-model="ruleForm.remarks" @focus="handleFocus('remarks','remarksRichText','备注')">
+                    </el-input>
+                  </el-form-item>
+
+                </el-form>
+              </div>
+              <div class="table-box">
+                <el-table :data="tableData" style="width: 100%">
+                  <el-table-column prop="date" label="系统" sortable width="180">
+                  </el-table-column>
+                  <el-table-column prop="name" label="表" sortable width="180">
+                  </el-table-column>
+                  <el-table-column prop="address" sortable label="字段">
+                  </el-table-column>
+                </el-table>
+              </div>
             </div>
           </div>
         </div>
@@ -90,6 +95,7 @@
       </span>
     </el-dialog>
   </div>
+
 </template>
 <script>
 import UE from '@/components/ue/ue'

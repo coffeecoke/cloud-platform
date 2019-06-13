@@ -1167,6 +1167,9 @@ div.edui-box {
     word-break: normal;
 }
 /* 弹出对话框按钮和对话框大小 */
+#edui_fixedlayer {
+    z-index: 3000 !important;
+}
 .edui-default .edui-dialog {
     z-index: 2000;
     position: absolute;
