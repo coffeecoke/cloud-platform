@@ -635,7 +635,7 @@ export default {
       this.isShowAllField = false
     },
     DesignHandleShow () {
-      this.isShowAllDesign = true
+      this.isShowAllDesign = false
     }
   },
   computed: {
