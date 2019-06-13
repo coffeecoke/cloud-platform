@@ -54,13 +54,13 @@
                   <el-input type="textarea" v-model="ruleForm.position"></el-input>
                 </el-form-item>
                 <el-form-item label="访谈纪要:" prop="summary">
-                  <el-input v-model="ruleForm.summary" @focus="handleFocus"></el-input>
+                  <el-input v-model="ruleForm.summary" @focus="handleFocus('summary','summaryRichText','访谈纪要')"></el-input>
                 </el-form-item>
                 <el-form-item label="业务逻辑:" prop="logic">
-                  <el-input v-model="ruleForm.logic"></el-input>
+                  <el-input v-model="ruleForm.logic" @focus="handleFocus('logic','summaryRichText','业务逻辑')"></el-input>
                 </el-form-item>
                 <el-form-item label="备注:" prop="remarks">
-                  <el-input v-model="ruleForm.remarks"></el-input>
+                  <el-input v-model="ruleForm.remarks" @focus="handleFocus('remarks','summaryRichText','备注')"></el-input>
                 </el-form-item>
 
               </el-form>
@@ -79,14 +79,14 @@
         </div>
       </div>
     </div>
-    <el-dialog title="提示" :visible.sync="dialogVisible" width="800px">
+    <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" width="800px">
       <div class="editor-container">
         <UE :defaultMsg=defaultMsg :config=config :id=ue1 ref="ue"></UE>
         <!-- <UE :defaultMsg=defaultMsg :config=config :id=ue2 ref="ue2"></UE> -->
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+        <el-button type="primary" @click.native.prevent="handleSubmit">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -112,8 +112,11 @@ export default {
         templ: '',
         position: '',
         summary: '',
+        summaryRichText: '',
         logic: '',
-        remarks: ''
+        logicRichText: '',
+        remarks: '',
+        remarksRichText: ''
       },
       rules: {
         type: [{
@@ -154,13 +157,16 @@ export default {
         name: '王小虎',
         address: '上海市'
       }],
-      defaultMsg: 'fdfdfdfdf',
+      defaultMsg: '',
       config: {
         initialFrameWidth: null,
         initialFrameHeight: 350
       },
       ue1: 'ue1', // 不同编辑器必须不同的id
-      dialogVisible: false
+      dialogVisible: false,
+      dialogTitle: '',
+      target: '',
+      richTarget: ''
     }
   },
   methods: {
@@ -185,7 +191,7 @@ export default {
         message: content,
         type: 'success'
       })
-      console.log(content)
+      this.ruleForm[this.richTarget] = content
     },
     getUEContentTxt () {
       let content = this.$refs.ue.getUEContentTxt() // 调用子组件方法
@@ -194,10 +200,23 @@ export default {
         message: content,
         type: 'success'
       })
-      console.log(content)
+      // 富文本编辑后设置input内容
+      this.ruleForm[this.target] = content
     },
-    handleFocus () {
+    handleFocus (target, richTarget, dialogTitle) {
       this.dialogVisible = true
+      this.dialogTitle = dialogTitle
+      this.target = target // 需要回显的input
+      this.richTarget = richTarget
+      this.$nextTick(() => { // 为什么要用nextTick
+        this.$refs.ue.setContent(this.ruleForm[this.richTarget]) // 设置保存的富文本
+      })
+      console.log(this)
+    },
+    handleSubmit () {
+      this.dialogVisible = false
+      this.getUEContentTxt()
+      this.getUEContent()
     }
   }
 }

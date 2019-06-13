@@ -32,6 +32,10 @@ export default {
     console.log('上传这堆错误不用理会，上传接口需自行开发配置')
   },
   methods: {
+    setContent (msg) {
+      this.editor.setContent(msg)
+
+    },
     getUEContent () { // 获取内容方法
       return this.editor.getContent()
     },
