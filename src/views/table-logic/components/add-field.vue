@@ -12,7 +12,7 @@
               <el-button class="button" @click="submitForm('ruleForm')"><i class="fa fa-save"></i><span>保存</span>
               </el-button>
             </div>
-            <div class="content-box">
+            <div class="content-box" :style='{height:contentBoxHeight}'>
               <div class="form-box">
                 <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
                   <el-form-item label="字段名称:" prop="name">
@@ -99,6 +99,7 @@
 </template>
 <script>
 import UE from '@/components/ue/ue'
+import $ from 'jquery'
 export default {
   props: ['isShowAllField'],
   components: {
@@ -106,6 +107,7 @@ export default {
   },
   data () {
     return {
+      // tableHeight: '',
       ruleForm: {
         name: '',
         type: '',
@@ -156,6 +158,30 @@ export default {
         address: '上海'
       }, {
         date: '2016-05-01',
+        name: '王小虎',
+        address: '上海市'
+      }, {
+        date: '2016-05-03',
+        name: '王小虎',
+        address: '上海市'
+      }, {
+        date: '2016-05-03',
+        name: '王小虎',
+        address: '上海市'
+      }, {
+        date: '2016-05-03',
+        name: '王小虎',
+        address: '上海市'
+      }, {
+        date: '2016-05-03',
+        name: '王小虎',
+        address: '上海市'
+      }, {
+        date: '2016-05-03',
+        name: '王小虎',
+        address: '上海市'
+      }, {
+        date: '2016-05-03',
         name: '王小虎',
         address: '上海市'
       }, {
@@ -230,6 +256,25 @@ export default {
       this.getUEContentTxt()
       this.getUEContent()
     }
+  },
+  computed: {
+    // this.tableHeight = $('body').height() - $('.title-box').height() + 'px'
+    // console.log($('.title-box').height())
+    // window.onresize = () => {
+    //   this.tableHeight = $('body').height() - $('.title-box').height() + 'px'
+    //   console.log($('.title-box').height())
+    // }
+
+    contentBoxHeight () {
+      let contentBoxHeight
+      if (this.isShowAllField) {
+        this.$nextTick(() => {
+          console.log($('.title-box')[0].offsetHeight)
+          contentBoxHeight = $('body').height() - $('.title-box').height() + 'px'
+        })
+      }
+      return contentBoxHeight
+    }
   }
 }
 
@@ -278,7 +323,7 @@ export default {
       .title-box {
         overflow: hidden;
         border-bottom: solid 1px #ccc;
-
+        height:62px;
         h4 {
           float: left;
 
@@ -298,6 +343,8 @@ export default {
       }
 
       .content-box {
+        overflow-y: scroll;
+        margin-bottom:20px;
         .text-box {
           font-size: 12px;
           padding: 5px 0;
