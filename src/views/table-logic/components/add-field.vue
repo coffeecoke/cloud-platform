@@ -162,6 +162,14 @@ export default {
         date: '2016-05-03',
         name: '王小虎',
         address: '上海市'
+      }, {
+        date: '2016-05-03',
+        name: '王小虎',
+        address: '上海市'
+      }, {
+        date: '2016-05-03',
+        name: '王小虎',
+        address: '上海市'
       }],
       defaultMsg: '',
       config: {
@@ -188,7 +196,6 @@ export default {
         }
       })
     },
-
     // 富文本编辑器
     getUEContent () {
       let content = this.$refs.ue.getUEContent() // 调用子组件方法
@@ -213,11 +220,10 @@ export default {
       this.dialogVisible = true
       this.dialogTitle = dialogTitle
       this.target = target // 需要回显的input
-      this.richTarget = richTarget
+      this.richTarget = richTarget // 需要储存的富文本目标变量
       this.$nextTick(() => { // 为什么要用nextTick
         this.$refs.ue.setContent(this.ruleForm[this.richTarget]) // 设置保存的富文本
       })
-      console.log(this)
     },
     handleSubmit () {
       this.dialogVisible = false
@@ -241,7 +247,7 @@ export default {
     z-index: 1000;
 
     .mask-right {
-      width: 30%;
+      width: 500px;
       height: 100%;
       background: #fff;
       float: right;
