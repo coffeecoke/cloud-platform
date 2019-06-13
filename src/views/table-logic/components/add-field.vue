@@ -12,7 +12,7 @@
               <el-button class="button" @click="submitForm('ruleForm')"><i class="fa fa-save"></i><span>保存</span>
               </el-button>
             </div>
-            <div class="content-box">
+            <div class="content-box" >
               <div class="form-box">
                 <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
                   <el-form-item label="字段名称:" prop="name">
