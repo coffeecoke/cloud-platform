@@ -12,7 +12,7 @@
               <el-button class="button" @click="submitForm('ruleForm')"><i class="fa fa-save"></i><span>保存</span>
               </el-button>
             </div>
-            <div class="content-box" :style='{height:contentBoxHeight}'>
+            <div class="content-box" :style='{height:tableHeight}'>
               <div class="form-box">
                 <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
                   <el-form-item label="字段名称:" prop="name">
@@ -107,7 +107,7 @@ export default {
   },
   data () {
     return {
-      // tableHeight: '',
+      tableHeight: '',
       ruleForm: {
         name: '',
         type: '',
@@ -257,23 +257,10 @@ export default {
       this.getUEContent()
     }
   },
-  computed: {
-    // this.tableHeight = $('body').height() - $('.title-box').height() + 'px'
-    // console.log($('.title-box').height())
-    // window.onresize = () => {
-    //   this.tableHeight = $('body').height() - $('.title-box').height() + 'px'
-    //   console.log($('.title-box').height())
-    // }
-
-    contentBoxHeight () {
-      let contentBoxHeight
-      if (this.isShowAllField) {
-        this.$nextTick(() => {
-          console.log($('.title-box')[0].offsetHeight)
-          contentBoxHeight = $('body').height() - $('.title-box').height() + 'px'
-        })
-      }
-      return contentBoxHeight
+  mounted () {
+    this.tableHeight = $('body').height() - 62 + 'px'
+    window.onresize = () => {
+      this.tableHeight = $('body').height() - 62 + 'px'
     }
   }
 }
