@@ -160,7 +160,7 @@
     <name-box :items = "items" :isShowAllPages="isShowAllPages" @boxHide = "boxHandleHide"></name-box>
     <!-- 点击新增字段显示右侧弹出框 -->
     <add-field :isShowAllField="isShowAllField" @AddBoxHide = "FieldHandleHide"></add-field>
-    <table-logic-design :isShowAllDesign="isShowAllDesign"></table-logic-design>
+    <table-logic-design :isShowAllDesign="isShowAllDesign" @boxHide = 'DesignHandleHide'></table-logic-design>
   </div>
 </template>
 <script>
@@ -635,6 +635,9 @@ export default {
       this.isShowAllField = false
     },
     DesignHandleShow () {
+      this.isShowAllDesign = true
+    },
+    DesignHandleHide () {
       this.isShowAllDesign = false
     }
   },

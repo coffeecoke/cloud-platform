@@ -3,7 +3,7 @@
     <div class="mask">
       <transition enter-active-class="bounceInRight" leave-active-class="bounceInLeft">
         <div class="mask-right animated" v-show="isShowAllDesign">
-          <div class="mask-right-icon">
+          <div class="mask-right-icon" @click="boxHide">
             <i class="fa el-icon-arrow-right"></i>
           </div>
           <div class="mask-right-content">
@@ -85,6 +85,10 @@ export default {
     }
   },
   methods: {
+    // 隐藏弹框
+    boxHide () {
+      this.$emit('boxHide')
+    },
     handleChange (val) {},
     focusGet () {
       this.isShow = false

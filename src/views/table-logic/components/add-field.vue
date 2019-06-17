@@ -2,7 +2,8 @@
   <div>
     <div class="name-box" v-show="isShowAllField">
       <div class="mask">
-        <div class="mask-right">
+        <transition enter-active-class="bounceInRight" leave-active-class="bounceInLeft">
+        <div class="mask-right animated" v-show="isShowAllField">
           <div class="mask-right-icon" @click="AddBoxHide">
             <i class="fa el-icon-arrow-right"></i>
           </div>
@@ -82,12 +83,12 @@
             </div>
           </div>
         </div>
+        </transition>
       </div>
     </div>
     <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" width="800px">
       <div class="editor-container">
-        <UE :defaultMsg=defaultMsg :config=config :id=ue1 ref="ue"></UE>
-        <!-- <UE :defaultMsg=defaultMsg :config=config :id=ue2 ref="ue2"></UE> -->
+        <UE :defaultMsg = defaultMsg :config=config :id=ue1 ref="ue"></UE>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
@@ -95,7 +96,6 @@
       </span>
     </el-dialog>
   </div>
-
 </template>
 <script>
 import UE from '@/components/ue/ue'
@@ -158,30 +158,6 @@ export default {
         address: '上海'
       }, {
         date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市'
-      }, {
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市'
-      }, {
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市'
-      }, {
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市'
-      }, {
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市'
-      }, {
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市'
-      }, {
-        date: '2016-05-03',
         name: '王小虎',
         address: '上海市'
       }, {
@@ -268,6 +244,7 @@ export default {
 
 </script>
 <style scoped lang="scss">
+  @import 'animate.css';
   .mask {
     width: 100%;
     height: 100%;

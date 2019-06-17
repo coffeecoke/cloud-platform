@@ -31,8 +31,8 @@ export default {
     }
   },
   methods: {
-    boxHide (index, tag) {
-      this.$emit('boxHide', index, tag)
+    boxHide () {
+      this.$emit('boxHide')
     }
   },
   mounted () {
