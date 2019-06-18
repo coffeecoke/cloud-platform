@@ -182,6 +182,7 @@ export default {
     display:flex;
     .box-left{
         width:160px;
+        flex:0 0 auto;
         height:auto;
         background:#e4edff;
     }
