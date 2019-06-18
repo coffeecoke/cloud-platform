@@ -17,6 +17,10 @@ import PersonalManagement from './personal-management'
 import TaskSystem from './task-system'
 // 取数逻辑表
 import TableLogic from '@/views/table-logic/tableLogic'
+
+// 金融ai实验室
+import AiLaboratory from '@/views/ai-laboratory'
+import KnowledgeGraph from '@/views/ai-laboratory/knowledge-graph'
 Vue.use(Router)
 // let routes = new Set([...UserRouter]) // 合并多个路由模块
 // const router = new Router({
@@ -43,6 +47,17 @@ const router = new Router({
   {
     path: '/tableLogic',
     component: TableLogic
+  },
+  {
+    path: '/index',
+    component: AiLaboratory,
+    children: [
+      {
+        path: '/worker-1',
+        name: '工作台1',
+        component: KnowledgeGraph
+      }
+    ]
   },
   {
     path: '/',
