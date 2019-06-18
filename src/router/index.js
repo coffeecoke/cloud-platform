@@ -51,6 +51,7 @@ const router = new Router({
   {
     path: '/index',
     component: AiLaboratory,
+    // redirect: '/worker-1',
     children: [
       {
         path: '/worker-1',
