@@ -206,7 +206,8 @@ export default {
 }
 .box-right{
     padding:0 10px;
-    width:100%;
+    flex:1;
+    // width:100%;
     .form-table{
         background:#fff;
         border-radius: 5px;
