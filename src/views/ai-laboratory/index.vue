@@ -1,6 +1,6 @@
 <template>
 <el-container>
-  <el-aside width="210px"  :style='{width:boxWidth}'>
+  <el-aside width="210px" :style='{width:boxWidth}'>
       <aside-menu></aside-menu>
   </el-aside>
   <el-container>
