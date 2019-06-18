@@ -82,7 +82,7 @@ export default {
   }
 }
 .switch-icon{
-  width:210px;
+  // width:210px;
   position:fixed;
   bottom:0px;
   left:0px;
