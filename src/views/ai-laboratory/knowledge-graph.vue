@@ -179,12 +179,17 @@ export default {
 .box-content{
     width:100%;
     height:100%;
-    display:flex;
+    position:relative;
+    // display:flex;
     .box-left{
         width:160px;
-        flex:0 0 auto;
+        // flex:0 0 auto;
         height:auto;
         background:#e4edff;
+        position:absolute;
+        top:0;
+        left:0;
+        bottom:0;
     }
 }
 .el-submenu{
@@ -207,7 +212,8 @@ export default {
 }
 .box-right{
     padding:0 10px;
-    flex:1;
+    // flex:1;
+    margin-left:170px;
     // width:100%;
     .form-table{
         background:#fff;
