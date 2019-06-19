@@ -65,19 +65,23 @@
                                     </el-col>
                                 </el-form-item>
                             </el-col>
-                            <el-col :span="4">
+                            <el-col :span="2">
                                 <el-form-item>
                                     <el-button type="primary" @click="onSubmit">查询</el-button>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="2">
+                                <el-form-item>
                                     <el-button type="primary">查询</el-button>
                                 </el-form-item>
                             </el-col>
                         </el-row>
                     </el-form>
-                    <el-form :model="formInline" label-width="80px">
+                    <el-form :model="form" label-width="80px">
                         <el-row type="flex" class="row-bg">
                             <el-col :span="5">
                                 <el-form-item label="审批人">
-                                    <el-input v-model="formInline.user" placeholder="审批人"></el-input>
+                                    <el-input v-model="form.user" placeholder="审批人"></el-input>
                                 </el-form-item>
                             </el-col>
                         </el-row>
@@ -126,6 +130,9 @@ export default {
         region: '',
         date1: '',
         date2: ''
+      },
+      form: {
+        user: ''
       },
       tableHeight: null,
       tableData: [{
@@ -220,6 +227,9 @@ export default {
 .el-submenu .el-menu-item.is-active{
     background: none;
 }
+.el-table td, .el-table th{
+    text-align: center;
+}
 // .el-submenu.is-active .el-submenu__title{
 //     background: #d8e2ff;
 //     border-top-right-radius: 25px;
@@ -303,5 +313,12 @@ export default {
 .block-right{
     float: right;
     margin-top:10px;
+}
+.el-table td, .el-table th{
+    text-align: center;
+}
+.el-table /deep/ .el-table__header th{
+    background:#eceff4;
+    color:#000;
 }
 </style>

@@ -10,5 +10,11 @@ export default [
     path: 'aiText',
     name: '首页',
     component: () => import('@/views/ai-laboratory/ai-text')
+  },
+  {
+    path: 'workBench',
+    name: '工作台',
+    component: () => import('@/views/ai-laboratory/workbench'),
+    meta: { title: '工作台', icon: 'workBench', noCache: true }
   }
 ]
