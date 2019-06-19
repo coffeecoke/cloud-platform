@@ -176,6 +176,31 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.el-submenu.is-opened /deep/ .el-submenu__title{
+  background:#d8e2ff;
+  border-top-right-radius: 25px;
+  border-bottom-right-radius: 25px;
+}
+.el-menu{
+    background: #e8eeff;
+}
+.el-submenu /deep/ .el-menu{
+  background: #e8eeff;
+}
+.el-submenu /deep/ .el-menu-item{
+    min-width:0;
+}
+.el-submenu .el-menu-item:hover{
+    background: none;
+}
+.el-submenu .el-menu-item.is-active{
+    background: none;
+}
+// .el-submenu.is-active .el-submenu__title{
+//     background: #d8e2ff;
+//     border-top-right-radius: 25px;
+//     border-bottom-right-radius: 25px;
+// }
 .box-content{
     width:100%;
     height:100%;
@@ -185,7 +210,7 @@ export default {
         width:160px;
         // flex:0 0 auto;
         height:auto;
-        background:#e4edff;
+        background:#e8eeff;
         position:absolute;
         top:0;
         left:0;

@@ -70,13 +70,21 @@ export default {
 </script>
 <style lang="scss" scoped>
 .el-submenu.is-opened /deep/ .el-submenu__title{
-  background:#fff;
+  background:#e8eeff;
+  border-top-left-radius: 25px;
+  border-bottom-left-radius: 25px;
 }
 .el-submenu /deep/ .el-menu{
   background: #fff;
 }
 .el-submenu .el-menu-item.is-active{
-  background: #e4edff;
+  background: #4977fc;
+  color:#fff;
+  border-top-left-radius: 25px;
+  border-bottom-left-radius: 25px;
+}
+.el-menu-item.is-active{
+  background: #e8eeff;
   border-top-left-radius: 25px;
   border-bottom-left-radius: 25px;
 }
@@ -93,7 +101,7 @@ export default {
   }
 }
 .switch-icon{
-  // width:210px;
+  // width:220px;
   position:fixed;
   bottom:0px;
   left:0px;
