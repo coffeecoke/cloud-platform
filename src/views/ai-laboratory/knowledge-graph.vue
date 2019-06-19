@@ -68,7 +68,7 @@
                 </div>
                 <div class="table-box">
                     <template>
-                        <el-table :data="tableData" style="width: 100%">
+                        <el-table :data="tableData" style="width: 100%" :height="tableHeight">
                             <el-table-column prop="name" label="发起人" width="180"></el-table-column>
                             <el-table-column prop="state" label="服务状态"></el-table-column>
                             <el-table-column prop="relation" label="接口关系"></el-table-column>
@@ -99,6 +99,7 @@
     </div>
 </template>
 <script>
+import $ from 'jquery'
 export default {
   data () {
     return {
@@ -109,6 +110,7 @@ export default {
         date1: '',
         date2: ''
       },
+      tableHeight: null,
       tableData: [{
         name: '2016-05-02',
         state: '是',
@@ -172,6 +174,11 @@ export default {
     handleCurrentChange (val) {
       console.log(`当前页: ${val}`)
     }
+  },
+  mounted () {
+    let tableHeight = $('.box-contenter').height() - $('.form-box').height() - 100
+    console.log(tableHeight)
+    this.tableHeight = tableHeight
   }
 }
 </script>
@@ -213,8 +220,10 @@ export default {
 .box-right{
     padding:0 10px;
     // flex:1;
-    margin-left:170px;
+    margin-left:160px;
     // width:100%;
+    height:100%;
+    overflow:auto;
     .form-table{
         background:#fff;
         border-radius: 5px;
