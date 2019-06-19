@@ -69,8 +69,19 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.el-menu{
+.el-submenu.is-opened /deep/ .el-submenu__title{
   background:#fff;
+}
+.el-submenu /deep/ .el-menu{
+  background: #fff;
+}
+.el-submenu .el-menu-item.is-active{
+  background: #e4edff;
+  border-top-left-radius: 25px;
+  border-bottom-left-radius: 25px;
+}
+.el-menu{
+  background: #fff;
   .logo{
     background: #000;
     height:80px;
