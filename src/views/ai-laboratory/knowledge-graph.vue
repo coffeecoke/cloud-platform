@@ -35,35 +35,52 @@
         <div class="box-right">
             <div class="form-table">
                 <div class="form-box">
-                    <el-form :inline="true" :model="formInline" class="demo-form-inline">
-                        <el-form-item label="名称名称">
-                            <el-input v-model="formInline.user" placeholder="审批人"></el-input>
-                        </el-form-item>
-                        <el-form-item label="活动区域">
-                            <el-select v-model="formInline.region" placeholder="活动区域">
-                            <el-option label="区域一" value="shanghai"></el-option>
-                            <el-option label="区域二" value="beijing"></el-option>
-                            </el-select>
-                        </el-form-item>
-                        <el-form-item label="活动时间">
-                            <el-form-item prop="date1">
-                                <el-date-picker type="date" placeholder="选择日期" v-model="formInline.date1" style="width: 100%;"></el-date-picker>
-                            </el-form-item>
-                            <el-form-item>
-                                <span>-</span>
-                            </el-form-item>
-                            <el-form-item prop="date2">
-                                <el-time-picker placeholder="选择时间" v-model="formInline.date2" style="width: 100%;"></el-time-picker>
-                            </el-form-item>
-                        </el-form-item>
-                        <el-form-item>
-                            <el-button type="primary" @click="onSubmit">查询</el-button>
-                        </el-form-item>
+                    <el-form :model="formInline" label-width="80px">
+                        <el-row type="flex" class="row-bg">
+                            <el-col :span="5">
+                                <el-form-item label="审批人">
+                                    <el-input v-model="formInline.user" placeholder="审批人"></el-input>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="5">
+                                <el-form-item label="活动区域">
+                                    <el-select v-model="formInline.region" placeholder="活动区域">
+                                    <el-option label="区域一" value="shanghai"></el-option>
+                                    <el-option label="区域二" value="beijing"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="8">
+                                <el-form-item label="活动时间">
+                                    <el-col :span="11">
+                                    <el-form-item prop="date1">
+                                        <el-date-picker type="date" placeholder="选择日期" v-model="formInline.date1" style="width: 100%;"></el-date-picker>
+                                    </el-form-item>
+                                    </el-col>
+                                    <el-col class="line" :span="2">-</el-col>
+                                    <el-col :span="11">
+                                    <el-form-item prop="date2">
+                                        <el-time-picker placeholder="选择时间" v-model="formInline.date2" style="width: 100%;"></el-time-picker>
+                                    </el-form-item>
+                                    </el-col>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="4">
+                                <el-form-item>
+                                    <el-button type="primary" @click="onSubmit">查询</el-button>
+                                    <el-button type="primary">查询</el-button>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
                     </el-form>
-                    <el-form :inline="true" :model="formInline" class="demo-form-inline">
-                        <el-form-item label="名称名称">
-                            <el-input v-model="formInline.user" placeholder="审批人"></el-input>
-                        </el-form-item>
+                    <el-form :model="formInline" label-width="80px">
+                        <el-row type="flex" class="row-bg">
+                            <el-col :span="5">
+                                <el-form-item label="审批人">
+                                    <el-input v-model="formInline.user" placeholder="审批人"></el-input>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
                     </el-form>
                 </div>
                 <div class="table-box">
@@ -183,6 +200,31 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.el-submenu.is-opened /deep/ .el-submenu__title{
+  background:#d8e2ff;
+  border-top-right-radius: 25px;
+  border-bottom-right-radius: 25px;
+}
+.el-menu{
+    background: #e8eeff;
+}
+.el-submenu /deep/ .el-menu{
+  background: #e8eeff;
+}
+.el-submenu /deep/ .el-menu-item{
+    min-width:0;
+}
+.el-submenu .el-menu-item:hover{
+    background: none;
+}
+.el-submenu .el-menu-item.is-active{
+    background: none;
+}
+// .el-submenu.is-active .el-submenu__title{
+//     background: #d8e2ff;
+//     border-top-right-radius: 25px;
+//     border-bottom-right-radius: 25px;
+// }
 .box-content{
     width:100%;
     height:100%;
@@ -192,7 +234,7 @@ export default {
         width:160px;
         // flex:0 0 auto;
         height:auto;
-        background:#e4edff;
+        background:#e8eeff;
         position:absolute;
         top:0;
         left:0;
@@ -230,7 +272,8 @@ export default {
         padding:10px;
         .form-box{
             width:100%;
-            height:110px;
+            height:auto;
+            padding:10px 0;
             background: #eceff4;
             margin-bottom:20px;
         }
