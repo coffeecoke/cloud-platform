@@ -57,6 +57,8 @@ export default {
 }
 .header-box {
   width:100%;
+  height:80px;
+  position: relative;
   .header{
       height:40px;
       display: flex;

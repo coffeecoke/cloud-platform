@@ -206,9 +206,7 @@ export default {
 .tags-view-container {
   height: 34px;
   width: 100%;
-  background: #fff;
-  border-bottom: 1px solid #d8dce5;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .12), 0 0 3px 0 rgba(0, 0, 0, .04);
+  // padding-bottom:10px;
   .tags-view-wrapper {
     .tags-view-item {
       display: inline-block;
@@ -216,13 +214,13 @@ export default {
       cursor: pointer;
       height: 26px;
       line-height: 26px;
-      border: 1px solid #d8dce5;
-      color: #495060;
-      background: #fff;
+      color: #fff;
+      background: #88a6fd;
       padding: 0 8px;
       font-size: 12px;
       margin-left: 5px;
       margin-top: 4px;
+      border-radius:4px;
       &:first-of-type {
         margin-left: 15px;
       }
@@ -230,9 +228,9 @@ export default {
         margin-right: 15px;
       }
       &.active {
-        background-color: #42b983;
+        background-color: #2f64ff;
         color: #fff;
-        border-color: #42b983;
+        border-color: #2f64ff;
         &::before {
           content: '';
           background: #fff;
@@ -282,10 +280,11 @@ export default {
       text-align: center;
       transition: all .3s cubic-bezier(.645, .045, .355, 1);
       transform-origin: 100% 50%;
+      font-size:18px;
       &:before {
         transform: scale(.6);
         display: inline-block;
-        vertical-align: -3px;
+        vertical-align: -4px;
       }
       &:hover {
         background-color: #b4bccc;
