@@ -227,14 +227,9 @@ export default {
 .el-submenu .el-menu-item.is-active{
     background: none;
 }
-.el-table td, .el-table th{
+.el-table /deep/ tr th,.el-table /deep/ tr td{
     text-align: center;
 }
-// .el-submenu.is-active .el-submenu__title{
-//     background: #d8e2ff;
-//     border-top-right-radius: 25px;
-//     border-bottom-right-radius: 25px;
-// }
 .box-content{
     width:100%;
     height:100%;

@@ -49,15 +49,15 @@
                 <div class="table-box">
                     <template>
                         <el-table :data="tableData" style="width: 100%" :height="tableHeight">
-                            <el-table-column prop="name" label="模型一" width="280"></el-table-column>
-                            <el-table-column prop="state" label="模型二"></el-table-column>
-                            <el-table-column prop="relation" label="模型三"></el-table-column>
-                            <el-table-column prop="parameter" label="审核时间"></el-table-column>
+                            <el-table-column prop="name" label="服务名称" width="280"></el-table-column>
+                            <el-table-column prop="state" label="发起人"></el-table-column>
+                            <el-table-column prop="relation" label="服务状态"></el-table-column>
+                            <el-table-column prop="parameter" label="接口关系"></el-table-column>
+                            <el-table-column prop="description" label="参数说明"></el-table-column>
                             <el-table-column prop="operation" label="操作">
                                 <template slot-scope="scope">
-                                     <i class="icon el-icon-circle-plus-outline"></i>
-                                     <i class="icon el-icon-edit"></i>
-                                     <i class="icon el-icon-delete"></i>
+                                    <i class="icon operation"></i>
+                                    <i class="icon test"></i>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -96,52 +96,62 @@ export default {
         name: '内容内容',
         state: '内容内容',
         relation: '内容内容',
-        parameter: '2019.6.19 '
+        parameter: '2019.6.19 ',
+        description: '内容内容'
       }, {
         name: '内容内容',
         state: '内容内容',
         relation: '内容内容',
-        parameter: '2019.6.19 '
+        parameter: '2019.6.19 ',
+        description: '内容内容'
       }, {
         name: '内容内容',
         state: '内容内容',
         relation: '内容内容',
-        parameter: '2019.6.19 '
+        parameter: '2019.6.19 ',
+        description: '内容内容'
       }, {
         name: '内容内容',
         state: '内容内容',
         relation: '内容内容',
-        parameter: '2019.6.19 '
+        parameter: '2019.6.19 ',
+        description: '内容内容'
       }, {
         name: '内容内容',
         state: '内容内容',
         relation: '内容内容',
-        parameter: '2019.6.19 '
+        parameter: '2019.6.19 ',
+        description: '内容内容'
       }, {
         name: '内容内容',
         state: '内容内容',
         relation: '内容内容',
-        parameter: '2019.6.19 '
+        parameter: '2019.6.19 ',
+        description: '内容内容'
       }, {
         name: '内容内容',
         state: '内容内容',
         relation: '内容内容',
-        parameter: '2019.6.19 '
+        parameter: '2019.6.19 ',
+        description: '内容内容'
       }, {
         name: '内容内容',
         state: '内容内容',
         relation: '内容内容',
-        parameter: '2019.6.19 '
+        parameter: '2019.6.19 ',
+        description: '内容内容'
       }, {
         name: '内容内容',
         state: '内容内容',
         relation: '内容内容',
-        parameter: '2019.6.19 '
+        parameter: '2019.6.19 ',
+        description: '内容内容'
       }, {
         name: '内容内容',
         state: '内容内容',
         relation: '内容内容',
-        parameter: '2019.6.19 '
+        parameter: '2019.6.19 ',
+        description: '内容内容'
       }]
     }
   },
@@ -175,7 +185,7 @@ export default {
     // flex:1;
     // width:100%;
     height:100%;
-    margin-top:10px;
+    // margin-top:10px;
     overflow:auto;
     .form-table{
         background:#fff;
@@ -194,7 +204,13 @@ export default {
                 width:20px;
                 height:20px;
                 display: inline-block;
-                background: url("../../assets/imgs/operation.png") no-repeat center;
+                background: url("../../assets/imgs/operation-active.png") no-repeat center;
+            }
+            .test{
+                width:20px;
+                height:20px;
+                display: inline-block;
+                background: url("../../assets/imgs/test-icon.png") no-repeat center;
             }
         }
     }
