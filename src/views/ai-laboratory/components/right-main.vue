@@ -17,7 +17,8 @@
                     </el-dropdown-menu>
                 </el-dropdown>
             </div>
-            <div class="tags"></div>
+            <!-- 标签页导航 -->
+            <tags-view/>
         </div>
         <section>
             <div class="box-contenter" :style='{height:tableHeight}'>
@@ -30,7 +31,11 @@
 </template>
 <script>
 import $ from 'jquery'
+import TagsView from './TagsView'
 export default {
+  components: {
+    TagsView
+  },
   data () {
     return {
       tableHeight: ''

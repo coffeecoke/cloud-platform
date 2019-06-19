@@ -20,7 +20,7 @@ import TableLogic from '@/views/table-logic/tableLogic'
 
 // 金融ai实验室
 import AiLaboratory from '@/views/ai-laboratory'
-import KnowledgeGraph from '@/views/ai-laboratory/knowledge-graph'
+import Ai from './ai-laboratory'
 Vue.use(Router)
 // let routes = new Set([...UserRouter]) // 合并多个路由模块
 // const router = new Router({
@@ -48,16 +48,25 @@ const router = new Router({
     path: '/tableLogic',
     component: TableLogic
   },
+
+  // 由于标签刷新的hack方法
   {
-    path: '/index',
+    path: '/redirect',
     component: AiLaboratory,
-    redirect: '/worker-1',
+    hidden: true,
     children: [
       {
-        path: '/worker-1',
-        name: '工作台1',
-        component: KnowledgeGraph
+        path: '/redirect/:path*',
+        component: () => import('@/views/redirect/index')
       }
+    ]
+  },
+  {
+    path: '/ai',
+    component: AiLaboratory,
+    redirect: '/ai/knowledgeGraph',
+    children: [
+      ...Ai
     ]
   },
   {

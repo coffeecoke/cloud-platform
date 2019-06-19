@@ -176,9 +176,9 @@ export default {
     }
   },
   mounted () {
-    let tableHeight = $('.box-contenter').height() - $('.form-box').height() - 100
-    console.log(tableHeight)
+    let tableHeight = $(window).height() - $('.header-box').height() - $('.form-box').height() - 100
     this.tableHeight = tableHeight
+    console.log(tableHeight)
   }
 }
 </script>
