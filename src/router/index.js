@@ -64,7 +64,7 @@ const router = new Router({
   {
     path: '/ai',
     component: AiLaboratory,
-    redirect: '/ai/knowledgeGraph',
+    redirect: '/ai/workBench',
     children: [
       ...Ai
     ]
