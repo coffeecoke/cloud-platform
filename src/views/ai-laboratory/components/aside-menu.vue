@@ -1,15 +1,15 @@
 <template>
-   <el-menu default-active="1-4-1" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
+   <el-menu :router="true" default-active="knowledgeGraph" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
      <div class="logo">
        <img src="../../../assets/imgs/logo-ai.png" alt="">
      </div>
-    <el-submenu index="worker-1">
+    <el-submenu index="ai">
         <template slot="title">
           <i class="el-icon-location"></i>
           <span>工作台</span>
         </template>
         <el-menu-item-group>
-          <el-menu-item index="worker-1-1">选项1</el-menu-item>
+          <el-menu-item index="knowledgeGraph">知识图谱</el-menu-item>
         </el-menu-item-group>
         <el-menu-item-group>
           <el-menu-item index="worker-1-2">选项2</el-menu-item>
