@@ -102,7 +102,7 @@ export default {
     color: #fff;
     border-top-left-radius: 25px;
     border-bottom-left-radius: 25px;
-    margin-left: 10px;
+    //margin-left: 10px;
   }
 
   .el-menu-item.is-active {
@@ -205,7 +205,7 @@ export default {
     position: fixed;
     bottom: 0px;
     left: 0px;
-    background: #fff;
+    // background: #fff;
 
     .positionnFix {
       width: 100%;
