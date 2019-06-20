@@ -16,5 +16,11 @@ export default [
     name: '工作台',
     component: () => import('@/views/ai-laboratory/workbench'),
     meta: { title: '工作台', icon: 'workBench', noCache: true }
+  },
+  {
+    path: 'serviceManagement',
+    name: '服务管理',
+    component: () => import('@/views/ai-laboratory/service-management'),
+    meta: { title: '服务管理', icon: 'serviceManagement', noCache: true }
   }
 ]

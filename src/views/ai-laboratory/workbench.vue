@@ -160,18 +160,23 @@ export default {
 
 </script>
 <style lang="scss" scoped>
-  .el-table td,
-  .el-table th {
-    text-align: center;
-  }
-
   .el-table /deep/ .el-table__header th {
     background: #eceff4;
     color: #333333;
+    text-align: center;
   }
+
+  .el-table /deep/ tr th,
+  .el-table /deep/ tr td {
+    text-align: center;
+  }
+
   .box-right {
     padding: 0 10px;
+    // flex:1;
+    // width:100%;
     height: 100%;
+    margin-top: 10px;
     overflow: auto;
 
     .form-table {
@@ -199,7 +204,6 @@ export default {
       }
     }
   }
-
   .block-right {
     float: right;
     margin-top: 10px;
