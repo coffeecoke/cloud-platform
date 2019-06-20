@@ -308,6 +308,9 @@ export default {
 .el-form-item .el-form-item__content .el-form-item .el-form-item__content{
     vertical-align:initial;
 }
+.el-form-item .line {
+    text-align: center;
+}
 .block-right{
     float: right;
     margin-top:10px;

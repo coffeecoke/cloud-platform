@@ -244,5 +244,7 @@ export default {
     float: right;
     margin-top: 10px;
   }
-
+  .el-form-item .line {
+    text-align: center;
+  }
 </style>
