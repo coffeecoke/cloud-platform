@@ -9,11 +9,7 @@
                         管理员<i class="el-icon-arrow-down el-icon--right"></i>
                     </span>
                     <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item>黄金糕</el-dropdown-item>
-                        <el-dropdown-item>狮子头</el-dropdown-item>
-                        <el-dropdown-item>螺蛳粉</el-dropdown-item>
-                        <el-dropdown-item disabled>双皮奶</el-dropdown-item>
-                        <el-dropdown-item divided>蚵仔煎</el-dropdown-item>
+                        <el-dropdown-item></el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
             </div>
@@ -64,6 +60,7 @@ export default {
       display: flex;
       justify-content: flex-end;
       align-items: center;
+      padding-right:32px;
     .item{
         color:#fff;
         font-weight:800;

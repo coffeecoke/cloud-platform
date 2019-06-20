@@ -20,7 +20,7 @@ export default {
   },
   data () {
     return {
-      boxWidth: ''
+      boxWidth: '200px'
     }
   }
 }
