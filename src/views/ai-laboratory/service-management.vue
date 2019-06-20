@@ -78,10 +78,16 @@
                 </div>
             </div>
         </div>
+        <elastic-frame></elastic-frame>
     </div>
 </template>
 <script>
+import ElasticFrame from './components/elastic-frame'
+import $ from 'jquery'
 export default {
+  components: {
+    ElasticFrame
+  },
   data () {
     return {
       currentPage: 4,
@@ -168,6 +174,11 @@ export default {
     handleCurrentChange (val) {
       console.log(`当前页: ${val}`)
     }
+  },
+  mounted () {
+    let tableHeight = $(window).height() - $('.header-box').height() - $('.form-box').height() - 100
+    this.tableHeight = tableHeight
+    console.log(tableHeight)
   }
 }
 </script>
