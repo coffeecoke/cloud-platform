@@ -35,7 +35,7 @@
       <i class="icon mxgl-icon"></i>
       <span slot="title">模型管理</span>
     </el-menu-item>
-    <el-menu-item index="6">
+    <el-menu-item index="/ai/serviceManagement">
       <i class="icon fwgl-icon"></i>
       <span slot="title">服务管理</span>
     </el-menu-item>
