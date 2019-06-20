@@ -302,6 +302,9 @@ export default {
         margin:7px 10px 0px 10px;
     }
 }
+.el-form-item--mini.el-form-item, .el-form-item--small.el-form-item {
+    margin-bottom:5px;
+}
 .el-form-item .el-form-item__content .el-form-item .el-form-item__content{
     vertical-align:initial;
 }
@@ -316,4 +319,5 @@ export default {
     background:#eceff4;
     color:#000;
 }
+
 </style>
