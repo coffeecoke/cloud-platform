@@ -67,7 +67,6 @@ export default {
       if (meta.activeMenu) {
         return meta.activeMenu
       }
-      console.log(path)
       return path
     }
   },
@@ -89,9 +88,6 @@ export default {
 <style lang="scss" scoped>
   .el-menu-vertical-demo:not(.el-menu--collapse) {
     width: 200px;
-  }
-  .el-submenu .el-menu-item {
-    min-width:auto;
   }
   .el-submenu.is-opened /deep/ .el-submenu__title {
     background: #e8eeff;
@@ -216,7 +212,6 @@ export default {
     bottom: 0px;
     left: 0px;
     // background: #fff;
-
     .positionnFix {
       width: 100%;
       height: 60px;

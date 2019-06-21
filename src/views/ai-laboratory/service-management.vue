@@ -182,7 +182,6 @@ export default {
   mounted () {
     let tableHeight = $(window).height() - $('.header-box').height() - $('.form-box').height() - 100
     this.tableHeight = tableHeight
-    console.log(tableHeight)
   }
 }
 
