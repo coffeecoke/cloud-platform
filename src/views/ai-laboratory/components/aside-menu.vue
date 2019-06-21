@@ -198,6 +198,7 @@ export default {
       display:flex;
       flex-direction: column;
       justify-content: center;
+      align-items: center;
       img {
         display: inline-block;
         // padding-top: 25px;
