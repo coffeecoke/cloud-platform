@@ -78,6 +78,7 @@
   </div>
 </template>
 <script>
+import $ from 'jquery'
 export default {
   data () {
     return {
@@ -155,6 +156,10 @@ export default {
     handleCurrentChange (val) {
       console.log(`当前页: ${val}`)
     }
+  },
+  mounted () {
+    let tableHeight = $(window).height() - $('.header-box').height() - $('.form-box').height() - 100
+    this.tableHeight = tableHeight
   }
 }
 
