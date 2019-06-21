@@ -6,7 +6,7 @@
     </div>
     <el-menu-item index="/ai/workBench">
       <i class="icon gzt-icon"></i>
-      <span>工作台</span>
+      <span slot="title">工作台</span>
     </el-menu-item>
     <el-submenu index="2">
       <template slot="title">
@@ -87,6 +87,9 @@ export default {
 
 </script>
 <style lang="scss" scoped>
+  .el-submenu .el-menu-item {
+    min-width:auto;
+  }
   .el-submenu.is-opened /deep/ .el-submenu__title {
     background: #e8eeff;
     border-top-left-radius: 25px;
@@ -192,10 +195,13 @@ export default {
       background: #000;
       height: 80px;
       text-align: center;
-
+      display:flex;
+      flex-direction: column;
+      justify-content: center;
       img {
         display: inline-block;
-        padding-top: 25px;
+        // padding-top: 25px;
+        width:90%;
       }
     }
   }
