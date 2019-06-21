@@ -176,9 +176,7 @@ export default {
     // flex:1;
     // width:100%;
     height: 100%;
-    margin-top: 10px;
     overflow: auto;
-
     .form-table {
       background: #fff;
       border-radius: 5px;
