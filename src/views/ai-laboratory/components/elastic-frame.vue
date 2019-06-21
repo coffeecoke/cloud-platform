@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="查看详情" :visible.sync="detailDialog" width="882px" class="dialog-container" @close="closeHandel">
+  <el-dialog title="查看详情" :visible.sync="showDetailDialog" width="882px" class="dialog-container" @close="closeHandel">
     <el-container>
       <el-aside width="186px">
         <el-tree :data="detailTreeData" :props="defaultProps"></el-tree>
@@ -13,6 +13,7 @@ export default {
   props: ['detailDialog'],
   data () {
     return {
+      showDetailDialog: null,
       detailTreeData: [{
         label: '分类1',
         children: [{
@@ -42,6 +43,12 @@ export default {
   methods: {
     closeHandel () {
       this.$emit('detailBoxHide')
+    }
+  },
+  watch: {
+    // 监听detailDialog值的变化，给showDetailDialog重新赋值，同样可以监听值得变化，为啥不用computed,因为关闭弹框会直接修改 computed里设置的属性值，而不是只通过根据依赖属性计算来的
+    detailDialog () {
+      this.showDetailDialog = this.detailDialog
     }
   }
 }
