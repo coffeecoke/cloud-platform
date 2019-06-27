@@ -722,7 +722,6 @@ export default {
   .el-table /deep/ .el-table__header {
     min-width: 100%
   }
-
   .el-table /deep/ .el-table__body {
     min-width: 100%
   }

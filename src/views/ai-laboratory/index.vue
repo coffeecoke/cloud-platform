@@ -1,8 +1,6 @@
 <template>
 <el-container>
-  <el-aside width="210px"  :style='{width:boxWidth}'>
-      <aside-menu></aside-menu>
-  </el-aside>
+  <aside-menu></aside-menu>
   <el-container>
     <el-main>
         <right-main></right-main>
@@ -34,6 +32,7 @@ export default {
     padding:0px;
 }
 .el-aside{
+  // width:200px;
   background:#fff;
 }
 </style>

@@ -9,15 +9,12 @@
                         管理员<i class="el-icon-arrow-down el-icon--right"></i>
                     </span>
                     <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item>黄金糕</el-dropdown-item>
-                        <el-dropdown-item>狮子头</el-dropdown-item>
-                        <el-dropdown-item>螺蛳粉</el-dropdown-item>
-                        <el-dropdown-item disabled>双皮奶</el-dropdown-item>
-                        <el-dropdown-item divided>蚵仔煎</el-dropdown-item>
+                        <el-dropdown-item></el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
             </div>
-            <div class="tags"></div>
+            <!-- 标签页导航 -->
+            <tags-view/>
         </div>
         <section>
             <div class="box-contenter" :style='{height:tableHeight}'>
@@ -30,7 +27,11 @@
 </template>
 <script>
 import $ from 'jquery'
+import TagsView from './TagsView'
 export default {
+  components: {
+    TagsView
+  },
   data () {
     return {
       tableHeight: ''
@@ -52,11 +53,14 @@ export default {
 }
 .header-box {
   width:100%;
+  height:80px;
+  position: relative;
   .header{
       height:40px;
       display: flex;
       justify-content: flex-end;
       align-items: center;
+      padding-right:32px;
     .item{
         color:#fff;
         font-weight:800;
