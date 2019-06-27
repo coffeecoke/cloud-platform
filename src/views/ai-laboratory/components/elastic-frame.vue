@@ -46,7 +46,6 @@ export default {
     }
   },
   watch: {
-    // 监听detailDialog值的变化，给showDetailDialog重新赋值，同样可以监听值得变化，为啥不用computed,因为关闭弹框会直接修改 computed里设置的属性值，而不是只通过根据依赖属性计算来的
     detailDialog () {
       this.showDetailDialog = this.detailDialog
     }
@@ -62,7 +61,6 @@ export default {
       background-color:transparent;
       & /deep/ .el-tree-node__content {
         height:32px;
-
       }
       & /deep/ .el-tree-node:focus>.el-tree-node__content {
         // background-color: transparent;
@@ -137,7 +135,6 @@ export default {
 
   .dialog-container /deep/ .el-dialog__body {
     padding-top: 10px;
-
   }
 
 </style>
