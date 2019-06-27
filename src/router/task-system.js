@@ -17,10 +17,9 @@ import Resoft from '@/views/task-system/resoft-undertake'
 import Thirdparty from '@/views/task-system/third-party'
 // 融鑫承接
 import PersonUnderTake from '@/views/task-system/person-undertake'
-// 融鑫承接
-
+// 问卷调查
 import QuestionPublic from '@/views/questionnaire/questionPublic'
-
+// 验收及转接
 import PostProject from '@/views/questionnaire/postProject'
 
 export default [{
