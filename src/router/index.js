@@ -1,58 +1,51 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Page404 from '@/views/404'
-import WxCodePage from '@/views/login/wx-qrcode'
-import Register from '@/views/login/register'
-import Login from '@/views/login/login'
-import Layout from '@/views/layout/layout'
-// 首页模块
-import Home from './home'
-// 个人中心路由模块
-import UserRouter from './user-management'
-// 问卷调查
-import Quest from './questionnaire'
-// 用户管理路由模块
-import PersonalManagement from './personal-management'
-// 项目管理
-import TaskSystem from './task-system'
-// 取数逻辑表
-import TableLogic from '@/views/table-logic/tableLogic'
-
-// 金融ai实验室
-import AiLaboratory from '@/views/ai-laboratory'
+// 金融ai实验室路由模块
 import Ai from './ai-laboratory'
+
+// 首页路由模块
+// import Home from './home'
+// 个人中心路由模块
+// import UserRouter from './user-management'
+// 用户管理路由模块
+// import PersonalManagement from './personal-management'
+// 项目管理路由模块
+// import TaskSystem from './task-system'
+
+// 引入权限路由
+import permissionRouter from './permissionRouter'
+// 引入key-value路由规则
+import routerMapComponents from './routerMapComonent'
 Vue.use(Router)
-// let routes = new Set([...UserRouter]) // 合并多个路由模块
-// const router = new Router({
-//   routes
-// })
+
 const router = new Router({
   routes: [{
     path: '/404',
-    component: Page404
+    component: () => import('@/views/404')
   },
   {
     path: '/login',
-    component: Login
+    component: () => import('@/views/login/login')
   },
   {
     path: '/wxCodePage',
-    component: WxCodePage
+    component: () => import('@/views/login/wx-qrcode')
 
   },
   {
     path: '/register',
-    component: Register
+    component: () => import('@/views/login/register')
   },
+  // 取数逻辑表
   {
     path: '/tableLogic',
-    component: TableLogic
+    component: () => import('@/views/table-logic/tableLogic')
   },
 
   // 由于标签刷新的hack方法
   {
     path: '/redirect',
-    component: AiLaboratory,
+    component: () => import('@/views/ai-laboratory'),
     hidden: true,
     children: [
       {
@@ -61,29 +54,40 @@ const router = new Router({
       }
     ]
   },
+  // 金融ai实验室
   {
     path: '/ai',
-    component: AiLaboratory,
+    component: import('@/views/ai-laboratory'),
     redirect: '/ai/serviceManagement',
     children: [
       ...Ai
     ]
-  },
-  {
-    path: '/',
-    component: Layout,
-    redirect: '/home',
-    children: [
-      ...Home,
-      // 用户管理路由模块
-      ...UserRouter,
-      ...Quest,
-      ...PersonalManagement,
-      ...TaskSystem
-    ]
   }
+  // {
+  //   path: '/',
+  //   component: () => import('@/views/layout/layout'),
+  //   redirect: '/home',
+  //   children: [
+  //     ...Home,
+  //     // 用户管理路由模块
+  //     ...UserRouter,
+  //     ...PersonalManagement,
+  //     ...TaskSystem
+  //   ]
+  // }
   ]
 })
+// 处理路由把components字符串，跟key-value规则转换成真正的component组件
+const formatRoutes = function (routes) {
+  routes.forEach(route => {
+    route.component = routerMapComponents[route.component]
+    if (route.children) {
+      formatRoutes(route.children)
+    }
+  })
+}
+formatRoutes(permissionRouter)
+router.addRoutes(permissionRouter) // 动态添加路由
 router.beforeEach((to, from, next) => {
   if (to.matched.length === 0) {
     from.name ? next({
