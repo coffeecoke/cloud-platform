@@ -57,7 +57,7 @@ const router = new Router({
   // 金融ai实验室
   {
     path: '/ai',
-    component: import('@/views/ai-laboratory'),
+    component: () => import('@/views/ai-laboratory'),
     redirect: '/ai/serviceManagement',
     children: [
       ...Ai
