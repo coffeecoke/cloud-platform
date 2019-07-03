@@ -1,3 +1,4 @@
+// key-value路由映射关系，由前台维护
 export default {
   // layout结构 //
   Layout: () => import('@/views/layout/layout'),

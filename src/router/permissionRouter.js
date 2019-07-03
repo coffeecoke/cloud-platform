@@ -1,3 +1,4 @@
+// 此部分应该为后端根据用户的权限过滤出用户能访问的路由
 let permissionRouter = [
   {
     path: '/',

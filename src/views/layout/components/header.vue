@@ -3,37 +3,18 @@
     <div class="logo">中软融鑫云交付平台</div>
     <div class="top-nav">
       <ul class="top-nav__list" ref="topNav">
-        <!-- <li class="nav-item" v-for="(item, i) in topNavs" :key="item.id" :class="{selected:select == i}" @click="clickLi(i)">
-          {{item.name}}
-        </li> -->
-
-        <router-link tag="li" class="tab-item" to="/home">
-          <a>我的首页</a>
-        </router-link>
-        <li class="tab-item"  @click = 'servlesslogin("/resoft/cloudView?tabId=workRoom#page&systemId=dispatchList")'>
-          <a href="javascript:void(0)">知识库</a>
-        </li>
-        <router-link tag="li" class="tab-item" to="/projectManager">
-          <a>项目管理</a>
-        </router-link>
-        <li class="tab-item" @click = 'servlesslogin("/resoft/cloudView?tabId=workRoom#page&systemId=projectStart-projectInit")'>
-          <a href="javascript:void(0)">工作台</a>
-        </li>
-        <li class="tab-item" @click = 'servlesslogin("/resoft/cloudView?tabId=workRoom#page&systemId=productMaintain-productMaintain")'>
-          <a href="javascript:void(0)">产品资料</a>
-        </li>
-        <li class="tab-item" @click = 'servlesslogin("/resoft/cloudView?tabId=workRoom#page&systemId=org")'>
-          系统管理
-        </li>
-         <router-link tag="li" class="tab-item" to="/partnerManager" exact>
-          <a>合伙人管理</a>
-        </router-link>
-        <li class="tab-item" @click = 'servlesslogin("/resoft/cloudView?tabId=workRoom#page&systemId=cloudEnv")'>
-          <a href="javascript:void(0)">云环境</a>
-        </li>
-         <!-- <router-link tag="li" class="tab-item" to="/qu-1">
-          <a>调查问卷</a>
-        </router-link> -->
+        <template v-for="item in permissionMenu" >
+          <template v-if="item.routerType==='frontRouter'">
+            <router-link tag="li" :key="item.id" class="tab-item" :to="item.path">
+              <a>{{item.title}}</a>
+            </router-link>
+          </template>
+          <template v-else>
+            <li class="tab-item" :key="item.id" @click = 'servlesslogin(`${item.path}`)'>
+              <a href="javascript:void(0)">{{item.title}}</a>
+            </li>
+          </template>
+        </template>
       </ul>
     </div>
     <div class="right-options">
@@ -51,18 +32,68 @@ export default {
       activeName: 'second',
       userName: '',
       select: 0,
-      origin: window.location.origin
+      origin: window.location.origin,
+      permissionMenu: [
+        // path：跟后台返回路由的path一致
+        // routerType 路由类型  "frontRouter"为前台路由  "httpRouter"为硬链
+        {
+          id: 1,
+          title: '我的首页',
+          path: '/home',
+          routerType: 'frontRouter',
+          class: 'active'
+        },
+        {
+          id: 2,
+          title: '知识库',
+          path: '/resoft/cloudView?tabId=workRoom#page&systemId=dispatchList',
+          routerType: 'httpRouter'
+        },
+        {
+          id: 3,
+          title: '项目管理',
+          path: '/projectManager',
+          routerType: 'frontRouter'
+        },
+        {
+          id: 4,
+          title: '工作台',
+          path: '/resoft/cloudView?tabId=workRoom#page&systemId=projectStart-projectInit',
+          routerType: 'httpRouter'
+        },
+        {
+          id: 5,
+          title: '产品资料',
+          path: '/resoft/cloudView?tabId=workRoom#page&systemId=productMaintain-productMaintain',
+          routerType: 'httpRouter'
+        },
+        {
+          id: 6,
+          title: '系统管理',
+          path: '/resoft/cloudView?tabId=workRoom#page&systemId=org',
+          routerType: 'httpRouter'
+        },
+        {
+          id: 7,
+          title: '合伙人管理',
+          path: '/partnerManager',
+          routerType: 'frontRouter'
+        },
+        {
+          id: 8,
+          title: '云环境',
+          path: '/resoft/cloudView?tabId=workRoom#page&systemId=cloudEnv',
+          routerType: 'httpRouter'
+        }
+      ]
     }
   },
   activated () {},
   created () {
-    console.log(this.userName)
+    // console.log(this.userName)
     this.userName = localStorage.getItem('userName') || '亲~'
   },
   methods: {
-    handleClick (tab, event) {
-      console.log(tab, event)
-    },
     clickLi (index) {
       this.select = index
     },
