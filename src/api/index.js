@@ -1,3 +1,5 @@
+// 权限菜单
+import perrmissionMenu from './permissionMenu'
 // 用户管理api
 import userManagementApi from './user-management'
 // 人员管理
@@ -13,6 +15,7 @@ import partner from './personal-management'
 import tableLogic from './tableLogic'
 // 对外暴露所有模块的接口，方便每vue都能调用所有的api
 export default Object.assign({},
+  perrmissionMenu,
   userManagementApi,
   userInfo,
   question,

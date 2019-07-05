@@ -49,7 +49,6 @@ const userInfo = {
       data: Qs.stringify(params)
     })
   }
-
   //
 }
 export default {

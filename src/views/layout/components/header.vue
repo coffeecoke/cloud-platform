@@ -3,7 +3,7 @@
     <div class="logo">中软融鑫云交付平台</div>
     <div class="top-nav">
       <ul class="top-nav__list" ref="topNav">
-        <template v-for="item in permissionMenu" >
+        <template v-for="item in permissionHeaderMenu" >
           <template v-if="item.routerType==='frontRouter'">
             <router-link tag="li" :key="item.id" class="tab-item" :to="item.path">
               <a>{{item.title}}</a>
@@ -33,7 +33,7 @@ export default {
       userName: '',
       select: 0,
       origin: window.location.origin,
-      permissionMenu: [
+      permissionHeaderMenu: [
         // path：跟后台返回路由的path一致
         // routerType 路由类型  "frontRouter"为前台路由  "httpRouter"为硬链
         {
@@ -90,8 +90,13 @@ export default {
   },
   activated () {},
   created () {
-    // console.log(this.userName)
     this.userName = localStorage.getItem('userName') || '亲~'
+    // 从后台获取权限菜单
+    this.$api.permissionMenu.getHeaderMenu().then((res) => {
+      let result = res.data
+      let { headerMenu } = result.data
+      this.permissionHeaderMenu = headerMenu
+    })
   },
   methods: {
     clickLi (index) {

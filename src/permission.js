@@ -10,7 +10,9 @@ NProgress.configure({ showSpinner: false })// NProgress configuration
 const whiteList = ['/login', '/wxCodePage', '/register'] // 不重定向白名单
 router.beforeEach((to, from, next) => {
   NProgress.start()
-  if (localStorage.getItem('token')) {
+  let token = localStorage.getItem('token')
+  let permissionRouter = localStorage.getItem('permissionRouter')
+  if (token && permissionRouter) {
     if (to.path === '/wxCodePage' || to.path === '/login') {
       next({ path: '/' }) // 直接跳转到默认页面（如：首页）
       NProgress.done() //

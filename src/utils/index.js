@@ -273,3 +273,14 @@ export function uniqueArr (arr) {
 export function isExternal (path) {
   return /^(https?:|mailto:|tel:)/.test(path)
 }
+
+// map router
+// 处理路由把components字符串，跟key-value规则转换成真正的component组件
+export function formatRoutes (routes, routerMapComponents) {
+  routes.forEach(route => {
+    route.component = routerMapComponents[route.component]
+    if (route.children) {
+      formatRoutes(route.children)
+    }
+  })
+}

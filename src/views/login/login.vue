@@ -55,7 +55,7 @@ export default {
   methods: {
     handleSubmit2 (ev) {
       localStorage.setItem('loginName', this.ruleForm2.loginName)
-      let _this = this
+      // let _this = this
       this.$refs.ruleForm2.validate((valid) => {
         if (valid) {
           // _this.$router.replace('/table');
@@ -64,8 +64,7 @@ export default {
           this.$api.userInfo.getUserInfo(loginParams).then(res => {
             let result = res.data
             this.logining = false
-            console.log(res)
-            let { msg, status, token, userName } = result
+            let { msg, status, token, userName, permissionRouter } = result
             if (status !== '1') {
               this.$message({
                 message: msg,
@@ -74,12 +73,13 @@ export default {
             } else {
               localStorage.setItem('token', token)
               localStorage.setItem('userName', userName)
-              console.log(localStorage.getItem('userName'))
-              _this.$router.push({ path: '/' })
+              localStorage.setItem('permissionRouter', permissionRouter)
+              // _this.$router.push({ path: '/' })
+              // 登陆成功后追加获取的权限路由表
+              this.$store.dispatch('permissionRouter/addRoutes', permissionRouter)
             }
           })
         } else {
-          console.log('error submit!!')
           return false
         }
       })

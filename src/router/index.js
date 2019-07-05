@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import { formatRoutes } from '../utils'
 // 金融ai实验室路由模块
 import Ai from './ai-laboratory'
 
@@ -15,7 +16,7 @@ import Ai from './ai-laboratory'
 // 引入权限路由
 import permissionRouter from './permissionRouter'
 // 引入key-value路由规则
-import routerMapComponents from './routerMapComonent'
+import routerMapComponents from './routerMapComponent'
 Vue.use(Router)
 
 const router = new Router({
@@ -77,16 +78,8 @@ const router = new Router({
   // }
   ]
 })
-// 处理路由把components字符串，跟key-value规则转换成真正的component组件
-const formatRoutes = function (routes) {
-  routes.forEach(route => {
-    route.component = routerMapComponents[route.component]
-    if (route.children) {
-      formatRoutes(route.children)
-    }
-  })
-}
-formatRoutes(permissionRouter)
+
+formatRoutes(permissionRouter, routerMapComponents)
 router.addRoutes(permissionRouter) // 动态添加路由
 router.beforeEach((to, from, next) => {
   if (to.matched.length === 0) {

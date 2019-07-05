@@ -4,7 +4,7 @@
     <template v-for = "item in permissionMenu">
       <el-menu-item index="item.index" v-if="!item.children" :key="item.id">
         <i class=""></i>
-        <span slot="title">工作台</span>
+        <span slot="title">{{item.title}}</span>
       </el-menu-item>
       <el-submenu v-else :index="item.index" :key="item.id">
         <template slot="title">{{item.title}}</template>
