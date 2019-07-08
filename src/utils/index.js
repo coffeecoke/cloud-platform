@@ -280,7 +280,7 @@ export function formatRoutes (routes, routerMapComponents) {
   routes.forEach(route => {
     route.component = routerMapComponents[route.component]
     if (route.children) {
-      formatRoutes(route.children)
+      formatRoutes(route.children, routerMapComponents)
     }
   })
 }

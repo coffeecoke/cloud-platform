@@ -35,7 +35,7 @@ export default {
           title: '基本信息',
           icon: '',
           index: 1, // 记得点标识
-          chidlren: [
+          children: [
             {
               id: 11,
               title: '基本信息',
