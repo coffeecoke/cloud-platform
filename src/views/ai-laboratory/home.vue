@@ -49,7 +49,6 @@ export default {
       li {
         margin:0 44px;
         padding:10px 0;
-
       }
       li.active {
           position: relative;
