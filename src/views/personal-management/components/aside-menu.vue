@@ -137,8 +137,15 @@ export default {
     defaultActive () {
       return this.$route.path.split('/')[1]
     }
+  },
+  created () {
+    this.$api.permissionMenu.getParterManagementLeftMenu(res => {
+      let result = res.data
+      if (result.status === '1') {
+        this.permissionMenu = result.data
+      }
+    })
   }
-
 }
 
 </script>
