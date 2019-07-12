@@ -10,11 +10,13 @@ import '@/styles/font-awesome.css'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import '@/styles/transition.scss'
+import vueSwiper from 'vue-awesome-swiper'
+import 'swiper/dist/css/swiper.css'
 import '@/styles/element-ui.scss'
 import '@/styles/common.scss'
 import 'babel-polyfill' // 解决ie下promise报错
 // import locale from 'element-ui/lib/locale/lang/en' // lang i18n
-
+Vue.use(vueSwiper)
 Vue.use(ElementUI, { size: 'small' })
 Vue.config.productionTip = false
 Vue.prototype.$http = axios
