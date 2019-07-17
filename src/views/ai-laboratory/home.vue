@@ -16,28 +16,11 @@
     <el-main>
       <div class="banner">
         <swiper :options="swiperOption" class="swiper-wrap"  ref="mySwiper" v-if="banner.length!=0">
-          <!-- <swiper-slide v-for="(item,index) in banner" :key="index" >
-            <img :src="item.image" alt="图片" />
-            <a>{{item.title}}</a>
-          </swiper-slide> -->
-          <!-- 常见的小圆点 -->
-          <swiper-slide>
-            <img src="../../assets/imgs/banner_01.jpg" alt="">
-            <a href="##">立即体验</a>
+          <swiper-slide v-for="(item,index) in banner" :key="index">
+            <img :src="item.image" alt="">
+            <a href="##">{{item.title}}</a>
           </swiper-slide>
-          <swiper-slide>
-            <img src="../../assets/imgs/banner_02.jpg" alt="">
-            <a href="##">立即体验</a>
-          </swiper-slide>
-          <swiper-slide>
-            <img src="../../assets/imgs/banner_03.jpg" alt="">
-            <a href="##">立即体验</a>
-          </swiper-slide>
-          <swiper-slide>
-            <img src="../../assets/imgs/banner_04.jpg" alt="">
-            <a href="##">立即体验</a>
-          </swiper-slide>
-          <p class="swiper-pagination"  v-for="(item,index) in banner" :key="index" slot="pagination" ></p>
+          <div class="swiper-pagination"  v-for="(item,index) in banner" :key="index" slot="pagination" ></div>
         </swiper>
       </div>
       <div class="box-service">
@@ -278,19 +261,19 @@ export default {
       banner: [
         {
           title: '立即体验1',
-          image: '../../assets/imgs/banner_01.jpg'
+          image: require('@/assets/imgs/banner_01.jpg')
         },
         {
           title: '立即体验2',
-          image: '../../assets/imgs/banner_02.jpg'
+          image: require('@/assets/imgs/banner_02.jpg')
         },
         {
           title: '立即体验3',
-          image: '../../assets/imgs/banner_03.jpg'
+          image: require('@/assets/imgs/banner_03.jpg')
         },
         {
           title: '立即体验4',
-          image: '../../assets/imgs/banner_04.jpg'
+          image: require('@/assets/imgs/banner_04.jpg')
         }
       ],
       swiperOption: {
@@ -315,6 +298,7 @@ export default {
         pagination: {
           el: '.swiper-pagination',
           clickable: true,
+          dynamicMainBullets: 4, // 动态分页器的主指示点的数量
           type: 'bullets'
         },
         navigation: {
