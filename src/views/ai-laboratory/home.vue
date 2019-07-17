@@ -278,7 +278,6 @@ export default {
         pagination: {
           el: '.swiper-pagination',
           clickable: true,
-          dynamicMainBullets: 4, // 动态分页器的主指示点的数量
           type: 'bullets'
         }
       },
@@ -314,9 +313,19 @@ export default {
       return 'icon' + (index + 1)
     }
   },
+  computed: {
+    swiper () {
+      return this.$refs.mySwiper.swiper
+    }
+  },
   activated () {},
   mounted () {
-
+    this.swiper.el.onmouseover = function () { // 鼠标放上暂停轮播
+      this.swiper.autoplay.stop()
+    }
+    this.swiper.el.onmouseleave = function () {
+      this.swiper.autoplay.start()
+    }
   }
 }
 
