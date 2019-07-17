@@ -458,22 +458,22 @@ export default {
             display: inline-block;
           }
           .icon1{
-            background: url("../../assets/imgs/file.png") no-repeat center;
+            background: url("~@assets/imgs/file.png") no-repeat center;
           }
           .icon2{
-            background: url("../../assets/imgs/star.png") no-repeat center;
+            background: url("~@assets/imgs/star.png") no-repeat center;
           }
           .icon3{
-            background: url("../../assets/imgs/Clock.png") no-repeat center;
+            background: url("~@assets/imgs/Clock.png") no-repeat center;
           }
           .icon4{
-            background: url("../../assets/imgs/Shape3.png") no-repeat center;
+            background: url("~@assets/imgs/Shape3.png") no-repeat center;
           }
           .icon5{
-            background: url("../../assets/imgs/Shape5.png") no-repeat center;
+            background: url("~@assets/imgs/Shape5.png") no-repeat center;
           }
           .icon6{
-            background: url("../../assets/imgs/Shape4.png") no-repeat center;
+            background: url("~@assets/imgs/Shape4.png") no-repeat center;
           }
           p{
             color:#3080ee;
@@ -493,22 +493,22 @@ export default {
               color:#fff;
             }
             .icon1{
-            background: url("../../assets/imgs/file-active.png") no-repeat center;
+            background: url("~@assets/imgs/file-active.png") no-repeat center;
             }
             .icon2{
-              background: url("../../assets/imgs/star-active.png") no-repeat center;
+              background: url("~@assets/imgs/star-active.png") no-repeat center;
             }
             .icon3{
-              background: url("../../assets/imgs/clock-active.png") no-repeat center;
+              background: url("~@assets/imgs/clock-active.png") no-repeat center;
             }
             .icon4{
-              background: url("../../assets/imgs/shape4-active.png") no-repeat center;
+              background: url("~@assets/imgs/shape4-active.png") no-repeat center;
             }
             .icon5{
-              background: url("../../assets/imgs/shape5-active.png") no-repeat center;
+              background: url("~@assets/imgs/shape5-active.png") no-repeat center;
             }
             .icon6{
-              background: url("../../assets/imgs/shape6-active.png") no-repeat center;
+              background: url("~@assets/imgs/shape6-active.png") no-repeat center;
             }
         }
         }
@@ -530,16 +530,16 @@ export default {
       .bg-slide{
         height:100%;
         &.slide1{
-          background: url("../../assets/imgs/swiper-img1.jpg") no-repeat center;
+          background: url("~@assets/imgs/swiper-img1.jpg") no-repeat center;
         }
         &.slide2{
-          background: url("../../assets/imgs/swiper-img2.jpg") no-repeat center;
+          background: url("~@assets/imgs/swiper-img2.jpg") no-repeat center;
         }
         &.slide3{
-          background: url("../../assets/imgs/swiper-img2.jpg") no-repeat center;
+          background: url("~@assets/imgs/swiper-img2.jpg") no-repeat center;
         }
         &.slide4{
-          background: url("../../assets/imgs/swiper-img4.jpg") no-repeat center;
+          background: url("~@assets/imgs/swiper-img4.jpg") no-repeat center;
         }
         .box-icon{
           padding-top:150px;
@@ -550,16 +550,16 @@ export default {
               display: block;
           }
           .icon1{
-              background: url("../../assets/imgs/qiye-2.png") no-repeat center;
+              background: url("~@assets/imgs/qiye-2.png") no-repeat center;
           }
           .icon2{
-              background: url("../../assets/imgs/xueshimao.png") no-repeat center;
+              background: url("~@assets/imgs/xueshimao.png") no-repeat center;
           }
           .icon3{
-              background: url("../../assets/imgs/fuwu.png") no-repeat center;
+              background: url("~@assets/imgs/fuwu.png") no-repeat center;
           }
           .icon4{
-              background: url("../../assets/imgs/lvhang.png") no-repeat center;
+              background: url("~@assets/imgs/lvhang.png") no-repeat center;
           }
           span{
             color:#fff;
@@ -660,7 +660,7 @@ export default {
   .box-product{
     width:100%;
     height:580px;
-    background: url("../../assets/imgs/ai-bg.jpg") no-repeat center;
+    background: url("~@assets/imgs/ai-bg.jpg") no-repeat center;
     .product-all{
         padding:80px 600px 20px;
         p{
