@@ -16,9 +16,9 @@
     <el-main>
       <div class="banner">
         <swiper :options="swiperOption" class="swiper-wrap"  ref="mySwiper" v-if="banner.length!=0">
-          <swiper-slide v-for="(item,index) in banner" :key="index">
-            <img :src="item.image" alt="">
-            <a href="##">{{item.title}}</a>
+          <swiper-slide v-for="(item,index) in banner" :key="index" >
+            <img :src="item.image" alt="图片" />
+            <a>{{item.title}}</a>
           </swiper-slide>
           <div class="swiper-pagination"  v-for="(item,index) in banner" :key="index" slot="pagination" ></div>
         </swiper>
@@ -27,7 +27,7 @@
         <h4 class="box-title">数据更智能 业务才更智能</h4>
           <ul class="box-list">
             <li v-for="(item,index) in liList" :key="index" :class="{ active:index==current}" @click="addClass(index)" @mouseover="addclassActive(index)">
-              <i :class="item.icon"></i>
+              <i class="icon" :class="iconClassName(index)"></i>
               <p>{{item.title}}</p>
               <span>{{item.text}}</span>
             </li>
@@ -35,64 +35,16 @@
       </div>
       <div class="box-solution">更多行业 更多场景的AI解决方案</div>
       <div class="box-swiper">
-        <swiper :options="swiperOptionmeau" class="swiper-wrap"  ref="mySwipers" v-if="banner.length!=0">
-          <swiper-slide>
-            <div class="bg-slide slide1">
-              <div class="box-icon" v-if="isShow" v-on:mouseover="changeActive($event)" v-on:mouseout="removeActive($event)">
-                <i class="icon icon1"></i>
-                <span>地产</span>
+        <swiper :options="swiperOptionmeau" class="swiper-wrap"  ref="mySwipers">
+          <swiper-slide v-for="(item,index) in scence" :key="index">
+            <div class="bg-slide" :class="generateClassName(index)">
+              <div class="box-icon">
+                <i class="icon" :class="icon1ClassName(index)"></i>
+                <span>{{item.text}}</span>
               </div>
-              <div class="box-text" v-else>
-                <h4>企业服务</h4>
-                <p>企业服务企业服务企业服务企业服务企业服务企业服务企业服务</p>
-              </div>
-            </div>
-          </swiper-slide>
-          <swiper-slide>
-            <div class="bg-slide slide2">
-              <div class="box-icon" v-if="isShow">
-                <i class="icon icon2"></i>
-                <span>校园</span>
-              </div>
-              <div class="box-text" v-else>
-                <h4>企业服务</h4>
-                <p>企业服务企业服务企业服务企业服务企业服务企业服务企业服务</p>
-              </div>
-            </div>
-          </swiper-slide>
-          <swiper-slide>
-            <div class="bg-slide slide3">
-              <div class="box-icon" v-if="isShow">
-                <i class="icon icon3"></i>
-                <span>服务</span>
-              </div>
-              <div class="box-text" v-else>
-                <h4>企业服务</h4>
-                <p>企业服务企业服务企业服务企业服务企业服务企业服务企业服务</p>
-              </div>
-            </div>
-          </swiper-slide>
-          <swiper-slide>
-            <div class="bg-slide slide4">
-              <div class="box-icon" v-if="isShow">
-                <i class="icon icon4"></i>
-                <span>旅游</span>
-              </div>
-              <div class="box-text" v-else>
-                <h4>企业服务</h4>
-                <p>企业服务企业服务企业服务企业服务企业服务企业服务企业服务</p>
-              </div>
-            </div>
-          </swiper-slide>
-          <swiper-slide>
-            <div class="bg-slide slide4">
-              <div class="box-icon" v-if="isShow">
-                <i class="icon icon4"></i>
-                <span>旅游</span>
-              </div>
-              <div class="box-text" v-else>
-                <h4>企业服务</h4>
-                <p>企业服务企业服务企业服务企业服务企业服务企业服务企业服务</p>
+              <div class="box-text">
+                <h4>{{item.title}}</h4>
+                <p>{{item.introduce}}</p>
               </div>
             </div>
           </swiper-slide>
@@ -103,44 +55,19 @@
       <div class="box-blank"></div>
       <div class="box-case">
             <div class="box-left-case">
-              <img src="../../assets/imgs/img_03.jpg" alt="">
-              <img src="../../assets/imgs/img_05.jpg" alt="">
-              <img src="../../assets/imgs/img_09.jpg" alt="">
-              <img src="../../assets/imgs/img_11.jpg" alt="">
+              <img  v-for="(item,index) in imgIntro" :key="index" :src="item.imgUrl" alt="">
             </div>
             <div class="box-right-case">
               <h4 class="case-title">在线案列</h4>
               <ul class="case-introduce">
-                <li>
+                <li v-for="(item,index) in caseList" :key="index">
                   <dl>
                     <dt>
-                      <img src="../../assets/imgs/group1.png" alt="">
+                      <img :src="item.imgUrl" alt="">
                     </dt>
                     <dd>
-                      <p>数据表明</p>
-                      <span>语音采集：中文语音，英文语音，国内外各地方言；图像采集：车辆，道路，人脸，名片，日常百货等，视频类，文字类，爬虫，网络爬虫等</span>
-                    </dd>
-                  </dl>
-                </li>
-                <li>
-                  <dl>
-                    <dt>
-                      <img src="../../assets/imgs/group2.png" alt="">
-                    </dt>
-                    <dd>
-                      <p>数据分类</p>
-                      <span>支持各类标注工具的数据标注平台，可标注图片：矩形拉框，多边形，人脸标点，各种属性；语音类如：中文，英文，方言的语言转写，校对，视频轨迹等</span>
-                    </dd>
-                  </dl>
-                </li>
-                <li>
-                  <dl>
-                    <dt>
-                      <img src="../../assets/imgs/group3.png" alt="">
-                    </dt>
-                    <dd>
-                      <p>客户留言</p>
-                      <span>支持各类标注工具的数据标注平台，可标注图片：矩形拉框，多边形，人脸标点，各种属性；语音类如：中文，英文，方言的语言转写，校对，视频轨迹等</span>
+                      <p>{{item.title}}</p>
+                      <span>{{item.describe}}</span>
                     </dd>
                   </dl>
                 </li>
@@ -154,17 +81,9 @@
           </div>
           <div class="data-product">
             <ul class="data-list">
-              <li>
-                  <p><span>130</span>+</p>
-                  <span>AI能力</span>
-              </li>
-              <li>
-                  <p><span>30</span>+</p>
-                  <span>解决方案</span>
-              </li>
-              <li>
-                  <p><span>24</span>小时</p>
-                  <span>快速集成</span>
+              <li v-for="(item,index) in proData" :key="index">
+                  <p><span>{{item.num}}</span>{{item.symbol}}</p>
+                  <span>{{item.text}}</span>
               </li>
             </ul>
           </div>
@@ -217,39 +136,100 @@ export default {
   data () {
     // const that = this
     return {
+      imgIntro: [
+        {imgUrl: require('@/assets/imgs/img_03.jpg')},
+        {imgUrl: require('@/assets/imgs/img_05.jpg')},
+        {imgUrl: require('@/assets/imgs/img_09.jpg')},
+        {imgUrl: require('@/assets/imgs/img_11.jpg')}
+      ],
+      caseList: [
+        {
+          imgUrl: require('@/assets/imgs/group1.png'),
+          title: '数据表明',
+          describe: '语音采集：中文语音，英文语音，国内外各地方言；图像采集：车辆，道路，人脸，名片，日常百货等，视频类，文字类，爬虫，网络爬虫等'
+        },
+        {
+          imgUrl: require('@/assets/imgs/group2.png'),
+          title: '数据分类',
+          describe: '支持各类标注工具的数据标注平台，可标注图片：矩形拉框，多边形，人脸标点，各种属性；语音类如：中文，英文，方言的语言转写，校对，视频轨迹等'
+        },
+        {
+          imgUrl: require('@/assets/imgs/group3.png'),
+          title: '客户留言',
+          describe: '支持各类标注工具的数据标注平台，可标注图片：矩形拉框，多边形，人脸标点，各种属性；语音类如：中文，英文，方言的语言转写，校对，视频轨迹等'
+        }
+      ],
+      proData: [
+        {
+          num: '130',
+          symbol: '+',
+          text: 'AI能力'
+        },
+        {
+          num: '30',
+          symbol: '+',
+          text: '解决方案'
+        },
+        {
+          num: '24',
+          symbol: '小时',
+          text: '快速集成'
+        }
+      ],
+      scence: [
+        {
+          text: '地产',
+          title: '企业服务',
+          introduce: '企业服务企业服务企业服务'
+        },
+        {
+          text: '校园',
+          title: '企业服务',
+          introduce: '企业服务企业服务企业服务'
+        },
+        {
+          text: '服务',
+          title: '企业服务',
+          introduce: '企业服务企业服务企业服务'
+        },
+        {
+          text: '旅游',
+          title: '企业服务',
+          introduce: '企业服务企业服务企业服务'
+        },
+        {
+          text: '旅游',
+          title: '企业服务',
+          introduce: '企业服务企业服务企业服务'
+        }
+      ],
       liList: [
         {
-          icon: 'icon icon1',
           title: '服务名称',
           text: '简介文字简介文字',
           selected: true
         },
         {
-          icon: 'icon icon2',
           title: '服务名称',
           text: '简介文字简介文字',
           selected: false
         },
         {
-          icon: 'icon icon3',
           title: '服务名称',
           text: '简介文字简介文字',
           selected: false
         },
         {
-          icon: 'icon icon4',
           title: '服务名称',
           text: '简介文字简介文字',
           selected: false
         },
         {
-          icon: 'icon icon5',
           title: '服务名称',
           text: '简介文字简介文字',
           selected: false
         },
         {
-          icon: 'icon icon6',
           title: '服务名称',
           text: '简介文字简介文字',
           selected: false
@@ -260,7 +240,7 @@ export default {
       imgIndex: 1,
       banner: [
         {
-          title: '立即体验1',
+          title: '立即体验',
           image: require('@/assets/imgs/banner_01.jpg')
         },
         {
@@ -300,27 +280,11 @@ export default {
           clickable: true,
           dynamicMainBullets: 4, // 动态分页器的主指示点的数量
           type: 'bullets'
-        },
-        navigation: {
-          nextEl: '.swiper-button-next',
-          prevEl: '.swiper-button-prev'
         }
       },
       isShow: true,
       swiperOptionmeau: {
-        isShowWrap: false,
-        // 循环
-        // loop: true,
-        // 设定初始化时slide的索引
         initialSlide: 0,
-        // 自动播放
-        // autoplay: {
-        //   delay: 1500,
-        //   stopOnLastSlide: false,
-        //   /* 触摸滑动后是否继续轮播 */
-        //   disableOnInteraction: false
-        // },
-        // 滑动速度
         speed: 800,
         // 滑动方向
         direction: 'horizontal',
@@ -328,11 +292,6 @@ export default {
         spaceBetween: 0,
         slidesPerGroup: 4,
         // 分页器设置
-        pagination: {
-          el: '.swiper-pagination',
-          clickable: true,
-          type: 'bullets'
-        },
         navigation: {
           nextEl: '.swiper-button-next',
           prevEl: '.swiper-button-prev'
@@ -344,11 +303,15 @@ export default {
     addClass (index) {
       this.current = index
     },
-    changeActive ($event) {
-      this.isShow = false
+    // 渲染不同的class
+    generateClassName (index) {
+      return 'slide' + (index + 1)
     },
-    removeActive ($event) {
-      this.isShow = true
+    iconClassName (index) {
+      return 'icon' + (index + 1)
+    },
+    icon1ClassName (index) {
+      return 'icon' + (index + 1)
     }
   },
   activated () {},
@@ -529,6 +492,15 @@ export default {
       display: flex;
       .bg-slide{
         height:100%;
+        position:relative;
+        &:hover {
+          .box-text {
+            display:block;
+          }
+          .box-icon {
+            display:none;
+          }
+        }
         &.slide1{
           background: url("~@assets/imgs/swiper-img1.jpg") no-repeat center;
         }
@@ -573,6 +545,13 @@ export default {
           height:100%;
           background-color:rgba(48, 128, 235, 0.6);
           padding:150px 30px 0;
+          display:none;
+          position:absolute;
+          z-index:2;
+          top:0;
+          bottom:0;
+          left:0;
+          right:0;
           h4{
             color:#fff;
             font-size:22px;
@@ -595,6 +574,7 @@ export default {
   background-color: rgba(204, 204, 204,0.3);
   margin-top:0;
   top:0;
+  z-index:100;
 }
 .swiper-button-next, .swiper-container-rtl .swiper-button-prev{
   right:0;
@@ -652,6 +632,7 @@ export default {
             display: inline-block;
             padding:10px 0;
             font-size:16px;
+            line-height: 30px;
           }
         }
       }
