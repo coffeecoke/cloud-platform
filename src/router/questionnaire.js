@@ -1,4 +1,4 @@
-/* // import Layout from '@/views/layout/layout'
+// import Layout from '@/views/layout/layout'
 import Quest from '@/views/questionnaire/index'
 import QuestBanks from '@/views/questionnaire/questionBanks'
 import Questionnaire from '@/views/questionnaire/questionnaire'
@@ -51,4 +51,3 @@ export default [{
     }
   ]
 }]
- */
