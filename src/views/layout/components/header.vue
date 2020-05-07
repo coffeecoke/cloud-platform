@@ -31,9 +31,9 @@
         <li class="tab-item" @click = 'servlesslogin("/resoft/cloudView?tabId=workRoom#page&systemId=cloudEnv")'>
           <a href="javascript:void(0)">云环境</a>
         </li>
-         <!-- <router-link tag="li" class="tab-item" to="/qu-1">
+        <router-link tag="li" class="tab-item" to="/qu-1">
           <a>调查问卷</a>
-        </router-link> -->
+        </router-link>
       </ul>
     </div>
     <div class="right-options">
